@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "flask-sketch"
+version = "0.1.0"
+description = "A CLI for autogenerate folder structure for Flask applications"
+authors = ["Eric Souza <ericsouza0801@gmail.com>"]
+license = "MIT License"
+
+[tool.poetry.dependencies]
+python = ">=3.6,<4.0"
+click = "^7.1.2"
+
+[tool.poetry.dev-dependencies]
+black = "^19.10b0"
+flake8 = "^3.8.3"
+
+[build-system]
+requires = ["poetry>=0.12"]
+build-backend = "poetry.masonry.api"
