@@ -14,7 +14,7 @@ black = "^19.10b0"
 flake8 = "^3.8.3"
 
 [tool.poetry.scripts]
-flask-sketch = "flask_sketch:flask_sketch"
+flask-sketch = "flask_sketch.__main__:flask_sketch"
 
 [build-system]
 requires = ["poetry>=0.12"]
