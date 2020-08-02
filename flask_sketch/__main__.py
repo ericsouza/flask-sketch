@@ -1,35 +1,23 @@
 #!/usr/bin/python3
 
-import click
-import os
+from __future__ import print_function, unicode_literals
+from PyInquirer import prompt
+from pprint import pprint
+import sys
+from pyfiglet import Figlet
+from config import cli_style
+from questions import questions
+from make_boilerplate import make
+
+f = Figlet(font="slant")
 
 
-@click.command()
-@click.argument("project_name")
 def flask_sketch(project_name):
-    project_app_folder = project_name + "/" + project_name
-    os.makedirs(project_name + "/" + "tests")
-    os.makedirs(project_app_folder)
-    os.makedirs(project_app_folder + "/" + "ext")
+    print(f.renderText("Flask Sketch"))
+    answers = prompt(questions, style=cli_style)
+    pprint(answers)
+    make(project_name, answers)
 
-    init_app = """from flask import Flask
-
-app = Flask()
-
-@app.route("/")
-def hello():
-    return "hello world"
 
 if __name__ == "__main__":
-    app.run()"""
-
-    with open(project_app_folder + "/__init__.py", "w") as file:
-        file.writelines(init_app)
-
-    with open(project_name + "/requirements.txt", "w") as file:
-        file.writelines("Flask")
-
-
-    print(f"All done! cd into {project_name} folder, create a virtualenv and run pip install -r requirements.txt")
-if __name__ == "__main__":
-    flask_sketch()
+    flask_sketch(sys.argv[1])

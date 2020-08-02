@@ -7,7 +7,8 @@ license = "MIT License"
 
 [tool.poetry.dependencies]
 python = ">=3.6,<4.0"
-click = "^7.1.2"
+pyfiglet = "^0.8.post1"
+pyinquirer = "^1.0.3"
 
 [tool.poetry.dev-dependencies]
 black = "^19.10b0"
