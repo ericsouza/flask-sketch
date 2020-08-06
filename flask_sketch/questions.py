@@ -153,7 +153,7 @@ questions = [
             {"name": "Admin Interface (Flask-Admin)"},
             {"name": "Cache (Flask-Caching)"},
             {"name": "Pyctuator (integration with Spring Boot Admin"},
-            {"name": "Rate Limiting"},
+            {"name": "Rate Limiting (Flask-Limiter)"},
             {"name": "Flasgger", "disabled": "Not yet supported"},
         ],
         "when": lambda answers: has_answers(
