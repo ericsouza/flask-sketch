@@ -1,4 +1,4 @@
-from helpers import has_answers
+from .helpers import has_answers
 
 
 questions = [

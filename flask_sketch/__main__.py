@@ -5,9 +5,9 @@ from PyInquirer import prompt
 from pprint import pprint
 import sys
 from pyfiglet import Figlet
-from config import cli_style
-from questions import questions
-from make_boilerplate import make
+from .config import cli_style
+from .questions import questions
+from .make_boilerplate import make
 
 f = Figlet(font="slant")
 
