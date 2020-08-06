@@ -1,4 +1,4 @@
-from helpers import is_selected
+from helpers import has_answers
 
 
 questions = [
@@ -17,23 +17,65 @@ questions = [
     },
     {
         "type": "list",
-        "message": "Select the type of your database",
-        "name": "database_type",
+        "message": "Select your database",
+        "name": "database",
         "choices": [
-            {"name": "SQL Database (MySQL, Postgres, SQLite)", "value": "sql_database"},
-            {"name": "Mongo database", "value": "mongo_database"},
+            {"name": "Postgres"},
+            {"name": "MySQL"},
+            {"name": "SQLite"},
+            {"name": "MongoDB"},
             {"name": "None (no database)", "value": "no_database"},
         ],
-        "validate": lambda answer, answers: "You must choose at least one topping."
+        "validate": lambda answer: "You must choose at least one topping."
         if len(answer) == 0
         else True,
     },
     {
         "type": "list",
-        "message": "Select your SQL database",
-        "name": "sql_database",
-        "choices": [{"name": "Postgres"}, {"name": "MySQL",}, {"name": "SQLite"},],
-        "when": lambda answers: is_selected(answers, "database_type", "sql_database"),
+        "message": "Select the Authentication Framework",
+        "name": "auth_framework",
+        "choices": [
+            {"name": "Flask-Login"},
+            {"name": "Flask-Security-Too (aka Flask-Security)"},
+            {"name": "Flask-HTTPAuth"},
+            {"name": "None"},
+        ],
+        "when": lambda answers: has_answers(
+            answers, have={"application_type": "web_only"}
+        ),
+        "validate": lambda answer: "You must choose at least one topping."
+        if len(answer) == 0
+        else True,
+    },
+    {
+        "type": "list",
+        "message": "Select the Authentication Framework",
+        "name": "auth_framework",
+        "choices": [
+            {"name": "Flask-Praetorian (recommended)"},
+            {"name": "PyJWT"},
+            {"name": "None"},
+        ],
+        "when": lambda answers: has_answers(
+            answers, have={"application_type": "api_only"}
+        ),
+        "validate": lambda answer: "You must choose at least one topping."
+        if len(answer) == 0
+        else True,
+    },
+    {
+        "type": "list",
+        "message": "Select the Authentication Framework",
+        "name": "auth_framework",
+        "choices": [
+            {"name": "Flask-Login + PyJWT (for api auth)"},
+            {"name": "Flask-Security-Too (aka Flask-Security)"},
+            {"name": "Flask-HTTPAuth"},
+            {"name": "None"},
+        ],
+        "when": lambda answers: has_answers(
+            answers, have={"application_type": "web_and_api"}
+        ),
         "validate": lambda answer: "You must choose at least one topping."
         if len(answer) == 0
         else True,
@@ -44,22 +86,11 @@ questions = [
         "name": "api_framework",
         "choices": [
             {"name": "Flask-RESTful"},
-            {"name": "Flask-Restx (Flask-Restplus)",},
             {"name": "Flask-Restless"},
-        ],
-        "when": lambda answers: "api" in answers.get("application_type"),
-        "validate": lambda answer: "You must choose at least one topping."
-        if len(answer) == 0
-        else True,
-    },
-    {
-        "type": "list",
-        "message": "Select Authentication Method",
-        "name": "api_auth",
-        "choices": [
-            {"name": "Flask-Praetorian (recommended)"},
-            {"name": "PyJWT",},
-            {"name": "None"},
+            {
+                "name": "Flask-Restx (aka Flask-Restplus)",
+                "disabled": "Not yet supported",
+            },
         ],
         "when": lambda answers: "api" in answers.get("application_type"),
         "validate": lambda answer: "You must choose at least one topping."
@@ -68,34 +99,122 @@ questions = [
     },
     {
         "type": "checkbox",
-        "message": "Select the features you need for your project",
-        "name": "api_only_features_no_db",
+        "message": "Select the frontend features.",
+        "name": "frontend_features",
         "choices": [
-            {"name": "Caching"},
-            {"name": "Pyctuator (integration with Spring Boot Admin"},
-            {"name": "Rate Limiting"},
+            {"name": "Flask-CORS"},
+            {"name": "Flask-HTMLmin"},
+            {"name": "Flask-Assets"},
+            {"name": "Flask-Talisman"},
         ],
-        "when": lambda answers: is_selected(answers, "database_type", "no_database"),
-        "validate": lambda answer: "You must choose at least one topping."
-        if len(answer) == 0
-        else True,
+        "when": lambda answers: "web" in answers.get("application_type"),
     },
     {
         "type": "checkbox",
-        "message": "Select the features you need for your project",
-        "name": "api_only_features",
+        "message": "Select some more features for your project",
+        "name": "features",
         "choices": [
-            {"name": "Migrations"},
-            {"name": "Admin Interface"},
-            {"name": "Caching"},
+            {"name": "Migrations (Flask-Migrate)"},
+            {"name": "Admin Interface (Flask-Admin)"},
+            {"name": "Cache (Flask-Caching)"},
             {"name": "Pyctuator (integration with Spring Boot Admin"},
-            {"name": "Rate Limiting"},
+            {"name": "Rate Limiting (Flask-Limiter)"},
+            {"name": "Flask-DebugToolbar"},
+            {"name": "Flask-MonitoringDashboard"},
         ],
-        "when": lambda answers: not is_selected(
-            answers, "database_type", "no_database"
+        "when": lambda answers: has_answers(
+            answers,
+            have={"application_type": "web_only"},
+            not_have={"database": "no_database"},
         ),
-        "validate": lambda answer: "You must choose at least one topping."
-        if len(answer) == 0
-        else True,
+    },
+    {
+        "type": "checkbox",
+        "message": "Select some more features for your project",
+        "name": "features",
+        "choices": [
+            {"name": "Cache (Flask-Caching)"},
+            {"name": "Pyctuator (integration with Spring Boot Admin"},
+            {"name": "Rate Limiting (Flask-Limiter)"},
+            {"name": "Flask-DebugToolbar"},
+            {"name": "Flask-MonitoringDashboard"},
+        ],
+        "when": lambda answers: has_answers(
+            answers,
+            have={"application_type": "web_only", "database": "no_database"},
+        ),
+    },
+    {
+        "type": "checkbox",
+        "message": "Select some more features for your project",
+        "name": "features",
+        "choices": [
+            {"name": "Migrations (Flask-Migrate)"},
+            {"name": "Admin Interface (Flask-Admin)"},
+            {"name": "Cache (Flask-Caching)"},
+            {"name": "Pyctuator (integration with Spring Boot Admin"},
+            {"name": "Rate Limiting"},
+            {"name": "Flasgger", "disabled": "Not yet supported"},
+        ],
+        "when": lambda answers: has_answers(
+            answers,
+            have={"application_type": "api_only"},
+            not_have={"database": "no_database"},
+        ),
+    },
+    {
+        "type": "checkbox",
+        "message": "Select some more features for your project",
+        "name": "features",
+        "choices": [
+            {"name": "Cache (Flask-Caching)"},
+            {"name": "Pyctuator (integration with Spring Boot Admin"},
+            {"name": "Rate Limiting (Flask-Limiter)"},
+            {"name": "Flasgger", "disabled": "Not yet supported"},
+        ],
+        "when": lambda answers: has_answers(
+            answers,
+            have={"application_type": "api_only", "database": "no_database"},
+        ),
+    },
+    {
+        "type": "checkbox",
+        "message": "Select some more features for your project",
+        "name": "features",
+        "choices": [
+            {"name": "Migrations (Flask-Migrate)"},
+            {"name": "Admin Interface (Flask-Admin)"},
+            {"name": "Cache (Flask-Caching)"},
+            {"name": "Pyctuator (integration with Spring Boot Admin"},
+            {"name": "Rate Limiting (Flask-Limiter)"},
+            {"name": "Flask-DebugToolbar"},
+            {"name": "Flask-MonitoringDashboard"},
+            {"name": "Flasgger", "disabled": "Not yet supported"},
+        ],
+        "when": lambda answers: has_answers(
+            answers,
+            have={"application_type": "web_and_api"},
+            not_have={"database": "no_database"},
+        ),
+    },
+    {
+        "type": "checkbox",
+        "message": "Select some more features for your project",
+        "name": "features",
+        "choices": [
+            {"name": "Cache (Flask-Caching)"},
+            {"name": "Pyctuator (integration with Spring Boot Admin"},
+            {"name": "Rate Limiting (Flask-Limiter)"},
+            {"name": "Flask-DebugToolbar"},
+            {"name": "Flask-MonitoringDashboard"},
+            {"name": "Flasgger", "disabled": "Not yet supported"},
+        ],
+        "when": lambda answers: has_answers(
+            answers,
+            have={
+                "application_type": "web_and_api",
+                "database": "no_database",
+            },
+        ),
     },
 ]

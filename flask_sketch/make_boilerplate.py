@@ -1,7 +1,7 @@
 import os
 
 
-def make(answers):
+def make(project_name, answers):
     # project_app_folder = project_name + "/" + project_name
     # os.makedirs(project_name + "/" + "tests")
     # os.makedirs(project_app_folder)
