@@ -20,10 +20,10 @@ questions = [
         "message": "Select your database",
         "name": "database",
         "choices": [
-            {"name": "Postgres"},
-            {"name": "MySQL"},
-            {"name": "SQLite"},
-            {"name": "MongoDB"},
+            {"name": "Postgres", "value": "postgres"},
+            {"name": "MySQL", "value": "mysql"},
+            {"name": "SQLite", "value": "sqlite"},
+            {"name": "MongoDB", "value": "mongodb"},
             {"name": "None (no database)", "value": "no_database"},
         ],
         "validate": lambda answer: "You must choose at least one topping."
@@ -35,10 +35,13 @@ questions = [
         "message": "Select the Authentication Framework",
         "name": "auth_framework",
         "choices": [
-            {"name": "Flask-Login"},
-            {"name": "Flask-Security-Too (aka Flask-Security)"},
-            {"name": "Flask-HTTPAuth"},
-            {"name": "None"},
+            {"name": "Flask-Login", "value": "flask_login"},
+            {
+                "name": "Flask-Security-Too (aka Flask-Security)",
+                "value": "flask_security_too",
+            },
+            {"name": "Flask-HTTPAuth", "value": "flask_httpauth"},
+            {"name": "None", "value": "no_security"},
         ],
         "when": lambda answers: has_answers(
             answers, have={"application_type": "web_only"}
@@ -52,9 +55,12 @@ questions = [
         "message": "Select the Authentication Framework",
         "name": "auth_framework",
         "choices": [
-            {"name": "Flask-Praetorian (recommended)"},
-            {"name": "PyJWT"},
-            {"name": "None"},
+            {
+                "name": "Flask-Praetorian (recommended)",
+                "value": "flask_praetorian",
+            },
+            {"name": "PyJWT", "value": "pyjwt"},
+            {"name": "None", "value": "no_security"},
         ],
         "when": lambda answers: has_answers(
             answers, have={"application_type": "api_only"}
@@ -68,9 +74,15 @@ questions = [
         "message": "Select the Authentication Framework",
         "name": "auth_framework",
         "choices": [
-            {"name": "Flask-Login + PyJWT (for api auth)"},
-            {"name": "Flask-Security-Too (aka Flask-Security)"},
-            {"name": "Flask-HTTPAuth"},
+            {
+                "name": "Flask-Login + PyJWT (for api auth)",
+                "value": "flask_login_pyjwt",
+            },
+            {
+                "name": "Flask-Security-Too (aka Flask-Security)",
+                "value": "flask_security_too",
+            },
+            {"name": "Flask-HTTPAuth", "value": "flask_httpauth"},
             {"name": "None"},
         ],
         "when": lambda answers: has_answers(
@@ -85,8 +97,8 @@ questions = [
         "message": "Select your API Framework",
         "name": "api_framework",
         "choices": [
-            {"name": "Flask-RESTful"},
-            {"name": "Flask-Restless"},
+            {"name": "Flask-RESTful", "value": "flask_restful"},
+            {"name": "Flask-Restless", "value": "flask_restless"},
             {
                 "name": "Flask-Restx (aka Flask-Restplus)",
                 "disabled": "Not yet supported",
