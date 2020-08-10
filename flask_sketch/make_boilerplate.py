@@ -1,6 +1,12 @@
 import os
 import pathlib
-from templates.ext import database_sqlalchemy_tpl
+from flask_sketch.handlers import (
+    app_type_handler,
+    database_handler,
+    auth_handler,
+    api_framework_handler,
+)
+from flask_sketch.helpers import Answers
 
 
 def write_tpl(path, content):
@@ -21,31 +27,15 @@ def make_commom_folders(paf, pf):
     os.makedirs(pjoin(paf, "commands"))
 
 
-def make_api_only_folders():
-    ...
-
-
-def make_web_only_folders():
-    ...
-
-
-def make_web_api_folders():
-    ...
-
-
-def make_database(paf, answer):
-    if not answer == "no_database":
-        if not answer == "mongodb":
-            write_tpl(
-                pjoin(paf, "ext", "database.py"),
-                database_sqlalchemy_tpl.get_tpl(),
-            )
-
-
-def make(project_name, answers):
+def make(project_name, asws):
     paf = pjoin(str(pathlib.Path().absolute()), project_name, project_name)
     pf = pjoin(str(pathlib.Path().absolute()), project_name)
 
-    make_commom_folders(paf, pf)
-    make_database(paf, answers["database"])
+    # make_commom_folders(paf, pf)
+    answers = Answers(asws)
+    print(app_type_handler(answers))
+    print(database_handler(answers))
+    print(auth_handler(answers))
+    if "api" in answers.application_type:
+        print(api_framework_handler(answers))
 

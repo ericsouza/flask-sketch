@@ -44,7 +44,7 @@ questions = [
                 "value": "mongodb",
                 "disabled": "Not yet supported",
             },
-            {"name": "None (no database)", "value": "no_database"},
+            {"name": "None (no database)", "value": "none"},
         ],
         "validate": lambda answer: "You must choose at least one topping."
         if len(answer) == 0
@@ -55,13 +55,13 @@ questions = [
         "message": "Select the Authentication Framework",
         "name": "auth_framework",
         "choices": [
-            {"name": "Flask-Login", "value": "flask_login"},
+            {"name": "Flask-Login", "value": "login_web"},
             {
                 "name": "Flask-Security-Too (aka Flask-Security)",
-                "value": "flask_security_too",
+                "value": "security_web",
             },
-            {"name": "Flask-HTTPAuth", "value": "flask_httpauth"},
-            {"name": "None", "value": "no_security"},
+            {"name": "Flask-BasicAuth", "value": "basicauth_web"},
+            {"name": "None", "value": "none"},
         ],
         "when": lambda answers: has_answers(
             answers, have={"application_type": "web_only"}
@@ -75,16 +75,14 @@ questions = [
         "message": "Select the Authentication Framework",
         "name": "auth_framework",
         "choices": [
-            {
-                "name": "Flask-Praetorian (recommended)",
-                "value": "flask_praetorian",
-            },
+            {"name": "Flask-Praetorian (recommended)", "value": "praetorian"},
             {
                 "name": "PyJWT",
                 "value": "pyjwt",
                 "disabled": "Not yet supported",
             },
-            {"name": "None", "value": "no_security"},
+            {"name": "Flask-BasicAuth", "value": "basicauth_api"},
+            {"name": "None", "value": "none"},
         ],
         "when": lambda answers: has_answers(
             answers, have={"application_type": "api_only"}
@@ -99,15 +97,15 @@ questions = [
         "name": "auth_framework",
         "choices": [
             {
-                "name": "Flask-Login + PyJWT (for api auth)",
-                "value": "flask_login_pyjwt",
+                "name": "Flask-Security-Too (aka Flask-Security)",
+                "value": "security_web_api",
             },
             {
-                "name": "Flask-Security-Too (aka Flask-Security)",
-                "value": "flask_security_too",
+                "name": "Flask-Login + PyJWT (for api auth)",
+                "value": "login_pyjwt",
             },
-            {"name": "Flask-HTTPAuth", "value": "flask_httpauth"},
-            {"name": "None"},
+            {"name": "Flask-BasicAuth", "value": "basicauth_web_api"},
+            {"name": "None", "value": "none"},
         ],
         "when": lambda answers: has_answers(
             answers, have={"application_type": "web_and_api"}
@@ -121,20 +119,18 @@ questions = [
         "message": "Select your API Framework",
         "name": "api_framework",
         "choices": [
-            {
-                "name": "Flask-Restx (aka Flask-Restplus)",
-                "value": "flask_restx",
-            },
+            {"name": "Flask-Restx (aka Flask-Restplus)", "value": "restx",},
             {
                 "name": "Flask-RESTful",
-                "value": "flask_restful",
+                "value": "restful",
                 "disabled": "Not yet supported",
             },
             {
                 "name": "Flask-Restless",
-                "value": "flask_restless",
+                "value": "restless",
                 "disabled": "Not yet supported",
             },
+            {"name": "None", "value": "none"},
         ],
         "when": lambda answers: "api" in answers.get("application_type"),
         "validate": lambda answer: "You must choose at least one topping."
@@ -164,15 +160,11 @@ questions = [
             {"name": "Pyctuator (integration with Spring Boot Admin"},
             {"name": "Rate Limiting (Flask-Limiter)"},
             {"name": "Flask-DebugToolbar"},
-            {
-                "name": "Flask-MonitoringDashboard",
-                "disabled": "Not yet supported",
-            },
         ],
         "when": lambda answers: has_answers(
             answers,
             have={"application_type": "web_only"},
-            not_have={"database": "no_database"},
+            not_have={"database": "none"},
         ),
     },
     {
@@ -184,14 +176,9 @@ questions = [
             {"name": "Pyctuator (integration with Spring Boot Admin"},
             {"name": "Rate Limiting (Flask-Limiter)"},
             {"name": "Flask-DebugToolbar"},
-            {
-                "name": "Flask-MonitoringDashboard",
-                "disabled": "Not yet supported",
-            },
         ],
         "when": lambda answers: has_answers(
-            answers,
-            have={"application_type": "web_only", "database": "no_database"},
+            answers, have={"application_type": "web_only", "database": "none"},
         ),
     },
     {
@@ -208,7 +195,7 @@ questions = [
         "when": lambda answers: has_answers(
             answers,
             have={"application_type": "api_only"},
-            not_have={"database": "no_database"},
+            not_have={"database": "none"},
         ),
     },
     {
@@ -221,8 +208,7 @@ questions = [
             {"name": "Rate Limiting (Flask-Limiter)"},
         ],
         "when": lambda answers: has_answers(
-            answers,
-            have={"application_type": "api_only", "database": "no_database"},
+            answers, have={"application_type": "api_only", "database": "none"},
         ),
     },
     {
@@ -236,16 +222,12 @@ questions = [
             {"name": "Pyctuator (integration with Spring Boot Admin"},
             {"name": "Rate Limiting (Flask-Limiter)"},
             {"name": "Flask-DebugToolbar"},
-            {
-                "name": "Flask-MonitoringDashboard",
-                "disabled": "Not yet supported",
-            },
             {"name": "Flasgger", "disabled": "Not yet supported"},
         ],
         "when": lambda answers: has_answers(
             answers,
             have={"application_type": "web_and_api"},
-            not_have={"database": "no_database"},
+            not_have={"database": "none"},
         ),
     },
     {
@@ -257,18 +239,11 @@ questions = [
             {"name": "Pyctuator (integration with Spring Boot Admin"},
             {"name": "Rate Limiting (Flask-Limiter)"},
             {"name": "Flask-DebugToolbar"},
-            {
-                "name": "Flask-MonitoringDashboard",
-                "disabled": "Not yet supported",
-            },
             {"name": "Flasgger", "disabled": "Not yet supported"},
         ],
         "when": lambda answers: has_answers(
             answers,
-            have={
-                "application_type": "web_and_api",
-                "database": "no_database",
-            },
+            have={"application_type": "web_and_api", "database": "none"},
         ),
     },
 ]
