@@ -23,6 +23,4 @@ class AppTypeHandler(GenericHandler):
     ...
 
 
-app_type_handler = AppTypeHandler(
-    web_only_handler, api_only_handler, web_api_handler,
-)
+app_type_handler = AppTypeHandler(web_only_handler, api_only_handler, web_api_handler,)

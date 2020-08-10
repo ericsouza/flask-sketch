@@ -23,6 +23,4 @@ class ConfigHandler(GenericHandler):
     ...
 
 
-config_handler = ConfigHandler(
-    dynaconf_handler, environs_handler, none_handler,
-)
+config_handler = ConfigHandler(dynaconf_handler, environs_handler, none_handler,)

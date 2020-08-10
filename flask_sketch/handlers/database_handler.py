@@ -34,9 +34,5 @@ class DatabaseHandler(GenericHandler):
 
 
 database_handler = DatabaseHandler(
-    sqlite_handler,
-    mysql_handler,
-    postgres_handler,
-    mongodb_handler,
-    none_handler,
+    sqlite_handler, mysql_handler, postgres_handler, mongodb_handler, none_handler,
 )

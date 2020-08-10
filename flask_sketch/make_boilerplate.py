@@ -40,4 +40,3 @@ def make(project_name, asws):
     if "api" in answers.application_type:
         print(api_framework_handler(answers))
     print(config_handler(answers))
-
