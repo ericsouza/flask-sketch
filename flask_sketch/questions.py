@@ -1,4 +1,4 @@
-from .helpers import has_answers
+from helpers import has_answers
 
 
 questions = [
@@ -7,9 +7,17 @@ questions = [
         "message": "Select the type of your project",
         "name": "application_type",
         "choices": [
-            {"name": "Web Only (no API)", "value": "web_only"},
             {"name": "API Only (no frontend)", "value": "api_only"},
-            {"name": "Web and API", "value": "web_and_api"},
+            {
+                "name": "Web Only (no API)",
+                "value": "web_only",
+                "disabled": "Not yet supported",
+            },
+            {
+                "name": "Web and API",
+                "value": "web_and_api",
+                "disabled": "Not yet supported",
+            },
         ],
         "validate": lambda answer: "You must choose at least one topping."
         if len(answer) == 0
@@ -20,10 +28,22 @@ questions = [
         "message": "Select your database",
         "name": "database",
         "choices": [
-            {"name": "Postgres", "value": "postgres"},
-            {"name": "MySQL", "value": "mysql"},
             {"name": "SQLite", "value": "sqlite"},
-            {"name": "MongoDB", "value": "mongodb"},
+            {
+                "name": "Postgres",
+                "value": "postgres",
+                "disabled": "Not yet supported",
+            },
+            {
+                "name": "MySQL",
+                "value": "mysql",
+                "disabled": "Not yet supported",
+            },
+            {
+                "name": "MongoDB",
+                "value": "mongodb",
+                "disabled": "Not yet supported",
+            },
             {"name": "None (no database)", "value": "no_database"},
         ],
         "validate": lambda answer: "You must choose at least one topping."
@@ -59,7 +79,11 @@ questions = [
                 "name": "Flask-Praetorian (recommended)",
                 "value": "flask_praetorian",
             },
-            {"name": "PyJWT", "value": "pyjwt"},
+            {
+                "name": "PyJWT",
+                "value": "pyjwt",
+                "disabled": "Not yet supported",
+            },
             {"name": "None", "value": "no_security"},
         ],
         "when": lambda answers: has_answers(
@@ -97,10 +121,18 @@ questions = [
         "message": "Select your API Framework",
         "name": "api_framework",
         "choices": [
-            {"name": "Flask-RESTful", "value": "flask_restful"},
-            {"name": "Flask-Restless", "value": "flask_restless"},
             {
                 "name": "Flask-Restx (aka Flask-Restplus)",
+                "value": "flask_restx",
+            },
+            {
+                "name": "Flask-RESTful",
+                "value": "flask_restful",
+                "disabled": "Not yet supported",
+            },
+            {
+                "name": "Flask-Restless",
+                "value": "flask_restless",
                 "disabled": "Not yet supported",
             },
         ],
@@ -114,10 +146,10 @@ questions = [
         "message": "Select the frontend features.",
         "name": "frontend_features",
         "choices": [
-            {"name": "Flask-CORS"},
-            {"name": "Flask-HTMLmin"},
-            {"name": "Flask-Assets"},
-            {"name": "Flask-Talisman"},
+            {"name": "Flask-CORS", "disabled": "Not yet supported"},
+            {"name": "Flask-HTMLmin", "disabled": "Not yet supported"},
+            {"name": "Flask-Assets", "disabled": "Not yet supported"},
+            {"name": "Flask-Talisman", "disabled": "Not yet supported"},
         ],
         "when": lambda answers: "web" in answers.get("application_type"),
     },
@@ -132,7 +164,10 @@ questions = [
             {"name": "Pyctuator (integration with Spring Boot Admin"},
             {"name": "Rate Limiting (Flask-Limiter)"},
             {"name": "Flask-DebugToolbar"},
-            {"name": "Flask-MonitoringDashboard"},
+            {
+                "name": "Flask-MonitoringDashboard",
+                "disabled": "Not yet supported",
+            },
         ],
         "when": lambda answers: has_answers(
             answers,
@@ -149,7 +184,10 @@ questions = [
             {"name": "Pyctuator (integration with Spring Boot Admin"},
             {"name": "Rate Limiting (Flask-Limiter)"},
             {"name": "Flask-DebugToolbar"},
-            {"name": "Flask-MonitoringDashboard"},
+            {
+                "name": "Flask-MonitoringDashboard",
+                "disabled": "Not yet supported",
+            },
         ],
         "when": lambda answers: has_answers(
             answers,
@@ -166,7 +204,6 @@ questions = [
             {"name": "Cache (Flask-Caching)"},
             {"name": "Pyctuator (integration with Spring Boot Admin"},
             {"name": "Rate Limiting (Flask-Limiter)"},
-            {"name": "Flasgger", "disabled": "Not yet supported"},
         ],
         "when": lambda answers: has_answers(
             answers,
@@ -180,9 +217,8 @@ questions = [
         "name": "features",
         "choices": [
             {"name": "Cache (Flask-Caching)"},
-            {"name": "Pyctuator (integration with Spring Boot Admin"},
+            {"name": "Pyctuator (for integration with Spring Boot Admin"},
             {"name": "Rate Limiting (Flask-Limiter)"},
-            {"name": "Flasgger", "disabled": "Not yet supported"},
         ],
         "when": lambda answers: has_answers(
             answers,
@@ -200,7 +236,10 @@ questions = [
             {"name": "Pyctuator (integration with Spring Boot Admin"},
             {"name": "Rate Limiting (Flask-Limiter)"},
             {"name": "Flask-DebugToolbar"},
-            {"name": "Flask-MonitoringDashboard"},
+            {
+                "name": "Flask-MonitoringDashboard",
+                "disabled": "Not yet supported",
+            },
             {"name": "Flasgger", "disabled": "Not yet supported"},
         ],
         "when": lambda answers: has_answers(
@@ -218,7 +257,10 @@ questions = [
             {"name": "Pyctuator (integration with Spring Boot Admin"},
             {"name": "Rate Limiting (Flask-Limiter)"},
             {"name": "Flask-DebugToolbar"},
-            {"name": "Flask-MonitoringDashboard"},
+            {
+                "name": "Flask-MonitoringDashboard",
+                "disabled": "Not yet supported",
+            },
             {"name": "Flasgger", "disabled": "Not yet supported"},
         ],
         "when": lambda answers: has_answers(
