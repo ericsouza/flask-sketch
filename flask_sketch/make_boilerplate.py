@@ -5,6 +5,7 @@ from flask_sketch.handlers import (
     database_handler,
     auth_handler,
     api_framework_handler,
+    config_handler,
 )
 from flask_sketch.helpers import Answers
 
@@ -38,4 +39,5 @@ def make(project_name, asws):
     print(auth_handler(answers))
     if "api" in answers.application_type:
         print(api_framework_handler(answers))
+    print(config_handler(answers))
 

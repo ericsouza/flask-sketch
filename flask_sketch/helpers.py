@@ -20,6 +20,7 @@ class Answers:
         self.database: str = answers["database"]
         self.auth_framework: str = answers["auth_framework"]
         self.api_framework: str = answers["api_framework"]
+        self.config_framework: str = answers["config_framework"]
         self.features: list = answers["features"]
 
 

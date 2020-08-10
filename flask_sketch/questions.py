@@ -116,7 +116,7 @@ questions = [
     {
         "type": "list",
         "message": "Select your Configuration Framework",
-        "name": "config_method",
+        "name": "config_framework",
         "choices": [
             {"name": "Dynaconf", "value": "dynaconf"},
             {
