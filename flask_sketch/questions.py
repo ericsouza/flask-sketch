@@ -8,16 +8,8 @@ questions = [
         "name": "application_type",
         "choices": [
             {"name": "API Only (no frontend)", "value": "api_only"},
-            {
-                "name": "Web Only (no API)",
-                "value": "web_only",
-                "disabled": "Not yet supported",
-            },
-            {
-                "name": "Web and API",
-                "value": "web_and_api",
-                "disabled": "Not yet supported",
-            },
+            {"name": "Web Only (no API)", "value": "web_only",},
+            {"name": "Web and API", "value": "web_and_api",},
         ],
         "validate": lambda answer: "You must choose at least one topping."
         if len(answer) == 0
@@ -29,21 +21,9 @@ questions = [
         "name": "database",
         "choices": [
             {"name": "SQLite", "value": "sqlite"},
-            {
-                "name": "Postgres",
-                "value": "postgres",
-                "disabled": "Not yet supported",
-            },
-            {
-                "name": "MySQL",
-                "value": "mysql",
-                "disabled": "Not yet supported",
-            },
-            {
-                "name": "MongoDB",
-                "value": "mongodb",
-                "disabled": "Not yet supported",
-            },
+            {"name": "Postgres", "value": "postgres",},
+            {"name": "MySQL", "value": "mysql",},
+            {"name": "MongoDB", "value": "mongodb",},
             {"name": "None (no database)", "value": "none"},
         ],
         "validate": lambda answer: "You must choose at least one topping."
@@ -120,11 +100,7 @@ questions = [
         "name": "api_framework",
         "choices": [
             {"name": "Flask-Restx (aka Flask-Restplus)", "value": "restx",},
-            {
-                "name": "Flask-RESTful",
-                "value": "restful",
-                "disabled": "Not yet supported",
-            },
+            {"name": "Flask-RESTful", "value": "restful",},
             {
                 "name": "Flask-Restless",
                 "value": "restless",
@@ -133,6 +109,23 @@ questions = [
             {"name": "None", "value": "none"},
         ],
         "when": lambda answers: "api" in answers.get("application_type"),
+        "validate": lambda answer: "You must choose at least one topping."
+        if len(answer) == 0
+        else True,
+    },
+    {
+        "type": "list",
+        "message": "Select your Configuration Framework",
+        "name": "config_method",
+        "choices": [
+            {"name": "Dynaconf", "value": "dynaconf"},
+            {
+                "name": "Environs",
+                "value": "environs",
+                "disabled": "Not yet supported",
+            },
+            {"name": "None (just regular env vars)", "value": "none"},
+        ],
         "validate": lambda answer: "You must choose at least one topping."
         if len(answer) == 0
         else True,
@@ -147,7 +140,8 @@ questions = [
             {"name": "Flask-Assets", "disabled": "Not yet supported"},
             {"name": "Flask-Talisman", "disabled": "Not yet supported"},
         ],
-        "when": lambda answers: "web" in answers.get("application_type"),
+        "when": lambda answers: "TODO_IN_FUTURE"
+        in answers.get("application_type"),
     },
     {
         "type": "checkbox",
@@ -222,7 +216,6 @@ questions = [
             {"name": "Pyctuator (integration with Spring Boot Admin"},
             {"name": "Rate Limiting (Flask-Limiter)"},
             {"name": "Flask-DebugToolbar"},
-            {"name": "Flasgger", "disabled": "Not yet supported"},
         ],
         "when": lambda answers: has_answers(
             answers,
@@ -239,7 +232,6 @@ questions = [
             {"name": "Pyctuator (integration with Spring Boot Admin"},
             {"name": "Rate Limiting (Flask-Limiter)"},
             {"name": "Flask-DebugToolbar"},
-            {"name": "Flasgger", "disabled": "Not yet supported"},
         ],
         "when": lambda answers: has_answers(
             answers,
