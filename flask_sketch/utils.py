@@ -1,7 +1,7 @@
 from typing import Callable
 
 
-def has_answers(answers, have: dict, not_have: dict = {}):
+def has_answers(answers, have: dict = {}, not_have: dict = {}):
 
     for da in have:
         if not answers.get(da).lower() == have.get(da).lower():
@@ -15,13 +15,13 @@ def has_answers(answers, have: dict, not_have: dict = {}):
 
 
 class Answers:
-    def __init__(self, answers):
-        self.application_type: str = answers["application_type"]
-        self.database: str = answers["database"]
-        self.auth_framework: str = answers["auth_framework"]
-        self.api_framework: str = answers["api_framework"]
-        self.config_framework: str = answers["config_framework"]
-        self.features: list = answers["features"]
+    def __init__(self, answers: dict):
+        self.application_type: str = answers.get("application_type")
+        self.database: str = answers.get("database")
+        self.auth_framework: str = answers.get("auth_framework")
+        self.api_framework: str = answers.get("api_framework")
+        self.config_framework: str = answers.get("config_framework")
+        self.features: list = answers.get("features")
 
 
 class GenericHandler:

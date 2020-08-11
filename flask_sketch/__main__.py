@@ -7,7 +7,7 @@ import sys
 from pyfiglet import Figlet
 from config import cli_style
 from questions import questions
-from make_boilerplate import make
+from make import create_project
 
 f = Figlet(font="slant")
 
@@ -17,7 +17,7 @@ def flask_sketch(project_name):
 
     if answers := prompt(questions, style=cli_style):
         pprint(answers)
-        make(project_name, answers)
+        create_project(project_name, answers)
 
 
 if __name__ == "__main__":

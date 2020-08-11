@@ -1,4 +1,4 @@
-from helpers import has_answers
+from utils import has_answers
 
 
 questions = [
@@ -56,7 +56,11 @@ questions = [
         "name": "auth_framework",
         "choices": [
             {"name": "Flask-Praetorian (recommended)", "value": "praetorian"},
-            {"name": "PyJWT", "value": "pyjwt", "disabled": "Not yet supported",},
+            {
+                "name": "PyJWT",
+                "value": "pyjwt",
+                "disabled": "Not yet supported",
+            },
             {"name": "Flask-BasicAuth", "value": "basicauth_api"},
             {"name": "None", "value": "none"},
         ],
@@ -76,7 +80,10 @@ questions = [
                 "name": "Flask-Security-Too (aka Flask-Security)",
                 "value": "security_web_api",
             },
-            {"name": "Flask-Login + PyJWT (for api auth)", "value": "login_pyjwt",},
+            {
+                "name": "Flask-Login + PyJWT (for api auth)",
+                "value": "login_pyjwt",
+            },
             {"name": "Flask-BasicAuth", "value": "basicauth_web_api"},
             {"name": "None", "value": "none"},
         ],
@@ -101,7 +108,28 @@ questions = [
             },
             {"name": "None", "value": "none"},
         ],
-        "when": lambda answers: "api" in answers.get("application_type"),
+        "when": lambda answers: has_answers(
+            answers,
+            not_have={"application_type": "web_only", "database": "mongodb"},
+        ),
+        "validate": lambda answer: "You must choose at least one topping."
+        if len(answer) == 0
+        else True,
+    },
+    {
+        "type": "list",
+        "message": "Select your API Framework",
+        "name": "api_framework",
+        "choices": [
+            {"name": "Flask-Restx (aka Flask-Restplus)", "value": "restx"},
+            {"name": "Flask-RESTful", "value": "restful",},
+            {"name": "None", "value": "none"},
+        ],
+        "when": lambda answers: has_answers(
+            answers,
+            have={"database": "mongodb"},
+            not_have={"application_type": "web_only"},
+        ),
         "validate": lambda answer: "You must choose at least one topping."
         if len(answer) == 0
         else True,
@@ -112,7 +140,11 @@ questions = [
         "name": "config_framework",
         "choices": [
             {"name": "Dynaconf", "value": "dynaconf"},
-            {"name": "Environs", "value": "environs", "disabled": "Not yet supported",},
+            {
+                "name": "Environs",
+                "value": "environs",
+                "disabled": "Not yet supported",
+            },
             {"name": "None (just regular env vars)", "value": "none"},
         ],
         "validate": lambda answer: "You must choose at least one topping."
@@ -129,7 +161,8 @@ questions = [
             {"name": "Flask-Assets", "disabled": "Not yet supported"},
             {"name": "Flask-Talisman", "disabled": "Not yet supported"},
         ],
-        "when": lambda answers: "TODO_IN_FUTURE" in answers.get("application_type"),
+        "when": lambda answers: "TODO_IN_FUTURE"
+        in answers.get("application_type"),
     },
     {
         "type": "checkbox",
@@ -222,7 +255,8 @@ questions = [
             {"name": "Flask-DebugToolbar"},
         ],
         "when": lambda answers: has_answers(
-            answers, have={"application_type": "web_and_api", "database": "none"},
+            answers,
+            have={"application_type": "web_and_api", "database": "none"},
         ),
     },
 ]
