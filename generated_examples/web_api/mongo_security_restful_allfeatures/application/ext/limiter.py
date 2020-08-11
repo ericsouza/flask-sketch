@@ -7,5 +7,5 @@ limiter = Limiter(
 
 
 def init_app(app):
-
+    print("limiter!")
     limiter.init_app(app)

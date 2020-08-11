@@ -1,0 +1,26 @@
+[default]
+JWT_ACCESS_LIFESPAN = {"hours" = 24}
+JWT_REFRESH_LIFESPAN = {"days" = 30}
+EXTENSIONS = [
+    "application.ext.caching:init_app",
+]
+
+[development]
+DEBUG = true
+SQLALCHEMY_DATABASE_URI = "sqlite:///db.sqlite3"
+SQLALCHEMY_TRACK_MODIFICATIONS = true
+BASIC_AUTH_USERNAME = "admin"
+BASIC_AUTH_PASSWORD = "admin"
+CACHE_TYPE = "simple"  # rember to use something like redis or memcached
+EXTENSIONS = [
+    "dynaconf_merge",
+    "application.ext.limiter:init_app",
+]
+
+[production]
+DEBUG = false
+SQLALCHEMY_DATABASE_URI = "mysql/..."
+SQLALCHEMY_TRACK_MODIFICATIONS = false
+BASIC_AUTH_USERNAME = "admin"
+BASIC_AUTH_PASSWORD = "admin" # random generated password
+CACHE_TYPE = "simple"  # rember to use something like redis or memcached

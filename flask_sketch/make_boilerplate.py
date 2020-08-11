@@ -7,7 +7,7 @@ from flask_sketch.handlers import (
     api_framework_handler,
     config_handler,
 )
-from flask_sketch.helpers import Answers
+from flask_sketch.utils import Answers
 
 
 def write_tpl(path, content):

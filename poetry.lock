@@ -94,6 +94,23 @@ dev = ["tox", "bumpversion (<1)", "sphinx (<2)", "PyTest (<5)", "PyTest-Cov (<2.
 
 [[package]]
 category = "dev"
+description = "The dynamic configurator for your Python Project"
+name = "dynaconf"
+optional = false
+python-versions = "*"
+version = "3.0.0"
+
+[package.extras]
+all = ["redis", "ruamel.yaml", "configobj", "hvac"]
+configobj = ["configobj"]
+ini = ["configobj"]
+redis = ["redis"]
+toml = ["toml"]
+vault = ["hvac"]
+yaml = ["ruamel.yaml"]
+
+[[package]]
+category = "dev"
 description = "the modular source code checker: pep8 pyflakes and co"
 name = "flake8"
 optional = false
@@ -542,17 +559,6 @@ six = ">=1.5"
 
 [[package]]
 category = "dev"
-description = "Add .env support to your django/flask apps in development and deployments"
-name = "python-dotenv"
-optional = false
-python-versions = "*"
-version = "0.14.0"
-
-[package.extras]
-cli = ["click (>=5.0)"]
-
-[[package]]
-category = "dev"
 description = "Programmatically open an editor, capture the result."
 name = "python-editor"
 optional = false
@@ -685,7 +691,7 @@ docs = ["sphinx", "jaraco.packaging (>=3.2)", "rst.linker (>=1.9)"]
 testing = ["jaraco.itertools", "func-timeout"]
 
 [metadata]
-content-hash = "97cab530f3b4a597e7b9ee722536e71aec97173ac6384d670a4c5c8640827dcb"
+content-hash = "174de45155ad52efd8ce6dc7c48aba20ec83b717fbcf5b9f2268b328c1b43a9b"
 python-versions = ">=3.7,<4.0"
 
 [metadata.files]
@@ -718,6 +724,10 @@ click = [
 deprecated = [
     {file = "Deprecated-1.2.10-py2.py3-none-any.whl", hash = "sha256:a766c1dccb30c5f6eb2b203f87edd1d8588847709c78589e1521d769addc8218"},
     {file = "Deprecated-1.2.10.tar.gz", hash = "sha256:525ba66fb5f90b07169fdd48b6373c18f1ee12728ca277ca44567a367d9d7f74"},
+]
+dynaconf = [
+    {file = "dynaconf-3.0.0-py2.py3-none-any.whl", hash = "sha256:000b64b9f58d33591fe2716b28b5177bffd5db6f11b9c52fbab580d7f655c343"},
+    {file = "dynaconf-3.0.0.tar.gz", hash = "sha256:b5fb3d1b07a78e6166228bb07b4dea2d101de55e1679d119403a2593e337e273"},
 ]
 flake8 = [
     {file = "flake8-3.8.3-py2.py3-none-any.whl", hash = "sha256:15e351d19611c887e482fb960eae4d44845013cc142d42896e9862f775d8cf5c"},
@@ -917,10 +927,6 @@ pyrsistent = [
 python-dateutil = [
     {file = "python-dateutil-2.8.1.tar.gz", hash = "sha256:73ebfe9dbf22e832286dafa60473e4cd239f8592f699aa5adaf10050e6e1823c"},
     {file = "python_dateutil-2.8.1-py2.py3-none-any.whl", hash = "sha256:75bb3f31ea686f1197762692a9ee6a7550b59fc6ca3a1f4b5d7e32fb98e2da2a"},
-]
-python-dotenv = [
-    {file = "python-dotenv-0.14.0.tar.gz", hash = "sha256:8c10c99a1b25d9a68058a1ad6f90381a62ba68230ca93966882a4dbc3bc9c33d"},
-    {file = "python_dotenv-0.14.0-py2.py3-none-any.whl", hash = "sha256:c10863aee750ad720f4f43436565e4c1698798d763b63234fb5021b6c616e423"},
 ]
 python-editor = [
     {file = "python-editor-1.0.4.tar.gz", hash = "sha256:51fda6bcc5ddbbb7063b2af7509e43bd84bfc32a4ff71349ec7847713882327b"},

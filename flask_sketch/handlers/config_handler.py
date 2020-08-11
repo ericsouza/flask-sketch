@@ -1,7 +1,7 @@
 import importlib.resources as pkg_resources  # noqa
 from flask_sketch.templates import ext  # noqa
-from flask_sketch.helpers import Answers
-from flask_sketch.helpers import GenericHandler
+from flask_sketch.utils import Answers
+from flask_sketch.utils import GenericHandler
 
 
 def dynaconf_handler(answers: Answers):
@@ -23,4 +23,6 @@ class ConfigHandler(GenericHandler):
     ...
 
 
-config_handler = ConfigHandler(dynaconf_handler, environs_handler, none_handler,)
+config_handler = ConfigHandler(
+    dynaconf_handler, environs_handler, none_handler,
+)
