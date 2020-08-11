@@ -13,6 +13,7 @@ pyinquirer = "^1.0.3"
 [tool.poetry.dev-dependencies]
 black = "^19.10b0"
 flake8 = "^3.8.3"
+isort = "^5.3.2"
 
 [tool.poetry.scripts]
 flask-sketch = "flask_sketch.__main__:flask_sketch"

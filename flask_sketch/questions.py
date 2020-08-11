@@ -1,6 +1,5 @@
 from utils import has_answers
 
-
 questions = [
     {
         "type": "list",
@@ -9,7 +8,11 @@ questions = [
         "choices": [
             {"name": "API Only (no frontend)", "value": "api_only"},
             {"name": "Web Only (no API)", "value": "web_only",},
-            {"name": "Web and API", "value": "web_and_api",},
+            {
+                "name": "Web and API",
+                "value": "web_and_api",
+                "disabled": "Soon will be supported.",
+            },
         ],
         "validate": lambda answer: "You must choose at least one topping."
         if len(answer) == 0
@@ -100,10 +103,10 @@ questions = [
         "name": "api_framework",
         "choices": [
             {"name": "Flask-Restx (aka Flask-Restplus)", "value": "restx",},
-            {"name": "Flask-RESTful", "value": "restful",},
+            {"name": "Flask-Restless", "value": "restless"},
             {
-                "name": "Flask-Restless",
-                "value": "restless",
+                "name": "Flask-RESTful",
+                "value": "restful",
                 "disabled": "Not yet supported",
             },
             {"name": "None", "value": "none"},
@@ -122,7 +125,11 @@ questions = [
         "name": "api_framework",
         "choices": [
             {"name": "Flask-Restx (aka Flask-Restplus)", "value": "restx"},
-            {"name": "Flask-RESTful", "value": "restful",},
+            {
+                "name": "Flask-RESTful",
+                "value": "restful",
+                "disabled": "Not yet supported",
+            },
             {"name": "None", "value": "none"},
         ],
         "when": lambda answers: has_answers(
@@ -156,7 +163,6 @@ questions = [
         "message": "Select the frontend features.",
         "name": "frontend_features",
         "choices": [
-            {"name": "Flask-CORS", "disabled": "Not yet supported"},
             {"name": "Flask-HTMLmin", "disabled": "Not yet supported"},
             {"name": "Flask-Assets", "disabled": "Not yet supported"},
             {"name": "Flask-Talisman", "disabled": "Not yet supported"},
@@ -201,6 +207,7 @@ questions = [
         "message": "Select some more features for your project",
         "name": "features",
         "choices": [
+            {"name": "Flask-CORS"},
             {"name": "Migrations (Flask-Migrate)"},
             {"name": "Admin Interface (Flask-Admin)"},
             {"name": "Cache (Flask-Caching)"},
@@ -218,6 +225,7 @@ questions = [
         "message": "Select some more features for your project",
         "name": "features",
         "choices": [
+            {"name": "Flask-CORS"},
             {"name": "Cache (Flask-Caching)"},
             {"name": "Pyctuator (for integration with Spring Boot Admin"},
             {"name": "Rate Limiting (Flask-Limiter)"},
@@ -231,6 +239,7 @@ questions = [
         "message": "Select some more features for your project",
         "name": "features",
         "choices": [
+            {"name": "Flask-CORS"},
             {"name": "Migrations (Flask-Migrate)"},
             {"name": "Admin Interface (Flask-Admin)"},
             {"name": "Cache (Flask-Caching)"},
@@ -249,6 +258,7 @@ questions = [
         "message": "Select some more features for your project",
         "name": "features",
         "choices": [
+            {"name": "Flask-CORS"},
             {"name": "Cache (Flask-Caching)"},
             {"name": "Pyctuator (integration with Spring Boot Admin"},
             {"name": "Rate Limiting (Flask-Limiter)"},

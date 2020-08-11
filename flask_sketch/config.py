@@ -1,4 +1,4 @@
-from PyInquirer import style_from_dict, Token
+from PyInquirer import Token, style_from_dict
 
 cli_style = style_from_dict(
     {

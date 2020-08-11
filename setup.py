@@ -33,5 +33,9 @@ setup(
     package_data={},
     install_requires=['pyfiglet==0.*,>=0.8.0', 'pyinquirer==1.*,>=1.0.3'],
     extras_require={
-        "dev": ["black==19.*,>=19.10.0.b0", "flake8==3.*,>=3.8.3"]},
+        "dev": [
+            "black==19.*,>=19.10.0.b0", "flake8==3.*,>=3.8.3",
+            "isort==5.*,>=5.3.2"
+        ]
+    },
 )

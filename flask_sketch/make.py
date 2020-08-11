@@ -1,11 +1,12 @@
 import os
 import pathlib
+
 from flask_sketch.handlers import (
-    app_type_handler,
-    database_handler,
-    auth_handler,
     api_framework_handler,
+    app_type_handler,
+    auth_handler,
     config_handler,
+    database_handler,
 )
 from flask_sketch.utils import Answers
 

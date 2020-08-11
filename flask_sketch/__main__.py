@@ -1,13 +1,14 @@
 #!/usr/bin/python3
 
 # from __future__ import print_function, unicode_literals
-from PyInquirer import prompt
-from pprint import pprint
 import sys
-from pyfiglet import Figlet
+from pprint import pprint
+
 from config import cli_style
-from questions import questions
 from make import create_project
+from pyfiglet import Figlet
+from PyInquirer import prompt
+from questions import questions
 
 f = Figlet(font="slant")
 
