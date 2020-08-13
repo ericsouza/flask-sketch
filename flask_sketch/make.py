@@ -29,7 +29,7 @@ def make_commom_folders(paf, pf):
     os.makedirs(pjoin(paf, "commands"))
 
 
-def create_project(project_name, asws):
+def create_project(project_name: str, asws: dict):
     paf = pjoin(str(pathlib.Path().absolute()), project_name, project_name)
     pf = pjoin(str(pathlib.Path().absolute()), project_name)
 

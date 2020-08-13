@@ -1,14 +1,14 @@
 from typing import Callable
 
 
-def has_answers(answers, have: dict = {}, not_have: dict = {}):
+def has_answers(answers: dict, have: dict = {}, not_have: dict = {}):
 
     for da in have:
-        if not answers.get(da).lower() == have.get(da).lower():
+        if not answers.get(da).lower() in have.get(da).lower().split(";"):
             return False
 
     for nda in not_have:
-        if answers.get(nda).lower() == not_have.get(nda).lower():
+        if answers.get(nda).lower() in not_have.get(nda).lower().split(";"):
             return False
 
     return True
