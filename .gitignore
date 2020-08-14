@@ -134,3 +134,5 @@ dmypy.json
 *.txt
 
 /__flask_helpers_projects
+
+/myproject

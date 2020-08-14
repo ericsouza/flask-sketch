@@ -1,10 +1,11 @@
 import os
 import importlib.resources as pkg_resources
 from typing import Callable
+from argparse import Namespace
 
 
 class Answers:
-    def __init__(self, pf, apf, answers: dict):
+    def __init__(self, pf: str, apf: str, answers: dict, args: Namespace):
         self.project_folder = pf
         self.application_project_folder = apf
         self.application_type: str = answers.get("application_type")
@@ -13,6 +14,7 @@ class Answers:
         self.api_framework: str = answers.get("api_framework")
         self.config_framework: str = answers.get("config_framework")
         self.features: list = answers.get("features")
+        self.args = args
 
 
 class GenericHandler:
@@ -21,7 +23,8 @@ class GenericHandler:
 
     def __call__(self, answers: Answers):
         for handler in self.handlers:
-            if r := handler(answers):
+            r = handler(answers)
+            if r:
                 return r
 
 
@@ -56,6 +59,8 @@ def make_commom_folders(paf, pf):
     os.makedirs(pjoin(paf, "config"))
     os.makedirs(pjoin(paf, "commands"))
 
+    open(pjoin(paf, "__init__.py"), 'a').close()
+    open(pjoin(paf, "app.py"), 'a').close()
     open(pjoin(paf, "ext", "__init__.py"), 'a').close()
     open(pjoin(paf, "models", "__init__.py"), 'a').close()
     open(pjoin(paf, "config", "__init__.py"), 'a').close()

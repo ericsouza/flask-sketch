@@ -1,4 +1,5 @@
 from flask_sketch.make import create_project
+from argparse import Namespace
 
 
 def test_web_only_mysql_security_dynaconf_allfeatures():
@@ -15,8 +16,8 @@ def test_web_only_mysql_security_dynaconf_allfeatures():
             'Flask-DebugToolbar',
         ],
     }
-
-    create_project("myproject", answers)
+    args = Namespace(project_name="myproject", e=True, p=True, v=True)
+    create_project(args, answers)
 
 
 test_web_only_mysql_security_dynaconf_allfeatures()

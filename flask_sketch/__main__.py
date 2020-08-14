@@ -1,25 +1,40 @@
 #!/usr/bin/python3
-
-# from __future__ import print_function, unicode_literals
-import sys
-from pprint import pprint
-
-from config import cli_style
-from make import create_project
+# from pprint import pprint
+import argparse
 from pyfiglet import Figlet
 from PyInquirer import prompt
-from questions import get_questions
+from flask_sketch.config import cli_style
+from flask_sketch.make import create_project
+from flask_sketch.questions import get_questions
+
+parser = argparse.ArgumentParser(description="Flask Sketch CLI")
+parser.add_argument("project_name", type=str)
+parser.add_argument(
+    "-e", action="store_true", help="Create examples endpoints"
+)
+parser.add_argument(
+    "-p",
+    action="store_true",
+    help="Create a pyproject.toml to work with poetry",
+)
+parser.add_argument(
+    "-v",
+    action="store_true",
+    help="Create a virtualenv and install requirements",
+)
 
 f = Figlet(font="slant")
 
 
-def flask_sketch(project_name: str):
+def flask_sketch(args):
     print(f.renderText("Flask Sketch"))
 
-    if answers := prompt(get_questions(), style=cli_style):
-        pprint(answers)
-        create_project(project_name, answers)
+    answers = prompt(get_questions(), style=cli_style)
+    if answers:
+        # pprint(answers)
+        create_project(args, answers)
 
 
 if __name__ == "__main__":
-    flask_sketch(sys.argv[1])
+    args = parser.parse_args()
+    flask_sketch(args)
