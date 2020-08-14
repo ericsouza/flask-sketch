@@ -1,0 +1,9 @@
+import click
+from flask.cli import with_appcontext
+from application_tpl.ext.database import db
+
+
+@click.command(name="create_db")
+@with_appcontext
+def create_database():
+    db.create_all()

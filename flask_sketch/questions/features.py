@@ -21,7 +21,6 @@ features_questions = [
             {"name": "Migrations (Flask-Migrate)"},
             {"name": "Admin Interface (Flask-Admin)"},
             {"name": "Cache (Flask-Caching)"},
-            {"name": "Pyctuator (integration with Spring Boot Admin"},
             {"name": "Rate Limiting (Flask-Limiter)"},
             {"name": "Flask-DebugToolbar"},
         ],
@@ -37,7 +36,6 @@ features_questions = [
         "name": "features",
         "choices": [
             {"name": "Cache (Flask-Caching)"},
-            {"name": "Pyctuator (integration with Spring Boot Admin"},
             {"name": "Rate Limiting (Flask-Limiter)"},
             {"name": "Flask-DebugToolbar"},
         ],
@@ -54,7 +52,6 @@ features_questions = [
             {"name": "Migrations (Flask-Migrate)"},
             {"name": "Admin Interface (Flask-Admin)"},
             {"name": "Cache (Flask-Caching)"},
-            {"name": "Pyctuator (integration with Spring Boot Admin"},
             {"name": "Rate Limiting (Flask-Limiter)"},
         ],
         "when": lambda answers: has_answers(
@@ -70,7 +67,6 @@ features_questions = [
         "choices": [
             {"name": "Flask-CORS"},
             {"name": "Cache (Flask-Caching)"},
-            {"name": "Pyctuator (for integration with Spring Boot Admin"},
             {"name": "Rate Limiting (Flask-Limiter)"},
         ],
         "when": lambda answers: has_answers(
@@ -86,7 +82,6 @@ features_questions = [
             {"name": "Migrations (Flask-Migrate)"},
             {"name": "Admin Interface (Flask-Admin)"},
             {"name": "Cache (Flask-Caching)"},
-            {"name": "Pyctuator (integration with Spring Boot Admin"},
             {"name": "Rate Limiting (Flask-Limiter)"},
             {"name": "Flask-DebugToolbar"},
         ],
@@ -103,7 +98,6 @@ features_questions = [
         "choices": [
             {"name": "Flask-CORS"},
             {"name": "Cache (Flask-Caching)"},
-            {"name": "Pyctuator (integration with Spring Boot Admin"},
             {"name": "Rate Limiting (Flask-Limiter)"},
             {"name": "Flask-DebugToolbar"},
         ],

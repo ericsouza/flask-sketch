@@ -1,17 +1,37 @@
-import importlib.resources as pkg_resources  # noqa
 from flask_sketch.templates import ext  # noqa
-from flask_sketch.utils import Answers
-from flask_sketch.utils import GenericHandler
+from flask_sketch.utils import Answers, GenericHandler, write_tpl, pjoin
+from flask_sketch import templates
 
 
 def login_handler(answers: Answers):
     if answers.auth_framework == "login_web":
-        return "é login_web"
+
+        return True
 
 
 def security_web_handler(answers: Answers):
     if answers.auth_framework == "security_web":
-        return "é security_web"
+        write_tpl(
+            "security_web_only_tpl",
+            templates.commands,
+            pjoin(
+                answers.application_project_folder, "commands", "__init__.py",
+            ),
+        )
+
+        write_tpl(
+            "ext_security_web_only_tpl",
+            templates.ext,
+            pjoin(answers.application_project_folder, "ext", "auth.py"),
+        )
+
+        write_tpl(
+            "models_security_web_only_tpl",
+            templates.models,
+            pjoin(answers.application_project_folder, "models", "user.py"),
+        )
+
+        return True
 
 
 def basicauth_web_handler(answers: Answers):
@@ -51,7 +71,18 @@ def basicauth_web_api_handler(answers: Answers):
 
 def none_handler(answers: Answers):
     if answers.auth_framework == "none":
-        return "é none"
+        if not answers.database == "none":
+            write_tpl(
+                "no_auth_tpl",
+                templates.commands,
+                pjoin(
+                    answers.application_project_folder,
+                    "commands",
+                    "__init__.py",
+                ),
+            )
+
+        return True
 
 
 class AuthHandler(GenericHandler):

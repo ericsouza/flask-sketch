@@ -1,21 +1,38 @@
-import importlib.resources as pkg_resources  # noqa
-from flask_sketch.templates import ext  # noqa
-from flask_sketch.utils import Answers
-from flask_sketch.utils import GenericHandler
+from flask_sketch import templates
+from flask_sketch.utils import Answers, GenericHandler, write_tpl, pjoin
+import os
 
 
 def web_only_handler(answers: Answers):
     if answers.application_type == "web_only":
-        return "é web only"
+        os.makedirs(pjoin(answers.application_project_folder, "site"))
+        write_tpl(
+            "site_web_only_init_tpl",
+            templates.site,
+            pjoin(answers.application_project_folder, "site", "__init__.py"),
+        )
+        write_tpl(
+            "site_web_only_views_tpl",
+            templates.site,
+            pjoin(answers.application_project_folder, "site", "views.py"),
+        )
+        return True
 
 
 def api_only_handler(answers: Answers):
     if answers.application_type == "api_only":
+        os.makedirs(
+            pjoin(answers.application_project_folder, "api", "resources")
+        )
         return "é api only"
 
 
 def web_api_handler(answers: Answers):
     if answers.application_type == "web_and_api":
+        os.makedirs(
+            pjoin(answers.application_project_folder, "api", "resources")
+        )
+        os.makedirs(pjoin(answers.application_project_folder, "site", "views"))
         return "é web and api"
 
 

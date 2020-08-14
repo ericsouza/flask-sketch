@@ -1,12 +1,17 @@
-import importlib.resources as pkg_resources  # noqa
-from flask_sketch.templates import ext  # noqa
-from flask_sketch.utils import Answers
-from flask_sketch.utils import GenericHandler
+from flask_sketch import templates
+from flask_sketch.utils import Answers, GenericHandler, write_tpl, pjoin
 
 
 def dynaconf_handler(answers: Answers):
     if answers.config_framework == "dynaconf":
-        return "é dynaconf"
+        write_tpl(
+            "config_dynaconf_tpl",
+            templates.config,
+            pjoin(
+                answers.application_project_folder, "config", "__init__.py",
+            ),
+        )
+        return True
 
 
 def environs_handler(answers: Answers):
