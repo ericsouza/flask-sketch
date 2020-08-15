@@ -1,32 +1,70 @@
 import importlib.resources as pkg_resources  # noqa
-from flask_sketch.templates import ext  # noqa
-from flask_sketch.utils import Answers
-from flask_sketch.utils import GenericHandler
+from flask_sketch import templates  # noqa
+from flask_sketch.utils import (
+    Answers,
+    GenericHandler,
+    write_tpl,
+    add_requirements,
+    pjoin,
+)
+
+
+def handle_sql_db(answers: Answers):
+    write_tpl(
+        answers.args.project_name,
+        "ext_sqlalchemy_tpl",
+        templates.ext,
+        pjoin(answers.application_project_folder, "ext", "database.py"),
+    )
+    add_requirements(answers.project_folder, "flask-sqlalchemy")
+
+    answers.settings["default"]["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+    answers.settings["development"]["SQLALCHEMY_TRACK_MODIFICATIONS"] = True
+    answers.settings["default"][
+        "SQLALCHEMY_DATABASE_URI"
+    ] = "sqlite:///db.sqlite3"
+    answers.settings["default"]["EXTENSIONS"].extend(
+        [f"{answers.args.project_name}.ext.database:init_app"]
+    )
 
 
 def sqlite_handler(answers: Answers):
     if answers.database == "sqlite":
-        return "é sqlite"
+        handle_sql_db(answers)
+        answers.settings["production"][
+            "SQLALCHEMY_DATABASE_URI"
+        ] = "sqlite:///production_db.sqlite3"
+        return True
 
 
 def mysql_handler(answers: Answers):
     if answers.database == "mysql":
-        return "é mysql"
+        handle_sql_db(answers)
+        answers.settings["production"][
+            "SQLALCHEMY_DATABASE_URI"
+        ] = "mysql+mysqldb://<user>:<password>@<server_ip>/MY_DATABASE"
+        add_requirements(answers.project_folder, "mysqlclient")
+        return True
 
 
 def postgres_handler(answers: Answers):
     if answers.database == "postgres":
-        return "é postgres"
+        handle_sql_db(answers)
+        answers.settings["production"][
+            "SQLALCHEMY_DATABASE_URI"
+        ] = "postgres://<user>:<password>@<server_ip>/MY_DATABASE"
+        add_requirements(answers.project_folder, "psycopg2")
+        return True
 
 
 def mongodb_handler(answers: Answers):
     if answers.database == "mongodb":
-        return "é mongodb"
+        return True
 
 
 def none_handler(answers: Answers):
     if answers.database == "none":
-        return "é none"
+        return True
 
 
 class DatabaseHandler(GenericHandler):

@@ -1,0 +1,32 @@
+[default]
+DEBUG = "not_overrided"
+SQLALCHEMY_TRACK_MODIFICATIONS = "not_overrided"
+SECURITY_REGISTERABLE = "not_overrided"
+SECURITY_POST_LOGIN_VIEW = "not_overrided"
+FLASK_ADMIN_TEMPLATE_MODE = "not_overrided"
+RATELIMIT_DEFAULT = "not_overrided"
+RATELIMIT_ENABLED = "not_overrided"
+EXTENSIONS = "not_overrided"
+
+[development]
+DEBUG = "not_overrided"
+SQLALCHEMY_DATABASE_URI = "not_overrided"
+SQLALCHEMY_TRACK_MODIFICATIONS = "not_overrided"
+FLASK_ADMIN_NAME = "not_overrided"
+CACHE_TYPE = "not_overrided"
+RATELIMIT_ENABLED = "not_overrided"
+EXTENSIONS = "not_overrided"
+DEBUG_TOOLBAR_ENABLED = "not_overrided"
+DEBUG_TB_INTERCEPT_REDIRECTS = "not_overrided"
+DEBUG_TB_PROFILER_ENABLED = "not_overrided"
+DEBUG_TB_TEMPLATE_EDITOR_ENABLED = "not_overrided"
+DEBUG_TB_PANELS = "not_overrided"
+
+[testing]
+FLASK_ADMIN_NAME = "not_overrided"
+SQLALCHEMY_DATABASE_URI = "not_overrided"
+CACHE_TYPE = "not_overrided"
+
+[production]
+FLASK_ADMIN_NAME = "not_overrided"
+CACHE_TYPE = "not_overrided"

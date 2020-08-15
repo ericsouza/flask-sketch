@@ -37,4 +37,5 @@ def flask_sketch(args):
 
 if __name__ == "__main__":
     args = parser.parse_args()
+    args.project_name = args.project_name.lower()
     flask_sketch(args)

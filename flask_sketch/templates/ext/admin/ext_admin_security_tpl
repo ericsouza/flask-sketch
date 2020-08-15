@@ -1,0 +1,25 @@
+from flask import abort
+from flask_admin import Admin, AdminIndexView
+from flask_admin.contrib.sqla import ModelView
+from flask_security import current_user
+from application_tpl.ext.database import db
+from application_tpl.models import User, Role
+
+
+class ProtectedAdminIndexView(AdminIndexView):
+    def is_accessible(self):
+        if current_user.has_role("admin"):
+            return True
+        return False
+
+    def inaccessible_callback(self, name, **kwargs):
+        return abort(403)
+
+
+admin = Admin(index_view=ProtectedAdminIndexView())
+
+
+def init_app(app):
+    admin.add_view(ModelView(User, db.session))
+    admin.add_view(ModelView(Role, db.session))
+    admin.init_app(app)

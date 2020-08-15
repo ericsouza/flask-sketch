@@ -1,0 +1,7 @@
+
+from application_tpl.examples.limiter_examples import slow, medium, fast, ping
+
+examplesbp.add_url_rule("/slow", view_func=slow)
+examplesbp.add_url_rule("/medium", view_func=medium)
+examplesbp.add_url_rule("/fast", view_func=fast)
+examplesbp.add_url_rule("/ping", view_func=ping)

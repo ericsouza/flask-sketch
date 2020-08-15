@@ -8,13 +8,7 @@ def test_web_only_mysql_security_dynaconf_allfeatures():
         'auth_framework': 'security_web',
         'config_framework': 'dynaconf',
         'database': 'mysql',
-        'features': [
-            'Migrations (Flask-Migrate)',
-            'Admin Interface (Flask-Admin)',
-            'Cache (Flask-Caching)',
-            'Rate Limiting (Flask-Limiter)',
-            'Flask-DebugToolbar',
-        ],
+        'features': ['migrate', 'caching', 'limiter', 'debugtoolbar', 'admin'],
     }
     args = Namespace(project_name="myproject", e=True, p=True, v=True)
     create_project(args, answers)

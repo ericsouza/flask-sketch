@@ -18,11 +18,11 @@ features_questions = [
         "message": "Select some more features for your project",
         "name": "features",
         "choices": [
-            {"name": "Migrations (Flask-Migrate)"},
-            {"name": "Admin Interface (Flask-Admin)"},
-            {"name": "Cache (Flask-Caching)"},
-            {"name": "Rate Limiting (Flask-Limiter)"},
-            {"name": "Flask-DebugToolbar"},
+            {"name": "Migrations (Flask-Migrate)", "value": "migrate"},
+            {"name": "Admin Interface (Flask-Admin)", "value": "admin"},
+            {"name": "Cache (Flask-Caching)", "value": "caching"},
+            {"name": "Rate Limiting (Flask-Limiter)", "value": "limiter"},
+            {"name": "Flask-DebugToolbar", "value": "debugtoolbar"},
         ],
         "when": lambda answers: has_answers(
             answers,

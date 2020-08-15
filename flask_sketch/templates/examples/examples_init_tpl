@@ -1,0 +1,3 @@
+from flask import Blueprint
+
+examplesbp = Blueprint("examples", __name__, url_prefix="/examples")

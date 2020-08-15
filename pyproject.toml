@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "flask-sketch"
-version = "0.2.3alpha3"
+version = "0.2.5"
 description = "A CLI for autogenerate folder structure for Flask applications"
 authors = ["Eric Souza <ericsouza0801@gmail.com>"]
 license = "MIT License"
@@ -15,6 +15,7 @@ keywords = ["flask-sketch", "flask_sketch", "flask boilerplate"]
 python = ">=3.7,<4.0"
 pyfiglet = "^0.8.post1"
 pyinquirer = "^1.0.3"
+toml = "^0.10.1"
 
 [tool.poetry.dev-dependencies]
 black = "^19.10b0"

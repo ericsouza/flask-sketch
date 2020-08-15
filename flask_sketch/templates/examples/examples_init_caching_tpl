@@ -1,0 +1,14 @@
+
+from application_tpl.examples.caching_examples import (
+    time_caching,
+    external_func_caching,
+    get_names,
+    add_name,
+)
+
+examplesbp.add_url_rule("/time_caching", view_func=time_caching)
+examplesbp.add_url_rule(
+    "/external_func_caching", view_func=external_func_caching
+)
+examplesbp.add_url_rule("/get_names", view_func=get_names)
+examplesbp.add_url_rule("/add_name/<string:name>", view_func=add_name)

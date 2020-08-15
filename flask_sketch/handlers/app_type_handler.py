@@ -7,11 +7,13 @@ def web_only_handler(answers: Answers):
     if answers.application_type == "web_only":
         os.makedirs(pjoin(answers.application_project_folder, "site"))
         write_tpl(
+            answers.args.project_name,
             "site_web_only_init_tpl",
             templates.site,
             pjoin(answers.application_project_folder, "site", "__init__.py"),
         )
         write_tpl(
+            answers.args.project_name,
             "site_web_only_views_tpl",
             templates.site,
             pjoin(answers.application_project_folder, "site", "views.py"),

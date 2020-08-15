@@ -1,0 +1,3 @@
+from application_tpl.models.user import User, Role
+
+__all__ = ["User", "Role"]

@@ -1,0 +1,23 @@
+from flask import Flask
+
+from application_tpl import commands, config
+from application_tpl.site import site
+
+# importing examples endpoints
+from application_tpl.examples import examplesbp
+
+
+def create_app():
+    app = Flask(__name__)
+    config.set_conf(app)
+
+    # blueprints
+    app.register_blueprint(site)
+
+    # examples:
+    app.register_blueprint(examplesbp)
+
+    # commands
+    commands.register_commands(app)
+
+    return app

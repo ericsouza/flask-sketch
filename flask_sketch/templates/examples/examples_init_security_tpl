@@ -1,0 +1,10 @@
+
+from application_tpl.examples.auth_examples import (
+    login_required_view,
+    roles_accepted_view,
+    roles_required_view,
+)
+
+examplesbp.add_url_rule("/login_required", view_func=login_required_view)
+examplesbp.add_url_rule("/roles_required", view_func=roles_required_view)
+examplesbp.add_url_rule("/roles_accepted", view_func=roles_accepted_view)

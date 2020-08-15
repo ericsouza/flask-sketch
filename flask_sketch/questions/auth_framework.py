@@ -15,8 +15,12 @@ auth_framework_questions = [
                 "value": "login_web",
                 "disabled": "Not supported yet",
             },
-            {"name": "Flask-BasicAuth", "value": "basicauth_web"},
-            {"name": "None", "value": "none"},
+            {
+                "name": "Flask-BasicAuth",
+                "value": "basicauth_web",
+                "disabled": "Not supported yet",
+            },
+            {"name": "None", "value": "none", "disabled": "Not supported yet"},
         ],
         "when": lambda answers: has_answers(
             answers, have={"application_type": "web_only"}
@@ -32,8 +36,8 @@ auth_framework_questions = [
         "choices": [
             {"name": "Flask-Praetorian (recommended)", "value": "praetorian"},
             {
-                "name": "PyJWT",
-                "value": "pyjwt",
+                "name": "Flask-JWT-Extended",
+                "value": "jwt_extended",
                 "disabled": "Not yet supported",
             },
             {"name": "Flask-BasicAuth", "value": "basicauth_api"},
@@ -56,8 +60,8 @@ auth_framework_questions = [
                 "value": "security_web_api",
             },
             {
-                "name": "Flask-Login + PyJWT (for api auth)",
-                "value": "login_pyjwt",
+                "name": "Flask-Login + Flask-JWT-Extended",
+                "value": "login_jwt_extended",
             },
             {"name": "Flask-BasicAuth", "value": "basicauth_web_api"},
             {"name": "None", "value": "none"},
