@@ -1,3 +1,4 @@
+from uuid import uuid4
 import os
 import pathlib
 from argparse import Namespace
@@ -27,7 +28,7 @@ def create_project(args: Namespace, asws: dict):
 
     answers.settings["default"]["DEBUG"] = False
     answers.settings["development"]["DEBUG"] = True
-    answers.secrets["default"]["SECRET_KEY"] = os.urandom(32)
+    answers.secrets["default"]["SECRET_KEY"] = str(uuid4())
 
     app_type_handler(answers)
     database_handler(answers)

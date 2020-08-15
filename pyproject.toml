@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "flask-sketch"
-version = "0.2.6"
+version = "0.2.8"
 description = "A CLI for autogenerate folder structure and boilerplate for Flask applications"
 authors = ["Eric Souza <ericsouza0801@gmail.com>"]
 license = "MIT License"

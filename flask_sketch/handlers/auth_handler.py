@@ -1,4 +1,5 @@
-import os
+from uuid import uuid4
+
 from flask_sketch.utils import (
     Answers,
     GenericHandler,
@@ -26,7 +27,7 @@ def security_web_handler(answers: Answers):
             [f"{answers.args.project_name}.ext.auth:init_app"]
         )
 
-        answers.secrets["default"]["SECURITY_PASSWORD_SALT"] = os.urandom(12)
+        answers.secrets["default"]["SECURITY_PASSWORD_SALT"] = str(uuid4())
 
         write_tpl(
             answers.args.project_name,
