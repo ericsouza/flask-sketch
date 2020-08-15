@@ -1,6 +1,6 @@
+import os
 import pathlib
 from argparse import Namespace
-import toml
 
 from flask_sketch.handlers import (
     api_framework_handler,
@@ -10,27 +10,24 @@ from flask_sketch.handlers import (
     database_handler,
     handle_features,
 )
-from flask_sketch.utils import (
-    Answers,
-    make_commom_folders,
-    pjoin,
-    cleanup,
-)
+from flask_sketch.utils import Answers, cleanup, make_commom, pjoin
 
 
 def create_project(args: Namespace, asws: dict):
     pf = pjoin(str(pathlib.Path().absolute()), args.project_name)
     apf = pjoin(
-        str(pathlib.Path().absolute()), args.project_name, args.project_name
+        str(pathlib.Path().absolute()),
+        args.project_name,
+        args.project_name.replace("-", "_"),
     )
 
     answers = Answers(pf, apf, asws, args)
 
-    make_commom_folders(answers)
+    make_commom(answers)
 
     answers.settings["default"]["DEBUG"] = False
-    answers.settings["development"]["DEBUG"] = False
-    answers.settings["default"]["EXTENSIONS"] = []
+    answers.settings["development"]["DEBUG"] = True
+    answers.secrets["default"]["SECRET_KEY"] = os.urandom(32)
 
     app_type_handler(answers)
     database_handler(answers)
@@ -41,3 +38,5 @@ def create_project(args: Namespace, asws: dict):
     config_handler(answers)
     cleanup(answers)
 
+    if args.e:
+        os.system(f"python -m venv {pf}/.venv")

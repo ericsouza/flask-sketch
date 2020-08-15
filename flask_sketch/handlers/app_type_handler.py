@@ -1,5 +1,10 @@
 from flask_sketch import templates
-from flask_sketch.utils import Answers, GenericHandler, write_tpl, pjoin
+from flask_sketch.utils import (
+    Answers,
+    GenericHandler,
+    write_tpl,
+    pjoin,
+)
 import os
 
 
@@ -26,7 +31,7 @@ def api_only_handler(answers: Answers):
         os.makedirs(
             pjoin(answers.application_project_folder, "api", "resources")
         )
-        return "é api only"
+        return True
 
 
 def web_api_handler(answers: Answers):
@@ -34,8 +39,8 @@ def web_api_handler(answers: Answers):
         os.makedirs(
             pjoin(answers.application_project_folder, "api", "resources")
         )
-        os.makedirs(pjoin(answers.application_project_folder, "site", "views"))
-        return "é web and api"
+        os.makedirs(pjoin(answers.application_project_folder, "site"))
+        return True
 
 
 class AppTypeHandler(GenericHandler):

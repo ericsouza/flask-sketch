@@ -1,8 +1,10 @@
-import os
-import toml
 import importlib.resources as pkg_resources
-from typing import Callable
+import os
 from argparse import Namespace
+from typing import Callable
+
+import toml
+
 from flask_sketch import templates
 
 
@@ -17,6 +19,12 @@ class Answers:
         self.config_framework: str = answers.get("config_framework")
         self.features: list = answers.get("features")
         self.args = args
+        self.secrets = {
+            "default": {
+                "SECRET_KEY": "not_overridden",
+                "SECURITY_PASSWORD_SALT": "not_overridden",
+            },
+        }
         self.settings = {
             "default": {
                 "DEBUG": "not_overridden",
@@ -26,7 +34,7 @@ class Answers:
                 "FLASK_ADMIN_TEMPLATE_MODE": "not_overridden",
                 "RATELIMIT_DEFAULT": "not_overridden",
                 "RATELIMIT_ENABLED": "not_overridden",
-                "EXTENSIONS": "not_overridden",
+                "EXTENSIONS": [],
             },
             "development": {
                 "DEBUG": "not_overridden",
@@ -35,7 +43,7 @@ class Answers:
                 "FLASK_ADMIN_NAME": "not_overridden",
                 "CACHE_TYPE": "not_overridden",
                 "RATELIMIT_ENABLED": "not_overridden",
-                "EXTENSIONS": "not_overridden",
+                "EXTENSIONS": [],
                 "DEBUG_TOOLBAR_ENABLED": "not_overridden",
                 "DEBUG_TB_INTERCEPT_REDIRECTS": "not_overridden",
                 "DEBUG_TB_PROFILER_ENABLED": "not_overridden",
@@ -71,7 +79,7 @@ class FlaskSketchTomlEncoder(toml.TomlEncoder):
         super(FlaskSketchTomlEncoder, self).__init__(_dict, preserve)
         if separator.strip() == "":
             separator = "," + separator
-        elif separator.strip(' \t\n\r,'):
+        elif separator.strip(" \t\n\r,"):
             raise ValueError("Invalid separator for arrays")
         self.separator = separator
 
@@ -108,20 +116,22 @@ def has_answers(answers: dict, have: dict = {}, not_have: dict = {}):
 
 def write_tpl(project_name, tpl, tpl_location, path):
     template = pkg_resources.read_text(tpl_location, tpl).replace(
-        "application_tpl", project_name
+        "application_tpl", project_name.replace("-", "_")
     )
     with open(path, "a") as file:
         file.writelines(template)
 
 
+""" maybe useful
+def write_templates(project_name: str, tpl_location, templates_paths: list):
+    for tpl_path in templates_paths():
+        tpl, path = tpl_path
+        write_tpl(project_name, tpl, tpl_location, path)
+"""
+
+
 def pjoin(*args):
     return "/".join(list(args))
-
-
-def add_dev_requirements(pf: str, *requirements):
-    with open(f"{pf}/requirements-dev.txt", "a") as file:
-        for requirement in requirements:
-            file.write("{}\r\n".format(requirement))
 
 
 def add_requirements(pf: str, *requirements):
@@ -130,13 +140,20 @@ def add_requirements(pf: str, *requirements):
             file.write("{}\r\n".format(requirement))
 
 
+def add_dev_requirements(pf: str, *requirements):
+    with open(f"{pf}/requirements-dev.txt", "a") as file:
+        for requirement in requirements:
+            file.write("{}\r\n".format(requirement))
+
+
 def cleanup(answers: Answers):
     ...
 
 
-def make_commom_folders(answers: Answers):
+def make_commom(answers: Answers):
     paf = answers.application_project_folder
     pf = answers.project_folder
+
     os.makedirs(pjoin(pf, "tests"))
     os.makedirs(paf)
     os.makedirs(pjoin(paf, "ext"))
@@ -146,14 +163,16 @@ def make_commom_folders(answers: Answers):
     os.makedirs(pjoin(paf, "examples"))
     if "admin" in answers.features:
         os.makedirs(pjoin(paf, "ext", "admin"))
+    open(pjoin(paf, "__init__.py"), "a").close()
+    open(pjoin(paf, "app.py"), "a").close()
+    open(pjoin(paf, "ext", "__init__.py"), "a").close()
+    open(pjoin(paf, "models", "__init__.py"), "a").close()
+    open(pjoin(paf, "config", "__init__.py"), "a").close()
+    open(pjoin(paf, "commands", "__init__.py"), "a").close()
+    open(pjoin(paf, "examples", "__init__.py"), "a").close()
 
-    open(pjoin(paf, "__init__.py"), 'a').close()
-    open(pjoin(paf, "app.py"), 'a').close()
-    open(pjoin(paf, "ext", "__init__.py"), 'a').close()
-    open(pjoin(paf, "models", "__init__.py"), 'a').close()
-    open(pjoin(paf, "config", "__init__.py"), 'a').close()
-    open(pjoin(paf, "commands", "__init__.py"), 'a').close()
-    open(pjoin(paf, "examples", "__init__.py"), 'a').close()
+    add_requirements(pf, "flask")
+    add_dev_requirements(pf, "black", "isort", "flake8")
 
     write_tpl("", ".gitignore_tpl", templates, pjoin(pf, ".gitignore"))
     write_tpl(
@@ -165,6 +184,3 @@ def make_commom_folders(answers: Answers):
         templates.examples,
         pjoin(paf, "examples", "__init__.py"),
     )
-
-    add_requirements(pf, "flask")
-    add_dev_requirements(pf, "black", "isort", "flake8")

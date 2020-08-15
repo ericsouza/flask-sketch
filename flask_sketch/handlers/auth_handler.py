@@ -1,4 +1,4 @@
-from flask_sketch.templates import ext  # noqa
+import os
 from flask_sketch.utils import (
     Answers,
     GenericHandler,
@@ -11,12 +11,23 @@ from flask_sketch import templates
 
 def login_handler(answers: Answers):
     if answers.auth_framework == "login_web":
-
         return True
 
 
 def security_web_handler(answers: Answers):
     if answers.auth_framework == "security_web":
+        add_requirements(
+            answers.project_folder, "flask-security-too", "bcrypt"
+        )
+
+        answers.settings["default"]["SECURITY_REGISTERABLE"] = True
+        answers.settings["default"]["SECURITY_POST_LOGIN_VIEW"] = "/"
+        answers.settings["default"]["EXTENSIONS"].extend(
+            [f"{answers.args.project_name}.ext.auth:init_app"]
+        )
+
+        answers.secrets["default"]["SECURITY_PASSWORD_SALT"] = os.urandom(12)
+
         write_tpl(
             answers.args.project_name,
             "security_web_only_tpl",
@@ -58,16 +69,6 @@ def security_web_handler(answers: Answers):
             pjoin(
                 answers.application_project_folder, "examples", "__init__.py",
             ),
-        )
-
-        add_requirements(
-            answers.project_folder, "flask-security-too", "bcrypt"
-        )
-
-        answers.settings["default"]["SECURITY_REGISTERABLE"] = True
-        answers.settings["default"]["SECURITY_POST_LOGIN_VIEW"] = "/"
-        answers.settings["default"]["EXTENSIONS"].extend(
-            [f"{answers.args.project_name}.ext.auth:init_app"]
         )
 
         return True

@@ -10,12 +10,6 @@ from flask_sketch.utils import (
 
 
 def handle_sql_db(answers: Answers):
-    write_tpl(
-        answers.args.project_name,
-        "ext_sqlalchemy_tpl",
-        templates.ext,
-        pjoin(answers.application_project_folder, "ext", "database.py"),
-    )
     add_requirements(answers.project_folder, "flask-sqlalchemy")
 
     answers.settings["default"]["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
@@ -25,6 +19,13 @@ def handle_sql_db(answers: Answers):
     ] = "sqlite:///db.sqlite3"
     answers.settings["default"]["EXTENSIONS"].extend(
         [f"{answers.args.project_name}.ext.database:init_app"]
+    )
+
+    write_tpl(
+        answers.args.project_name,
+        "ext_sqlalchemy_tpl",
+        templates.ext,
+        pjoin(answers.application_project_folder, "ext", "database.py"),
     )
 
 
@@ -39,21 +40,21 @@ def sqlite_handler(answers: Answers):
 
 def mysql_handler(answers: Answers):
     if answers.database == "mysql":
+        add_requirements(answers.project_folder, "mysqlclient")
         handle_sql_db(answers)
         answers.settings["production"][
             "SQLALCHEMY_DATABASE_URI"
         ] = "mysql+mysqldb://<user>:<password>@<server_ip>/MY_DATABASE"
-        add_requirements(answers.project_folder, "mysqlclient")
         return True
 
 
 def postgres_handler(answers: Answers):
     if answers.database == "postgres":
+        add_requirements(answers.project_folder, "psycopg2")
         handle_sql_db(answers)
         answers.settings["production"][
             "SQLALCHEMY_DATABASE_URI"
         ] = "postgres://<user>:<password>@<server_ip>/MY_DATABASE"
-        add_requirements(answers.project_folder, "psycopg2")
         return True
 
 

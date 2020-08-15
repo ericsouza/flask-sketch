@@ -1,8 +1,10 @@
 #!/usr/bin/python3
 # from pprint import pprint
 import argparse
+
 from pyfiglet import Figlet
 from PyInquirer import prompt
+
 from flask_sketch.config import cli_style
 from flask_sketch.make import create_project
 from flask_sketch.questions import get_questions
