@@ -77,8 +77,8 @@ def basicauth_api_handler(sketch: Sketch):
         return True
 
 
-def security_web_api_handler(sketch: Sketch):
-    if sketch.auth_framework == "security_web_api":
+def security_jwt_extended_handler(sketch: Sketch):
+    if sketch.auth_framework == "security_jwt_extended":
         sketch.add_requirements("flask-security-too", "flask-jwt-extended")
         return True
 
@@ -127,7 +127,7 @@ auth_handler = AuthHandler(
     basicauth_web_handler,
     jwt_extended_handler,
     basicauth_api_handler,
-    security_web_api_handler,
+    security_jwt_extended_handler,
     login_jwt_extended_handler,
     basicauth_web_api_handler,
     none_handler,

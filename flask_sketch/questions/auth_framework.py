@@ -34,13 +34,13 @@ auth_framework_questions = [
         "message": "Select the Authentication Framework",
         "name": "auth_framework",
         "choices": [
-            {"name": "Flask-Praetorian (recommended)", "value": "praetorian"},
+            {"name": "Flask-JWT-Extended", "value": "jwt_extended"},
+            {"name": "Flask-BasicAuth", "value": "basicauth_api"},
             {
-                "name": "Flask-JWT-Extended",
-                "value": "jwt_extended",
+                "name": "Flask-Praetorian",
+                "value": "praetorian",
                 "disabled": "Not yet supported",
             },
-            {"name": "Flask-BasicAuth", "value": "basicauth_api"},
             {"name": "None", "value": "none"},
         ],
         "when": lambda answers: has_answers(
@@ -57,7 +57,7 @@ auth_framework_questions = [
         "choices": [
             {
                 "name": "Flask-Security-Too + Flask-JWT-Extended",
-                "value": "security_web_api",
+                "value": "security_jwt_extended",
             },
             {
                 "name": "Flask-Login + Flask-JWT-Extended",

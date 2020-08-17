@@ -5,12 +5,12 @@ config_questions = [
         "name": "config_framework",
         "choices": [
             {"name": "Dynaconf", "value": "dynaconf"},
+            {"name": "None: Use Settings File", "value": "none"},
             {
                 "name": "Environs",
                 "value": "environs",
                 "disabled": "Not yet supported",
             },
-            {"name": "None (just regular env vars)", "value": "none"},
         ],
         "validate": lambda answer: "You must choose at least one topping."
         if len(answer) == 0

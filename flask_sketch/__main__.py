@@ -5,7 +5,7 @@ import argparse
 from pyfiglet import Figlet
 from PyInquirer import prompt
 
-from flask_sketch.config import cli_style
+from flask_sketch.config import cli_style_2
 from flask_sketch.make import create_project
 from flask_sketch.questions import get_questions
 
@@ -31,9 +31,8 @@ f = Figlet(font="slant")
 def flask_sketch(args):
     print(f.renderText("Flask Sketch"))
 
-    answers = prompt(get_questions(), style=cli_style)
+    answers = prompt(get_questions(), style=cli_style_2)
     if answers:
-        # pprint(answers)
         create_project(args, answers)
 
 
