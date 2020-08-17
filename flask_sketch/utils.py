@@ -1,11 +1,17 @@
 import importlib.resources as pkg_resources
 import os
+import random
+import string
 from argparse import Namespace
 from typing import Callable
 
 import toml
 
 from flask_sketch import templates
+
+LETTERS = string.ascii_letters
+NUMBERS = string.digits
+PUNCTUATION = string.punctuation
 
 
 class Answers:
@@ -19,10 +25,13 @@ class Answers:
         self.config_framework: str = answers.get("config_framework")
         self.features: list = answers.get("features")
         self.args = args
+        self.blueprints = []
         self.secrets = {
             "default": {
                 "SECRET_KEY": "not_overridden",
                 "SECURITY_PASSWORD_SALT": "not_overridden",
+                "BASIC_AUTH_USERNAME": "not_overridden",
+                "BASIC_AUTH_PASSWORD": "not_overridden",
             },
         }
         self.settings = {
@@ -101,6 +110,26 @@ class FlaskSketchTomlEncoder(toml.TomlEncoder):
         return retval
 
 
+def password_generator(length=8):
+    """
+    Generates a random password having the specified length
+    :length -> length of password to be generated. Defaults to 8
+        if nothing is specified.
+    :returns string <class 'str'>
+    """
+    # create alphanumerical from string constants
+    printable = f"{LETTERS}{NUMBERS}{PUNCTUATION}"
+
+    # convert printable from string to list and shuffle
+    printable = list(printable)
+    random.shuffle(printable)
+
+    # generate random password and convert to string
+    random_password = random.choices(printable, k=length)
+    random_password = "".join(random_password)
+    return random_password
+
+
 def has_answers(answers: dict, have: dict = {}, not_have: dict = {}):
 
     for da in have:
@@ -148,6 +177,60 @@ def add_dev_requirements(pf: str, *requirements):
 
 def cleanup(answers: Answers):
     ...
+
+
+def make_app(answers: Answers):
+    extensions = [
+        ext.split(":")[0].split(".")[-1]
+        for ext in answers.settings["default"]["EXTENSIONS"]
+    ]
+
+    aux = ",\n    ".join(extensions)
+    extensions_imports_string = (
+        f"from {answers.args.project_name}.ext import (\n    {aux}\n)"
+    )
+
+    blueprints = [
+        f"from {answers.args.project_name}.{bp} import {bp}bp"
+        for bp in answers.blueprints
+    ]
+    blueprints_imports_string = "\n".join(blueprints)
+
+    extensions_inits = [f"{ext}.init_app(app)" for ext in extensions]
+    extensions_inits_string = "\n    ".join(extensions_inits)
+
+    if "debugtoolbar" in answers.features:
+        dev_extensions_inits_string = "if app.debug:\n\
+        from {}.ext import debugtoolbar \n\
+        debugtoolbar.init_app(app)".format(
+            answers.args.project_name
+        )
+
+    blueprints_register = [
+        f"app.register_blueprint({bp}bp)" for bp in answers.blueprints
+    ]
+
+    blueprints_register_string = "\n    ".join(blueprints_register)
+
+    with open(pjoin(answers.application_project_folder, "app.py"), "r+") as f:
+        template = string.Template(f.read())
+
+        if answers.config_framework == "dynaconf":
+            app_content = template.substitute(
+                blueprints_imports=blueprints_imports_string,
+                blueprint_registers=blueprints_register_string,
+            )
+        else:
+            app_content = template.substitute(
+                extensions_imports=extensions_imports_string,
+                blueprints_imports=blueprints_imports_string,
+                extensions_inits=extensions_inits_string,
+                dev_extentions_inits=dev_extensions_inits_string,
+                blueprint_registers=blueprints_register_string,
+            )
+        f.seek(0)
+        f.write(app_content)
+        f.truncate()
 
 
 def make_commom(answers: Answers):

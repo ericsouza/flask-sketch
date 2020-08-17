@@ -1,11 +1,10 @@
-from uuid import uuid4
-
 from flask_sketch.utils import (
     Answers,
     GenericHandler,
     write_tpl,
     pjoin,
     add_requirements,
+    password_generator,
 )
 from flask_sketch import templates
 
@@ -27,7 +26,9 @@ def security_web_handler(answers: Answers):
             [f"{answers.args.project_name}.ext.auth:init_app"]
         )
 
-        answers.secrets["default"]["SECURITY_PASSWORD_SALT"] = str(uuid4())
+        answers.secrets["default"][
+            "SECURITY_PASSWORD_SALT"
+        ] = password_generator(16)
 
         write_tpl(
             answers.args.project_name,

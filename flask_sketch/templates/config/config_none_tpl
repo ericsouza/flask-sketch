@@ -1,0 +1,10 @@
+from os import environ
+
+
+def set_conf(app):
+    app.config.from_pyfile("../.secrets.cfg", silent=True)
+
+    if environ.get("FLASK_ENV") == "development":
+        app.config.from_pyfile("../settings-dev.cfg", silent=True)
+    else:
+        app.config.from_pyfile("../settings.cfg", silent=True)

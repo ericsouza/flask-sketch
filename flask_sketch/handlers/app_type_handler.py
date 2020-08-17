@@ -11,6 +11,8 @@ import os
 def web_only_handler(answers: Answers):
     if answers.application_type == "web_only":
         os.makedirs(pjoin(answers.application_project_folder, "site"))
+        answers.blueprints.extend(["site"])
+
         write_tpl(
             answers.args.project_name,
             "site_web_only_init_tpl",
@@ -31,6 +33,7 @@ def api_only_handler(answers: Answers):
         os.makedirs(
             pjoin(answers.application_project_folder, "api", "resources")
         )
+        answers.blueprints.extend(["site"])
         return True
 
 
@@ -40,6 +43,8 @@ def web_api_handler(answers: Answers):
             pjoin(answers.application_project_folder, "api", "resources")
         )
         os.makedirs(pjoin(answers.application_project_folder, "site"))
+        answers.blueprints.extend(["site"])
+
         return True
 
 

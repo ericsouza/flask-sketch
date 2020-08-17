@@ -50,7 +50,7 @@ def dynaconf_handler(answers: Answers):
         )
         write_tpl(
             answers.args.project_name,
-            "app_web_only_dynaconf_tpl",
+            "app_dynaconf_conf_tpl",
             templates.app,
             pjoin(answers.application_project_folder, "app.py"),
         )
@@ -65,6 +65,76 @@ def environs_handler(answers: Answers):
 
 def none_handler(answers: Answers):
     if answers.config_framework == "none":
+        sketch_settings = clean_settings(answers.settings)
+
+        secrets_cfg = dict(clean_settings(answers.secrets)["default"])
+
+        settings_cfg = dict(sketch_settings["default"])
+        settings_cfg.update(dict(sketch_settings["production"]))
+        del settings_cfg["EXTENSIONS"]
+
+        dev_settings_cfg = dict(sketch_settings["default"])
+        dev_settings_cfg.update(dict(sketch_settings["development"]))
+        del dev_settings_cfg["EXTENSIONS"]
+
+        secrets_cfg = dict(
+            sorted(
+                secrets_cfg.items(),
+                key=lambda x: x[0].encode('utf-8').decode('unicode_escape'),
+            )
+        )
+        settings_cfg = dict(
+            sorted(
+                settings_cfg.items(),
+                key=lambda x: x[0].encode('utf-8').decode('unicode_escape'),
+            )
+        )
+        dev_settings_cfg = dict(
+            sorted(
+                dev_settings_cfg.items(),
+                key=lambda x: x[0].encode('utf-8').decode('unicode_escape'),
+            )
+        )
+
+        secrets_cfg_output = []
+        for k, val in secrets_cfg.items():
+            secrets_cfg_output.append(f'{k} = {repr(val)}\n')
+
+        settings_cfg_output = []
+        for k, val in settings_cfg.items():
+            settings_cfg_output.append(f'{k} = {repr(val)}\n')
+
+        dev_settings_cfg_output = []
+        for k, val in dev_settings_cfg.items():
+            dev_settings_cfg_output.append(f'{k} = {repr(val)}\n')
+
+        with open(pjoin(answers.project_folder, ".secrets.cfg"), "w",) as file:
+            file.writelines(secrets_cfg_output)
+
+        with open(pjoin(answers.project_folder, "settings.cfg"), "w",) as file:
+            file.writelines(settings_cfg_output)
+
+        with open(
+            pjoin(answers.project_folder, "settings-dev.cfg"), "w",
+        ) as file:
+            file.writelines(dev_settings_cfg_output)
+
+        write_tpl(
+            answers.args.project_name,
+            "config_none_tpl",
+            templates.config,
+            pjoin(
+                answers.application_project_folder, "config", "__init__.py",
+            ),
+        )
+
+        write_tpl(
+            answers.args.project_name,
+            "app_none_conf_framework_tpl",
+            templates.app,
+            pjoin(answers.application_project_folder, "app.py"),
+        )
+
         return True
 
 

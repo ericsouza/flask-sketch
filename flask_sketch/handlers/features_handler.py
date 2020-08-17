@@ -132,25 +132,16 @@ def handle_debugtoolbar(answers: Answers):
     answers.settings["development"]["EXTENSIONS"].extend(
         ["flask_debugtoolbar:DebugToolbarExtension", "dynaconf_merge_unique"]
     )
-    answers.settings["development"]["DEBUG_TOOLBAR_ENABLED"] = True
     answers.settings["development"]["DEBUG_TB_INTERCEPT_REDIRECTS"] = False
-    answers.settings["development"]["DEBUG_TB_PROFILER_ENABLED"] = True
-    answers.settings["development"]["DEBUG_TB_TEMPLATE_EDITOR_ENABLED"] = True
-    answers.settings["development"]["DEBUG_TB_PANELS"] = []
-    answers.settings["development"]["DEBUG_TB_PANELS"].extend(
-        [
-            "flask_debugtoolbar.panels.versions.VersionDebugPanel",
-            "flask_debugtoolbar.panels.sqlalchemy.SQLAlchemyDebugPanel",
-            "flask_debugtoolbar.panels.timer.TimerDebugPanel",
-            "flask_debugtoolbar.panels.headers.HeaderDebugPanel",
-            "flask_debugtoolbar.panels.request_vars.RequestVarsDebugPanel",
-            "flask_debugtoolbar.panels.template.TemplateDebugPanel",
-            "flask_debugtoolbar.panels.route_list.RouteListDebugPanel",
-            "flask_debugtoolbar.panels.logger.LoggingPanel",
-            "flask_debugtoolbar.panels.profiler.ProfilerDebugPanel",
-            "flask_debugtoolbar.panels.config_vars.ConfigVarsDebugPanel",
-        ]
-    )
+    if answers.config_framework != "dynaconf":
+        write_tpl(
+            answers.args.project_name,
+            "ext_debugtoolbar_tpl",
+            templates.ext,
+            pjoin(
+                answers.application_project_folder, "ext", "debugtoolbar.py",
+            ),
+        )
 
 
 def handle_features(answers: Answers):

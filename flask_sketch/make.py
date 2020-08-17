@@ -1,4 +1,3 @@
-from uuid import uuid4
 import os
 import pathlib
 from argparse import Namespace
@@ -11,7 +10,14 @@ from flask_sketch.handlers import (
     database_handler,
     handle_features,
 )
-from flask_sketch.utils import Answers, cleanup, make_commom, pjoin
+from flask_sketch.utils import (
+    Answers,
+    cleanup,
+    make_app,
+    make_commom,
+    password_generator,
+    pjoin,
+)
 
 
 def create_project(args: Namespace, asws: dict):
@@ -28,7 +34,7 @@ def create_project(args: Namespace, asws: dict):
 
     answers.settings["default"]["DEBUG"] = False
     answers.settings["development"]["DEBUG"] = True
-    answers.secrets["default"]["SECRET_KEY"] = str(uuid4())
+    answers.secrets["default"]["SECRET_KEY"] = password_generator(length=32)
 
     app_type_handler(answers)
     database_handler(answers)
@@ -37,7 +43,12 @@ def create_project(args: Namespace, asws: dict):
         api_framework_handler(answers)
     handle_features(answers)
     config_handler(answers)
-    cleanup(answers)
 
     if args.e:
+        answers.blueprints.extend(["examples"])
+    make_app(answers)
+
+    cleanup(answers)
+
+    if args.v:
         os.system(f"python -m venv {pf}/.venv")

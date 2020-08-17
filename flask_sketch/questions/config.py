@@ -10,11 +10,7 @@ config_questions = [
                 "value": "environs",
                 "disabled": "Not yet supported",
             },
-            {
-                "name": "None (just regular env vars)",
-                "value": "none",
-                "disabled": "Not supported yet",
-            },
+            {"name": "None (just regular env vars)", "value": "none"},
         ],
         "validate": lambda answer: "You must choose at least one topping."
         if len(answer) == 0

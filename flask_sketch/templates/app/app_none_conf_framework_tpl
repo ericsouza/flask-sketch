@@ -1,0 +1,17 @@
+from flask import Flask
+
+from application_tpl import commands, config
+
+$extensions_imports
+
+$blueprints_imports
+
+
+def create_app():
+    app = Flask(__name__)
+    config.set_conf(app)
+    $extensions_inits
+    $dev_extentions_inits
+    $blueprint_registers
+    commands.register_commands(app)
+    return app
