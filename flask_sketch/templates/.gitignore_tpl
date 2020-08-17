@@ -138,3 +138,4 @@ poetry.lock
 
 #secrets
 .secrets.toml
+.secrets.cfg
