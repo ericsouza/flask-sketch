@@ -1,159 +1,122 @@
 from flask_sketch.utils import (
-    Answers,
+    Sketch,
     GenericHandler,
-    write_tpl,
     pjoin,
-    add_requirements,
-    password_generator,
+    random_string,
 )
 from flask_sketch import templates
 
 
-def login_handler(answers: Answers):
-    if answers.auth_framework == "login_web":
+def login_handler(sketch: Sketch):
+    if sketch.auth_framework == "login_web":
         return True
 
 
-def security_web_handler(answers: Answers):
-    if answers.auth_framework == "security_web":
-        add_requirements(
-            answers.project_folder, "flask-security-too", "bcrypt"
-        )
+def security_web_handler(sketch: Sketch):
+    if sketch.auth_framework == "security_web":
+        sketch.add_requirements("flask-security-too", "argon2-cffi")
 
-        answers.settings["default"]["SECURITY_REGISTERABLE"] = True
-        answers.settings["default"]["SECURITY_POST_LOGIN_VIEW"] = "/"
-        answers.settings["default"]["EXTENSIONS"].extend(
-            [f"{answers.args.project_name}.ext.auth:init_app"]
-        )
+        sketch.settings["default"]["SECURITY_REGISTERABLE"] = True
+        sketch.settings["default"]["SECURITY_POST_LOGIN_VIEW"] = "/"
+        sketch.settings["default"]["SECURITY_PASSWORD_HASH"] = "argon2"
 
-        answers.secrets["default"][
-            "SECURITY_PASSWORD_SALT"
-        ] = password_generator(16)
+        sketch.add_extensions("auth")
 
-        write_tpl(
-            answers.args.project_name,
+        sketch.secrets["default"]["SECURITY_PASSWORD_SALT"] = random_string()
+
+        sketch.write_template(
             "security_web_only_tpl",
             templates.commands,
-            pjoin(
-                answers.application_project_folder, "commands", "__init__.py",
-            ),
+            pjoin(sketch.app_folder, "commands", "__init__.py",),
         )
 
-        write_tpl(
-            answers.args.project_name,
+        sketch.write_template(
             "ext_security_web_only_tpl",
             templates.ext,
-            pjoin(answers.application_project_folder, "ext", "auth.py"),
+            pjoin(sketch.app_folder, "ext", "auth.py"),
         )
 
-        write_tpl(
-            answers.args.project_name,
+        sketch.write_template(
             "models_security_web_only_tpl",
             templates.models,
-            pjoin(answers.application_project_folder, "models", "user.py"),
+            pjoin(sketch.app_folder, "models", "user.py"),
         )
 
-        write_tpl(
-            answers.args.project_name,
+        sketch.write_template(
             "examples_security_auth_tpl",
             templates.examples,
-            pjoin(
-                answers.application_project_folder,
-                "examples",
-                "auth_examples.py",
-            ),
+            pjoin(sketch.app_folder, "examples", "auth_examples.py",),
         )
 
-        write_tpl(
-            answers.args.project_name,
+        sketch.write_template(
             "examples_init_security_tpl",
             templates.examples,
-            pjoin(
-                answers.application_project_folder, "examples", "__init__.py",
-            ),
+            pjoin(sketch.app_folder, "examples", "__init__.py",),
         )
 
         return True
 
 
-def basicauth_web_handler(answers: Answers):
-    if answers.auth_framework == "basicauth_web":
-        add_requirements(answers.project_folder, "flask-basicAuth")
+def basicauth_web_handler(sketch: Sketch):
+    if sketch.auth_framework == "basicauth_web":
+        sketch.add_requirements("flask-basicAuth")
+        sketch.secrets["default"]["BASIC_AUTH_PASSWORD"] = "admin"
+        sketch.secrets["default"]["BASIC_AUTH_PASSWORD"] = random_string()
         return True
 
 
-def praetorian_handler(answers: Answers):
-    if answers.auth_framework == "praetorian":
-        add_requirements(answers.project_folder, "flask-praetorian")
+def jwt_extended_handler(sketch: Sketch):
+    if sketch.auth_framework == "jwt_extended":
+        sketch.add_requirements("flask-jwt-extended")
         return True
 
 
-def jwt_extended_handler(answers: Answers):
-    if answers.auth_framework == "jwt_extended":
-        add_requirements(answers.project_folder, "flask-jwt-extended")
+def basicauth_api_handler(sketch: Sketch):
+    if sketch.auth_framework == "basicauth_api":
+        sketch.add_requirements("flask-basicauth")
         return True
 
 
-def basicauth_api_handler(answers: Answers):
-    if answers.auth_framework == "basicauth_api":
-        add_requirements(answers.project_folder, "flask-basicauth")
+def security_web_api_handler(sketch: Sketch):
+    if sketch.auth_framework == "security_web_api":
+        sketch.add_requirements("flask-security-too", "flask-jwt-extended")
         return True
 
 
-def security_web_api_handler(answers: Answers):
-    if answers.auth_framework == "security_web_api":
-        add_requirements(
-            answers.project_folder, "flask-security-too", "flask-jwt-extended"
-        )
+def login_jwt_extended_handler(sketch: Sketch):
+    if sketch.auth_framework == "login_jwt_extended":
+        sketch.add_requirements("flask-login", "flask-jwt-extended")
         return True
 
 
-def login_jwt_extended_handler(answers: Answers):
-    if answers.auth_framework == "login_jwt_extended":
-        add_requirements(
-            answers.project_folder, "flask-login", "flask-jwt-extended"
-        )
+def basicauth_web_api_handler(sketch: Sketch):
+    if sketch.auth_framework == "basicauth_web_api":
+        sketch.add_requirements("flask-basicauth")
         return True
 
 
-def basicauth_web_api_handler(answers: Answers):
-    if answers.auth_framework == "basicauth_web_api":
-        add_requirements(answers.project_folder, "flask-BasicAuth")
-        return True
-
-
-def none_handler(answers: Answers):
-    if answers.auth_framework == "none":
-        if not answers.database == "none":
-            write_tpl(
-                answers.args.project_name,
+def none_handler(sketch: Sketch):
+    if sketch.auth_framework == "none":
+        if not sketch.database == "none":
+            sketch.write_template(
                 "no_auth_tpl",
                 templates.commands,
-                pjoin(
-                    answers.application_project_folder,
-                    "commands",
-                    "__init__.py",
-                ),
+                pjoin(sketch.app_folder, "commands", "__init__.py",),
             )
 
         return True
 
 
 class AuthHandler(GenericHandler):
-    def __call__(self, answers: Answers):
+    def __call__(self, sketch: Sketch):
         for handler in self.handlers:
-            r = handler(answers)
+            r = handler(sketch)
             if r:
                 if not handler.__name__ == "none_handler":
-                    write_tpl(
-                        answers.args.project_name,
+                    sketch.write_template(
                         "models_auth_tpl",
                         templates.models,
-                        pjoin(
-                            answers.application_project_folder,
-                            "models",
-                            "__init__.py",
-                        ),
+                        pjoin(sketch.app_folder, "models", "__init__.py",),
                     )
                 return r
 
@@ -162,7 +125,6 @@ auth_handler = AuthHandler(
     login_handler,
     security_web_handler,
     basicauth_web_handler,
-    praetorian_handler,
     jwt_extended_handler,
     basicauth_api_handler,
     security_web_api_handler,

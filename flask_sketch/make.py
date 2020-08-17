@@ -11,16 +11,17 @@ from flask_sketch.handlers import (
     handle_features,
 )
 from flask_sketch.utils import (
-    Answers,
+    Sketch,
     cleanup,
-    make_app,
     make_commom,
-    password_generator,
+    make_requirements,
+    make_app,
+    random_string,
     pjoin,
 )
 
 
-def create_project(args: Namespace, asws: dict):
+def create_project(args: Namespace, answers: dict):
     pf = pjoin(str(pathlib.Path().absolute()), args.project_name)
     apf = pjoin(
         str(pathlib.Path().absolute()),
@@ -28,27 +29,27 @@ def create_project(args: Namespace, asws: dict):
         args.project_name.replace("-", "_"),
     )
 
-    answers = Answers(pf, apf, asws, args)
+    sketch = Sketch(pf, apf, answers, args)
 
-    make_commom(answers)
+    make_commom(sketch)
 
-    answers.settings["default"]["DEBUG"] = False
-    answers.settings["development"]["DEBUG"] = True
-    answers.secrets["default"]["SECRET_KEY"] = password_generator(length=32)
+    sketch.settings["default"]["DEBUG"] = False
+    sketch.settings["development"]["DEBUG"] = True
 
-    app_type_handler(answers)
-    database_handler(answers)
-    auth_handler(answers)
-    if "api" in answers.application_type:
-        api_framework_handler(answers)
-    handle_features(answers)
-    config_handler(answers)
+    app_type_handler(sketch)
+    database_handler(sketch)
+    auth_handler(sketch)
+    if "api" in sketch.app_type:
+        api_framework_handler(sketch)
+    handle_features(sketch)
+    config_handler(sketch)
 
     if args.e:
-        answers.blueprints.extend(["examples"])
-    make_app(answers)
+        sketch.blueprints.extend(["examples"])
+    make_app(sketch)
+    make_requirements(sketch)
 
-    cleanup(answers)
+    cleanup(sketch)
 
     if args.v:
         os.system(f"python -m venv {pf}/.venv")

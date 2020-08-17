@@ -1,25 +1,25 @@
 from flask_sketch import templates  # noqa
-from flask_sketch.utils import Answers
+from flask_sketch.utils import Sketch
 from flask_sketch.utils import GenericHandler
 
 
-def restful_handler(answers: Answers):
-    if answers.api_framework == "restful":
+def restful_handler(sketch: Sketch):
+    if sketch.api_framework == "restful":
         return True
 
 
-def restx_handler(answers: Answers):
-    if answers.api_framework == "restx":
+def restx_handler(sketch: Sketch):
+    if sketch.api_framework == "restx":
         return True
 
 
-def restless_handler(answers: Answers):
-    if answers.api_framework == "restless":
+def restless_handler(sketch: Sketch):
+    if sketch.api_framework == "restless":
         return True
 
 
-def none_handler(answers: Answers):
-    if answers.api_framework == "none":
+def none_handler(sketch: Sketch):
+    if sketch.api_framework == "none":
         return True
 
 

@@ -1,70 +1,67 @@
 import importlib.resources as pkg_resources  # noqa
 from flask_sketch import templates  # noqa
 from flask_sketch.utils import (
-    Answers,
+    Sketch,
     GenericHandler,
-    write_tpl,
-    add_requirements,
     pjoin,
 )
 
 
-def handle_sql_db(answers: Answers):
-    add_requirements(answers.project_folder, "flask-sqlalchemy")
+def handle_sql_db(sketch: Sketch):
+    sketch.add_requirements("flask-sqlalchemy")
 
-    answers.settings["default"]["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-    answers.settings["development"]["SQLALCHEMY_TRACK_MODIFICATIONS"] = True
-    answers.settings["default"][
+    sketch.settings["default"]["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+    sketch.settings["development"]["SQLALCHEMY_TRACK_MODIFICATIONS"] = True
+    sketch.settings["default"][
         "SQLALCHEMY_DATABASE_URI"
     ] = "sqlite:///db.sqlite3"
-    answers.settings["default"]["EXTENSIONS"].extend(
-        [f"{answers.args.project_name}.ext.database:init_app"]
-    )
 
-    write_tpl(
-        answers.args.project_name,
+    sketch.add_extensions("database")
+
+    sketch.write_template(
         "ext_sqlalchemy_tpl",
         templates.ext,
-        pjoin(answers.application_project_folder, "ext", "database.py"),
+        pjoin(sketch.app_folder, "ext", "database.py"),
     )
 
 
-def sqlite_handler(answers: Answers):
-    if answers.database == "sqlite":
-        handle_sql_db(answers)
-        answers.settings["production"][
+def sqlite_handler(sketch: Sketch):
+    if sketch.database == "sqlite":
+        handle_sql_db(sketch)
+        sketch.settings["production"][
             "SQLALCHEMY_DATABASE_URI"
         ] = "sqlite:///production_db.sqlite3"
         return True
 
 
-def mysql_handler(answers: Answers):
-    if answers.database == "mysql":
-        add_requirements(answers.project_folder, "mysqlclient")
-        handle_sql_db(answers)
-        answers.settings["production"][
+def mysql_handler(sketch: Sketch):
+    if sketch.database == "mysql":
+        sketch.add_requirements("mysqlclient")
+        handle_sql_db(sketch)
+        sketch.settings["production"][
             "SQLALCHEMY_DATABASE_URI"
         ] = "mysql+mysqldb://<user>:<password>@<server_ip>/MY_DATABASE"
         return True
 
 
-def postgres_handler(answers: Answers):
-    if answers.database == "postgres":
-        add_requirements(answers.project_folder, "psycopg2")
-        handle_sql_db(answers)
-        answers.settings["production"][
+def postgres_handler(sketch: Sketch):
+    if sketch.database == "postgres":
+        sketch.add_requirements("psycopg2")
+        handle_sql_db(sketch)
+        sketch.settings["production"][
             "SQLALCHEMY_DATABASE_URI"
         ] = "postgres://<user>:<password>@<server_ip>/MY_DATABASE"
         return True
 
 
-def mongodb_handler(answers: Answers):
-    if answers.database == "mongodb":
+def mongodb_handler(sketch: Sketch):
+    if sketch.database == "mongodb":
+        sketch.add_requirements("flask-mongoengine")
         return True
 
 
-def none_handler(answers: Answers):
-    if answers.database == "none":
+def none_handler(sketch: Sketch):
+    if sketch.database == "none":
         return True
 
 

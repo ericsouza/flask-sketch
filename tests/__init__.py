@@ -11,7 +11,7 @@ def test_web_only_mysql_security_dynaconf_allfeatures():
         "database": "mysql",
         "features": ["migrate", "caching", "limiter", "debugtoolbar", "admin"],
     }
-    args = Namespace(project_name="myproject", e=False, p=True, v=True)
+    args = Namespace(project_name="myproject", e=True, p=True, v=False)
     create_project(args, answers)
 
 

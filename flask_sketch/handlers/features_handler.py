@@ -1,149 +1,111 @@
 from flask_sketch.utils import (
-    Answers,
-    write_tpl,
+    Sketch,
     pjoin,
-    add_requirements,
-    add_dev_requirements,
 )
 from flask_sketch import templates
 
 
-def handle_caching(answers: Answers):
-    add_requirements(answers.project_folder, "flask-caching")
+def handle_caching(sketch: Sketch):
+    sketch.add_requirements("flask-caching")
 
-    answers.settings["development"]["CACHE_TYPE"] = "simple"
-    answers.settings["testing"]["CACHE_TYPE"] = "simple"
-    answers.settings["production"]["CACHE_TYPE"] = "simple"
-    answers.settings["default"]["EXTENSIONS"].extend(
-        [f"{answers.args.project_name}.ext.caching:init_app"]
-    )
+    sketch.settings["development"]["CACHE_TYPE"] = "simple"
+    sketch.settings["testing"]["CACHE_TYPE"] = "simple"
+    sketch.settings["production"]["CACHE_TYPE"] = "simple"
 
-    write_tpl(
-        answers.args.project_name,
+    sketch.add_extensions("caching")
+
+    sketch.write_template(
         "ext_caching_tpl",
         templates.ext,
-        pjoin(answers.application_project_folder, "ext", "caching.py"),
+        pjoin(sketch.app_folder, "ext", "caching.py"),
     )
-    write_tpl(
-        answers.args.project_name,
+    sketch.write_template(
         "examples_caching_tpl",
         templates.examples,
-        pjoin(
-            answers.application_project_folder,
-            "examples",
-            "caching_examples.py",
-        ),
+        pjoin(sketch.app_folder, "examples", "caching_examples.py",),
     )
-    write_tpl(
-        answers.args.project_name,
+    sketch.write_template(
         "examples_init_caching_tpl",
         templates.examples,
-        pjoin(answers.application_project_folder, "examples", "__init__.py",),
+        pjoin(sketch.app_folder, "examples", "__init__.py",),
     )
 
 
-def handle_limiter(answers: Answers):
-    add_requirements(answers.project_folder, "flask-limiter")
+def handle_limiter(sketch: Sketch):
+    sketch.add_requirements("flask-limiter")
 
-    answers.settings["default"][
-        "RATELIMIT_DEFAULT"
-    ] = "200 per day;50 per hour"
-    answers.settings["default"]["RATELIMIT_ENABLED"] = True
-    answers.settings["development"]["RATELIMIT_ENABLED"] = False
-    answers.settings["default"]["EXTENSIONS"].extend(
-        [f"{answers.args.project_name}.ext.limiter:init_app"]
-    )
+    sketch.settings["default"]["RATELIMIT_DEFAULT"] = "200 per day;50 per hour"
+    sketch.settings["default"]["RATELIMIT_ENABLED"] = True
+    sketch.settings["development"]["RATELIMIT_ENABLED"] = False
 
-    write_tpl(
-        answers.args.project_name,
+    sketch.add_extensions("limiter")
+
+    sketch.write_template(
         "ext_limiter_tpl",
         templates.ext,
-        pjoin(answers.application_project_folder, "ext", "limiter.py"),
+        pjoin(sketch.app_folder, "ext", "limiter.py"),
     )
-    write_tpl(
-        answers.args.project_name,
+    sketch.write_template(
         "examples_limiter_tpl",
         templates.examples,
-        pjoin(
-            answers.application_project_folder,
-            "examples",
-            "limiter_examples.py",
-        ),
+        pjoin(sketch.app_folder, "examples", "limiter_examples.py",),
     )
-    write_tpl(
-        answers.args.project_name,
+    sketch.write_template(
         "examples_init_limiter_tpl",
         templates.examples,
-        pjoin(answers.application_project_folder, "examples", "__init__.py",),
+        pjoin(sketch.app_folder, "examples", "__init__.py",),
     )
 
 
-def handle_migrate(answers: Answers):
-    add_requirements(answers.project_folder, "flask-migrate")
+def handle_migrate(sketch: Sketch):
+    sketch.add_requirements("flask-migrate")
 
-    answers.settings["default"]["EXTENSIONS"].extend(
-        [f"{answers.args.project_name}.ext.migrate:init_app"]
-    )
+    sketch.add_extensions("migrate")
 
-    write_tpl(
-        answers.args.project_name,
+    sketch.write_template(
         "ext_migrate_tpl",
         templates.ext,
-        pjoin(answers.application_project_folder, "ext", "migrate.py"),
+        pjoin(sketch.app_folder, "ext", "migrate.py"),
     )
 
 
-def handle_admin(answers: Answers):
-    add_requirements(answers.project_folder, "flask-admin")
+def handle_admin(sketch: Sketch):
+    sketch.add_requirements("flask-admin")
 
-    answers.settings["default"]["EXTENSIONS"].extend(
-        [f"{answers.args.project_name}.ext.admin:init_app"]
-    )
+    sketch.add_extensions("admin")
 
-    answers.settings["default"]["FLASK_ADMIN_TEMPLATE_MODE"] = "bootstrap3"
-    answers.settings["development"][
-        "FLASK_ADMIN_NAME"
-    ] = f"{answers.args.project_name} (Dev)"
-    answers.settings["testing"][
-        "FLASK_ADMIN_NAME"
-    ] = f"{answers.args.project_name} (Testing)"
-    answers.settings["production"][
-        "FLASK_ADMIN_NAME"
-    ] = answers.args.project_name
+    sketch.settings["default"]["ADMIN_TEMPLATE_MODE"] = "bootstrap3"
+    sketch.settings["development"][
+        "ADMIN_NAME"
+    ] = f"{sketch.project_name} (Dev)"
+    sketch.settings["testing"][
+        "ADMIN_NAME"
+    ] = f"{sketch.project_name} (Testing)"
+    sketch.settings["production"]["ADMIN_NAME"] = sketch.project_name
 
     # TODO refact this part to not use a lot of if statements
-    if answers.auth_framework == "security_web":
-        write_tpl(
-            answers.args.project_name,
+    if sketch.auth_framework == "security_web":
+        sketch.write_template(
             "ext_admin_security_tpl",
             templates.ext.admin,
-            pjoin(
-                answers.application_project_folder,
-                "ext",
-                "admin",
-                "__init__.py",
-            ),
+            pjoin(sketch.app_folder, "ext", "admin", "__init__.py",),
         )
 
 
-def handle_debugtoolbar(answers: Answers):
-    add_dev_requirements(answers.project_folder, "flask-debugtoolbar")
+def handle_debugtoolbar(sketch: Sketch):
+    sketch.add_requirements("flask-debugtoolbar", dev=True)
 
-    answers.settings["development"]["EXTENSIONS"].extend(
-        ["flask_debugtoolbar:DebugToolbarExtension", "dynaconf_merge_unique"]
-    )
-    answers.settings["development"]["DEBUG_TB_INTERCEPT_REDIRECTS"] = False
-    if answers.config_framework != "dynaconf":
-        write_tpl(
-            answers.args.project_name,
+    sketch.add_extensions("debugtoolbar")
+
+    sketch.settings["development"]["DEBUG_TB_INTERCEPT_REDIRECTS"] = False
+    if sketch.config_framework != "dynaconf":
+        sketch.write_template(
             "ext_debugtoolbar_tpl",
             templates.ext,
-            pjoin(
-                answers.application_project_folder, "ext", "debugtoolbar.py",
-            ),
+            pjoin(sketch.app_folder, "ext", "debugtoolbar.py",),
         )
 
 
-def handle_features(answers: Answers):
-    for feature in answers.features:
-        globals()[f"handle_{feature}"](answers)
+def handle_features(sketch: Sketch):
+    for feature in sketch.features:
+        globals()[f"handle_{feature}"](sketch)

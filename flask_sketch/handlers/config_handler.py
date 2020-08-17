@@ -1,138 +1,118 @@
+from collections import OrderedDict
 import toml
 from flask_sketch import templates
 from flask_sketch.utils import (
-    Answers,
+    Sketch,
     GenericHandler,
-    write_tpl,
     pjoin,
-    add_requirements,
     FlaskSketchTomlEncoder,
 )
 
 
-def clean_settings(settings: dict):
+def sort_settings(settings: dict):
     s = settings
     for k in s:
-        s[k] = {
-            key: val for key, val in s[k].items() if val != "not_overridden"
-        }
+        s[k] = OrderedDict(sorted(s[k].items()))
     return s
 
 
-def dynaconf_handler(answers: Answers):
-    if answers.config_framework == "dynaconf":
-        add_requirements(answers.project_folder, "dynaconf")
+def dynaconf_handler(sketch: Sketch):
+    if sketch.config_framework == "dynaconf":
+        sketch.add_requirements("dynaconf")
 
-        settings_toml = clean_settings(answers.settings)
-        secrets_toml = clean_settings(answers.secrets)
+        settings_toml = sort_settings(sketch.settings)
+        secrets_toml = sort_settings(sketch.secrets)
 
-        with open(
-            pjoin(answers.project_folder, "settings.toml"),
-            "w",
-            encoding="utf-8",
-        ) as file:
-            toml.dump(settings_toml, file, encoder=FlaskSketchTomlEncoder())
+        try:
+            sketch.extensions.remove("debugtoolbar")
+            settings_toml["development"]["EXTENSIONS"] = [
+                "flask_debugtoolbar:DebugToolbarExtension",
+                "dynaconf_merge_unique",
+            ]
 
-        with open(
-            pjoin(answers.project_folder, ".secrets.toml"),
-            "w",
-            encoding="utf-8",
-        ) as file:
-            toml.dump(secrets_toml, file, encoder=FlaskSketchTomlEncoder())
+        except ValueError:
+            settings_toml["development"]["EXTENSIONS"] = [
+                "dynaconf_merge_unique"
+            ]
 
-        write_tpl(
-            answers.args.project_name,
+        settings_toml["default"]["EXTENSIONS"] = [
+            "{}.ext.{}:init_app".format(sketch.app_folder_name, ext)
+            for ext in sketch.extensions
+        ]
+
+        with open(pjoin(sketch.project_folder, "settings.toml"), "w") as f:
+            toml.dump(settings_toml, f, encoder=FlaskSketchTomlEncoder())
+
+        with open(pjoin(sketch.project_folder, ".secrets.toml"), "w") as f:
+            toml.dump(secrets_toml, f, encoder=FlaskSketchTomlEncoder())
+
+        sketch.write_template(
             "config_dynaconf_tpl",
             templates.config,
-            pjoin(
-                answers.application_project_folder, "config", "__init__.py",
-            ),
+            pjoin(sketch.app_folder, "config", "__init__.py",),
         )
-        write_tpl(
-            answers.args.project_name,
+        sketch.write_template(
             "app_dynaconf_conf_tpl",
             templates.app,
-            pjoin(answers.application_project_folder, "app.py"),
+            pjoin(sketch.app_folder, "app.py"),
         )
 
         return True
 
 
-def environs_handler(answers: Answers):
-    if answers.config_framework == "environs":
+def environs_handler(sketch: Sketch):
+    if sketch.config_framework == "environs":
         return True
 
 
-def none_handler(answers: Answers):
-    if answers.config_framework == "none":
-        sketch_settings = clean_settings(answers.settings)
+def none_handler(sketch: Sketch):
+    if sketch.config_framework == "none":
 
-        secrets_cfg = dict(clean_settings(answers.secrets)["default"])
+        secrets_cfg = sort_settings(sketch.secrets)["default"]
 
-        settings_cfg = dict(sketch_settings["default"])
-        settings_cfg.update(dict(sketch_settings["production"]))
-        del settings_cfg["EXTENSIONS"]
+        settings_cfg = {"default": {}}
+        settings_cfg["default"].update(sketch.settings["default"])
+        settings_cfg["default"].update(sketch.settings["production"])
+        del settings_cfg["default"]["EXTENSIONS"]
+        settings_cfg = sort_settings(settings_cfg)
 
-        dev_settings_cfg = dict(sketch_settings["default"])
-        dev_settings_cfg.update(dict(sketch_settings["development"]))
-        del dev_settings_cfg["EXTENSIONS"]
-
-        secrets_cfg = dict(
-            sorted(
-                secrets_cfg.items(),
-                key=lambda x: x[0].encode('utf-8').decode('unicode_escape'),
-            )
-        )
-        settings_cfg = dict(
-            sorted(
-                settings_cfg.items(),
-                key=lambda x: x[0].encode('utf-8').decode('unicode_escape'),
-            )
-        )
-        dev_settings_cfg = dict(
-            sorted(
-                dev_settings_cfg.items(),
-                key=lambda x: x[0].encode('utf-8').decode('unicode_escape'),
-            )
-        )
+        dev_settings_cfg = {"default": {}}
+        dev_settings_cfg["default"].update(sketch.settings["default"])
+        dev_settings_cfg["default"].update(sketch.settings["development"])
+        del dev_settings_cfg["default"]["EXTENSIONS"]
+        dev_settings_cfg = sort_settings(dev_settings_cfg)
 
         secrets_cfg_output = []
         for k, val in secrets_cfg.items():
             secrets_cfg_output.append(f'{k} = {repr(val)}\n')
 
         settings_cfg_output = []
-        for k, val in settings_cfg.items():
+        for k, val in settings_cfg["default"].items():
             settings_cfg_output.append(f'{k} = {repr(val)}\n')
 
         dev_settings_cfg_output = []
-        for k, val in dev_settings_cfg.items():
+        for k, val in dev_settings_cfg["default"].items():
             dev_settings_cfg_output.append(f'{k} = {repr(val)}\n')
 
-        with open(pjoin(answers.project_folder, ".secrets.cfg"), "w",) as file:
-            file.writelines(secrets_cfg_output)
+        with open(pjoin(sketch.project_folder, ".secrets.cfg"), "w",) as f:
+            f.writelines(secrets_cfg_output)
 
-        with open(pjoin(answers.project_folder, "settings.cfg"), "w",) as file:
-            file.writelines(settings_cfg_output)
+        with open(pjoin(sketch.project_folder, "settings.cfg"), "w",) as f:
+            f.writelines(settings_cfg_output)
 
-        with open(
-            pjoin(answers.project_folder, "settings-dev.cfg"), "w",
-        ) as file:
-            file.writelines(dev_settings_cfg_output)
+        with open(pjoin(sketch.project_folder, "settings-dev.cfg"), "w",) as f:
+            f.writelines(dev_settings_cfg_output)
 
-        write_tpl(
-            answers.args.project_name,
+        sketch.write_template(
             "config_none_tpl",
             templates.config,
-            pjoin(
-                answers.application_project_folder, "config", "__init__.py",
-            ),
+            pjoin(sketch.app_folder, "config", "__init__.py",),
         )
 
-        write_tpl(
-            answers.args.project_name,
+        sketch.write_template(
             "app_none_conf_framework_tpl",
             templates.app,
-            pjoin(answers.application_project_folder, "app.py"),
+            pjoin(sketch.app_folder, "app.py"),
         )
 
         return True

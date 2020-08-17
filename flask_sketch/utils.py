@@ -14,71 +14,61 @@ NUMBERS = string.digits
 PUNCTUATION = string.punctuation
 
 
-class Answers:
+class Sketch:
     def __init__(self, pf: str, apf: str, answers: dict, args: Namespace):
-        self.project_folder = pf
-        self.application_project_folder = apf
-        self.application_type: str = answers.get("application_type")
+        self.project_name: str = args.project_name
+        self.app_folder_name: str = args.project_name.replace("-", "_")
+        self.project_folder: str = pf
+        self.app_folder: str = apf
+        self.app_type: str = answers.get("application_type")
         self.database: str = answers.get("database")
         self.auth_framework: str = answers.get("auth_framework")
         self.api_framework: str = answers.get("api_framework")
         self.config_framework: str = answers.get("config_framework")
         self.features: list = answers.get("features")
-        self.args = args
+        self.secret_key = random_string(32)
+        self.create_examples = args.e
+        self.create_virtualenv = args.v
+        self.create_pyproject = args.p
+        self.requirements = []
+        self.dev_requirements = []
+        self.extensions = []
         self.blueprints = []
-        self.secrets = {
-            "default": {
-                "SECRET_KEY": "not_overridden",
-                "SECURITY_PASSWORD_SALT": "not_overridden",
-                "BASIC_AUTH_USERNAME": "not_overridden",
-                "BASIC_AUTH_PASSWORD": "not_overridden",
-            },
-        }
+        self.secrets = {"default": {}}
         self.settings = {
-            "default": {
-                "DEBUG": "not_overridden",
-                "SQLALCHEMY_TRACK_MODIFICATIONS": "not_overridden",
-                "SECURITY_REGISTERABLE": "not_overridden",
-                "SECURITY_POST_LOGIN_VIEW": "not_overridden",
-                "FLASK_ADMIN_TEMPLATE_MODE": "not_overridden",
-                "RATELIMIT_DEFAULT": "not_overridden",
-                "RATELIMIT_ENABLED": "not_overridden",
-                "EXTENSIONS": [],
-            },
-            "development": {
-                "DEBUG": "not_overridden",
-                "SQLALCHEMY_DATABASE_URI": "not_overridden",
-                "SQLALCHEMY_TRACK_MODIFICATIONS": "not_overridden",
-                "FLASK_ADMIN_NAME": "not_overridden",
-                "CACHE_TYPE": "not_overridden",
-                "RATELIMIT_ENABLED": "not_overridden",
-                "EXTENSIONS": [],
-                "DEBUG_TOOLBAR_ENABLED": "not_overridden",
-                "DEBUG_TB_INTERCEPT_REDIRECTS": "not_overridden",
-                "DEBUG_TB_PROFILER_ENABLED": "not_overridden",
-                "DEBUG_TB_TEMPLATE_EDITOR_ENABLED": "not_overridden",
-                "DEBUG_TB_PANELS": "not_overridden",
-            },
-            "testing": {
-                "FLASK_ADMIN_NAME": "not_overridden",
-                "SQLALCHEMY_DATABASE_URI": "not_overridden",
-                "CACHE_TYPE": "not_overridden",
-            },
-            "production": {
-                "FLASK_ADMIN_NAME": "not_overridden",
-                "CACHE_TYPE": "not_overridden",
-                "SQLALCHEMY_DATABASE_URI": "not_overridden",
-            },
+            "default": {"EXTENSIONS": []},
+            "development": {"EXTENSIONS": []},
+            "testing": {},
+            "production": {},
         }
+
+    def add_requirements(self, *requirements, dev=False):
+        if dev:
+            self.dev_requirements.extend(requirements)
+        else:
+            self.requirements.extend(requirements)
+
+    def add_extensions(self, *extensions):
+        self.extensions.extend(extensions)
+
+    def add_blueprints(self, *blueprints):
+        self.blueprints.extend(blueprints)
+
+    def write_template(self, template, template_location, path):
+        template = pkg_resources.read_text(
+            template_location, template
+        ).replace("application_tpl", self.app_folder_name)
+        with open(path, "a") as file:
+            file.writelines(template)
 
 
 class GenericHandler:
     def __init__(self, *handlers: Callable):
         self.handlers = handlers
 
-    def __call__(self, answers: Answers):
+    def __call__(self, sketch: Sketch):
         for handler in self.handlers:
-            r = handler(answers)
+            r = handler(sketch)
             if r:
                 return r
 
@@ -110,7 +100,7 @@ class FlaskSketchTomlEncoder(toml.TomlEncoder):
         return retval
 
 
-def password_generator(length=8):
+def random_string(length=16):
     """
     Generates a random password having the specified length
     :length -> length of password to be generated. Defaults to 8
@@ -125,9 +115,9 @@ def password_generator(length=8):
     random.shuffle(printable)
 
     # generate random password and convert to string
-    random_password = random.choices(printable, k=length)
-    random_password = "".join(random_password)
-    return random_password
+    rstring = random.choices(printable, k=length)
+    rstring = "".join(rstring)
+    return rstring
 
 
 def has_answers(answers: dict, have: dict = {}, not_have: dict = {}):
@@ -143,6 +133,7 @@ def has_answers(answers: dict, have: dict = {}, not_have: dict = {}):
     return True
 
 
+"""
 def write_tpl(project_name, tpl, tpl_location, path):
     template = pkg_resources.read_text(tpl_location, tpl).replace(
         "application_tpl", project_name.replace("-", "_")
@@ -151,7 +142,7 @@ def write_tpl(project_name, tpl, tpl_location, path):
         file.writelines(template)
 
 
-""" maybe useful
+ maybe useful
 def write_templates(project_name: str, tpl_location, templates_paths: list):
     for tpl_path in templates_paths():
         tpl, path = tpl_path
@@ -163,59 +154,55 @@ def pjoin(*args):
     return "/".join(list(args))
 
 
-def add_requirements(pf: str, *requirements):
-    with open(f"{pf}/requirements.txt", "a") as file:
-        for requirement in requirements:
-            file.write("{}\r\n".format(requirement))
-
-
-def add_dev_requirements(pf: str, *requirements):
-    with open(f"{pf}/requirements-dev.txt", "a") as file:
-        for requirement in requirements:
-            file.write("{}\r\n".format(requirement))
-
-
-def cleanup(answers: Answers):
+def cleanup(sketch: Sketch):
     ...
 
 
-def make_app(answers: Answers):
-    extensions = [
-        ext.split(":")[0].split(".")[-1]
-        for ext in answers.settings["default"]["EXTENSIONS"]
-    ]
+def make_requirements(sketch: Sketch):
+    requirements = [req + "\n" for req in sorted(sketch.requirements)]
 
-    aux = ",\n    ".join(extensions)
+    dev_requirements = [req + "\n" for req in sorted(sketch.dev_requirements)]
+    dev_requirements.insert(0, "-r requirements.txt\n\n")
+
+    with open(f"{sketch.project_folder}/requirements.txt", "w") as file:
+        file.writelines(requirements)
+
+    with open(f"{sketch.project_folder}/requirements-dev.txt", "w") as file:
+        file.writelines(dev_requirements)
+
+
+def make_app(sketch: Sketch):
+    aux = ",\n    ".join(sketch.extensions)
     extensions_imports_string = (
-        f"from {answers.args.project_name}.ext import (\n    {aux}\n)"
+        f"from {sketch.app_folder_name}.ext import (\n    {aux}\n)"
     )
 
     blueprints = [
-        f"from {answers.args.project_name}.{bp} import {bp}bp"
-        for bp in answers.blueprints
+        f"from {sketch.app_folder_name}.{bp} import {bp}bp"
+        for bp in sketch.blueprints
     ]
     blueprints_imports_string = "\n".join(blueprints)
 
-    extensions_inits = [f"{ext}.init_app(app)" for ext in extensions]
+    extensions_inits = [f"{ext}.init_app(app)" for ext in sketch.extensions]
     extensions_inits_string = "\n    ".join(extensions_inits)
 
-    if "debugtoolbar" in answers.features:
+    if "debugtoolbar" in sketch.features:
         dev_extensions_inits_string = "if app.debug:\n\
         from {}.ext import debugtoolbar \n\
         debugtoolbar.init_app(app)".format(
-            answers.args.project_name
+            sketch.app_folder_name
         )
 
     blueprints_register = [
-        f"app.register_blueprint({bp}bp)" for bp in answers.blueprints
+        f"app.register_blueprint({bp}bp)" for bp in sketch.blueprints
     ]
 
     blueprints_register_string = "\n    ".join(blueprints_register)
 
-    with open(pjoin(answers.application_project_folder, "app.py"), "r+") as f:
+    with open(pjoin(sketch.app_folder, "app.py"), "r+") as f:
         template = string.Template(f.read())
 
-        if answers.config_framework == "dynaconf":
+        if sketch.config_framework == "dynaconf":
             app_content = template.substitute(
                 blueprints_imports=blueprints_imports_string,
                 blueprint_registers=blueprints_register_string,
@@ -233,9 +220,9 @@ def make_app(answers: Answers):
         f.truncate()
 
 
-def make_commom(answers: Answers):
-    paf = answers.application_project_folder
-    pf = answers.project_folder
+def make_commom(sketch: Sketch):
+    paf = sketch.app_folder
+    pf = sketch.project_folder
 
     os.makedirs(pjoin(pf, "tests"))
     os.makedirs(paf)
@@ -244,7 +231,7 @@ def make_commom(answers: Answers):
     os.makedirs(pjoin(paf, "config"))
     os.makedirs(pjoin(paf, "commands"))
     os.makedirs(pjoin(paf, "examples"))
-    if "admin" in answers.features:
+    if "admin" in sketch.features:
         os.makedirs(pjoin(paf, "ext", "admin"))
     open(pjoin(paf, "__init__.py"), "a").close()
     open(pjoin(paf, "app.py"), "a").close()
@@ -253,16 +240,12 @@ def make_commom(answers: Answers):
     open(pjoin(paf, "config", "__init__.py"), "a").close()
     open(pjoin(paf, "commands", "__init__.py"), "a").close()
     open(pjoin(paf, "examples", "__init__.py"), "a").close()
+    sketch.add_requirements("flask")
+    sketch.add_requirements("black", "isort", "flake8", dev=True)
 
-    add_requirements(pf, "flask")
-    add_dev_requirements(pf, "black", "isort", "flake8")
-
-    write_tpl("", ".gitignore_tpl", templates, pjoin(pf, ".gitignore"))
-    write_tpl(
-        answers.args.project_name, "wsgi_tpl", templates, pjoin(pf, "wsgi.py")
-    )
-    write_tpl(
-        answers.args.project_name,
+    sketch.write_template(".gitignore_tpl", templates, pjoin(pf, ".gitignore"))
+    sketch.write_template("wsgi_tpl", templates, pjoin(pf, "wsgi.py"))
+    sketch.write_template(
         "examples_init_tpl",
         templates.examples,
         pjoin(paf, "examples", "__init__.py"),
