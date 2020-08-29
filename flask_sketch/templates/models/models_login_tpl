@@ -1,0 +1,47 @@
+from flask_login import UserMixin
+from application_tpl.ext.database import db
+from application_tpl.models.utils import ModelCRUD
+
+roles_users = db.Table(
+    "roles_users",
+    db.Column("user_id", db.Integer(), db.ForeignKey("user.id")),
+    db.Column("role_id", db.Integer(), db.ForeignKey("role.id")),
+)
+
+
+class Role(db.Model):
+    __tablename__ = "role"
+    id = db.Column(db.Integer(), primary_key=True)
+    name = db.Column(db.String(80), unique=True)
+    description = db.Column(db.String(255))
+
+    def __repr__(self):
+        return "<Role {}>".format(self.name)
+
+
+class User(db.Model, UserMixin, ModelCRUD):
+    __tablename__ = "user"
+    id = db.Column(db.Integer(), primary_key=True)
+    email = db.Column(db.String(255), unique=True)
+    password = db.Column(db.String(255))
+    active = db.Column(db.Boolean(), default=True, server_default="true")
+    roles = db.relationship(
+        "Role", secondary="roles_users", backref=db.backref("users", lazy="dynamic"),
+    )
+
+    def __repr__(self):
+        return "<User {}>".format(self.email)
+
+    @classmethod
+    def get_by_email(cls, email):
+        return User.query.filter_by(email=email).one_or_none()
+
+    def has_roles(self, *roles_required):
+        roles = set(roles_required)
+        user_roles = set([role.name for role in self.roles])
+        return roles.issubset(user_roles)
+
+    def has_any_roles(self, *roles_accepted):
+        roles = set(roles_accepted)
+        user_roles = set([role.name for role in self.roles])
+        return not set(user_roles).isdisjoint(roles)

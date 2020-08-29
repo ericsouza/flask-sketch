@@ -84,15 +84,15 @@ def none_handler(sketch: Sketch):
 
         secrets_cfg_output = []
         for k, val in secrets_cfg.items():
-            secrets_cfg_output.append(f'{k} = {repr(val)}\n')
+            secrets_cfg_output.append(f"{k} = {repr(val)}\n")
 
         settings_cfg_output = []
         for k, val in settings_cfg["default"].items():
-            settings_cfg_output.append(f'{k} = {repr(val)}\n')
+            settings_cfg_output.append(f"{k} = {repr(val)}\n")
 
         dev_settings_cfg_output = []
         for k, val in dev_settings_cfg["default"].items():
-            dev_settings_cfg_output.append(f'{k} = {repr(val)}\n')
+            dev_settings_cfg_output.append(f"{k} = {repr(val)}\n")
 
         with open(pjoin(sketch.project_folder, ".secrets.cfg"), "w",) as f:
             f.writelines(secrets_cfg_output)

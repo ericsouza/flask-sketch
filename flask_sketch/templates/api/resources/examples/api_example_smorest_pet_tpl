@@ -1,0 +1,73 @@
+from flask.views import MethodView
+from flask_smorest import Blueprint, abort
+import marshmallow as ma
+from flask_jwt_extended import jwt_required
+from application_tpl.models.examples.pet import Pet
+from application_tpl.models.utils import ItemNotFoundError
+from application_tpl.utils.security.api_rbac import roles_required, roles_accepted
+
+pet_blp = Blueprint(
+    "pets", "pets", url_prefix="/api/pets", description="Operations on pets"
+)
+
+
+class PetSchema(ma.Schema):
+    id = ma.fields.Int(dump_only=True)
+    name = ma.fields.String()
+
+
+class PetQueryArgsSchema(ma.Schema):
+    name = ma.fields.String()
+
+
+@pet_blp.route("")
+class Pets(MethodView):
+    @pet_blp.arguments(PetQueryArgsSchema, location="query")
+    @pet_blp.response(PetSchema(many=True))
+    def get(self, args):
+        """List pets"""
+        return Pet.get(filters=args)
+
+    @pet_blp.arguments(PetSchema)
+    @pet_blp.response(PetSchema, code=201)
+    @jwt_required
+    @roles_accepted("admin", "editor")
+    def post(self, new_data):
+        """Add a new pet"""
+        item = Pet.create(new_data)
+        return item
+
+
+@pet_blp.route("/<pet_id>")
+class PetsById(MethodView):
+    @pet_blp.response(PetSchema)
+    def get(self, pet_id):
+        """Get pet by ID"""
+        try:
+            item = Pet.get_by_id(pet_id)
+        except ItemNotFoundError:
+            abort(404, message="Item not found.")
+        return item
+
+    @pet_blp.arguments(PetSchema)
+    @pet_blp.response(PetSchema)
+    @jwt_required
+    @roles_accepted("admin", "editor")
+    def put(self, update_data, pet_id):
+        """Update existing pet"""
+        try:
+            item = Pet.get_by_id(pet_id)
+        except ItemNotFoundError:
+            abort(404, message="Item not found.")
+        item.update(update_data)
+        return item
+
+    @pet_blp.response(code=204)
+    @jwt_required
+    @roles_required("admin")
+    def delete(self, pet_id):
+        """Delete pet"""
+        try:
+            Pet.delete(pet_id)
+        except ItemNotFoundError:
+            abort(404, message="Item not found.")

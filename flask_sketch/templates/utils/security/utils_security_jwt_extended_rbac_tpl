@@ -1,0 +1,44 @@
+from functools import wraps
+from flask import abort, Response, jsonify
+from flask_jwt_extended import get_jwt_identity
+from application_tpl.models import User
+
+
+def roles_required(*roles):
+    def decorator(func):
+        @wraps(func)
+        def wrapped(*args, **kwargs):
+            current_user = get_jwt_identity()
+            user: User = User.get_by_email(current_user)
+            try:
+                if user.has_roles(*roles):
+                    return func(*args, **kwargs)
+            except AttributeError:
+                return abort(
+                    400, Response(jsonify({"code": 400, "message": "Missing token."}))
+                )
+            return abort(403, Response(jsonify({"code": 403, "status": "Forbidden"})))
+
+        return wrapped
+
+    return decorator
+
+
+def roles_accepted(*roles):
+    def decorator(func):
+        @wraps(func)
+        def wrapped(*args, **kwargs):
+            current_user = get_jwt_identity()
+            user: User = User.get_by_email(current_user)
+            try:
+                if user.has_any_roles(*roles):
+                    return func(*args, **kwargs)
+            except AttributeError:
+                return abort(
+                    403, Response(jsonify({"code": 403, "status": "Forbidden"}))
+                )
+            return abort(403, Response(jsonify({"code": 403, "status": "Forbidden"})))
+
+        return wrapped
+
+    return decorator

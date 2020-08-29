@@ -5,7 +5,7 @@ from flask_sketch.make import create_project
 
 def test_web_only_mysql_security_dynaconf_allfeatures():
     answers = {
-        "application_type": "web_only",
+        "have_api": False,
         "auth_framework": "security_web",
         "config_framework": "dynaconf",
         "database": "mysql",
@@ -17,7 +17,7 @@ def test_web_only_mysql_security_dynaconf_allfeatures():
 
 def test_web_only_postgres_security_nosettings_allfeatures():
     answers = {
-        "application_type": "web_only",
+        "have_api": False,
         "auth_framework": "security_web",
         "config_framework": "none",
         "database": "postgres",

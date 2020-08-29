@@ -20,9 +20,13 @@ class Sketch:
         self.app_folder_name: str = args.project_name.replace("-", "_")
         self.project_folder: str = pf
         self.app_folder: str = apf
-        self.app_type: str = answers.get("application_type")
+        self.app_type: str = "web_only" if not answers.get(
+            "have_api"
+        ) else "web_and_api"
+        self.have_api = answers.get("have_api")
         self.database: str = answers.get("database")
         self.auth_framework: str = answers.get("auth_framework")
+        self.api_auth_framework: str = answers.get("api_auth_framework")
         self.api_framework: str = answers.get("api_framework")
         self.config_framework: str = answers.get("config_framework")
         self.features: list = answers.get("features")
@@ -30,8 +34,8 @@ class Sketch:
         self.create_examples = args.e
         self.create_virtualenv = args.v
         self.create_pyproject = args.p
-        self.requirements = []
-        self.dev_requirements = []
+        self.requirements = set()
+        self.dev_requirements = set()
         self.extensions = []
         self.blueprints = []
         self.secrets = {"default": {}}
@@ -44,9 +48,9 @@ class Sketch:
 
     def add_requirements(self, *requirements, dev=False):
         if dev:
-            self.dev_requirements.extend(requirements)
+            self.dev_requirements.update(requirements)
         else:
-            self.requirements.extend(requirements)
+            self.requirements.update(requirements)
 
     def add_extensions(self, *extensions):
         self.extensions.extend(extensions)
@@ -123,31 +127,17 @@ def random_string(length=16):
 def has_answers(answers: dict, have: dict = {}, not_have: dict = {}):
 
     for da in have:
-        if not answers.get(da).lower() in have.get(da).lower().split(";"):
+        if isinstance(answers.get(da), bool):
+            if not answers.get(da) == have.get(da):
+                return False
+        elif not answers.get(da) in have.get(da).split(";"):
             return False
 
     for nda in not_have:
-        if answers.get(nda).lower() in not_have.get(nda).lower().split(";"):
+        if answers.get(nda) in not_have.get(nda).split(";"):
             return False
 
     return True
-
-
-"""
-def write_tpl(project_name, tpl, tpl_location, path):
-    template = pkg_resources.read_text(tpl_location, tpl).replace(
-        "application_tpl", project_name.replace("-", "_")
-    )
-    with open(path, "a") as file:
-        file.writelines(template)
-
-
- maybe useful
-def write_templates(project_name: str, tpl_location, templates_paths: list):
-    for tpl_path in templates_paths():
-        tpl, path = tpl_path
-        write_tpl(project_name, tpl, tpl_location, path)
-"""
 
 
 def pjoin(*args):
@@ -159,9 +149,11 @@ def cleanup(sketch: Sketch):
 
 
 def make_requirements(sketch: Sketch):
-    requirements = [req + "\n" for req in sorted(sketch.requirements)]
+    requirements = [req + "\n" for req in sorted(list(sketch.requirements))]
 
-    dev_requirements = [req + "\n" for req in sorted(sketch.dev_requirements)]
+    dev_requirements = [
+        req + "\n" for req in sorted(list(sketch.dev_requirements))
+    ]
     dev_requirements.insert(0, "-r requirements.txt\n\n")
 
     with open(f"{sketch.project_folder}/requirements.txt", "w") as file:

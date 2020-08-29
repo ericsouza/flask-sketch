@@ -1,0 +1,9 @@
+from flask_smorest import Api
+from application_tpl.api.resources.examples.pet import pet_blp
+
+api = Api()
+
+
+def init_app(app):
+    api.init_app(app)
+    api.register_blueprint(pet_blp)

@@ -8,12 +8,17 @@ from flask_sketch import templates
 
 
 def login_handler(sketch: Sketch):
-    if sketch.auth_framework == "login_web":
+    if sketch.auth_framework == "login":
+        sketch.add_requirements(
+            "flask-login", "argon2-cffi", "flask-wtf", "email_validator"
+        )
+        sketch.add_extensions("auth")
+
         return True
 
 
 def security_web_handler(sketch: Sketch):
-    if sketch.auth_framework == "security_web":
+    if sketch.auth_framework == "security":
         sketch.add_requirements("flask-security-too", "argon2-cffi")
 
         sketch.settings["default"]["SECURITY_REGISTERABLE"] = True
@@ -58,40 +63,10 @@ def security_web_handler(sketch: Sketch):
 
 
 def basicauth_web_handler(sketch: Sketch):
-    if sketch.auth_framework == "basicauth_web":
+    if sketch.auth_framework == "basicauth":
         sketch.add_requirements("flask-basicAuth")
         sketch.secrets["default"]["BASIC_AUTH_PASSWORD"] = "admin"
         sketch.secrets["default"]["BASIC_AUTH_PASSWORD"] = random_string()
-        return True
-
-
-def jwt_extended_handler(sketch: Sketch):
-    if sketch.auth_framework == "jwt_extended":
-        sketch.add_requirements("flask-jwt-extended")
-        return True
-
-
-def basicauth_api_handler(sketch: Sketch):
-    if sketch.auth_framework == "basicauth_api":
-        sketch.add_requirements("flask-basicauth")
-        return True
-
-
-def security_jwt_extended_handler(sketch: Sketch):
-    if sketch.auth_framework == "security_jwt_extended":
-        sketch.add_requirements("flask-security-too", "flask-jwt-extended")
-        return True
-
-
-def login_jwt_extended_handler(sketch: Sketch):
-    if sketch.auth_framework == "login_jwt_extended":
-        sketch.add_requirements("flask-login", "flask-jwt-extended")
-        return True
-
-
-def basicauth_web_api_handler(sketch: Sketch):
-    if sketch.auth_framework == "basicauth_web_api":
-        sketch.add_requirements("flask-basicauth")
         return True
 
 
@@ -122,13 +97,5 @@ class AuthHandler(GenericHandler):
 
 
 auth_handler = AuthHandler(
-    login_handler,
-    security_web_handler,
-    basicauth_web_handler,
-    jwt_extended_handler,
-    basicauth_api_handler,
-    security_jwt_extended_handler,
-    login_jwt_extended_handler,
-    basicauth_web_api_handler,
-    none_handler,
+    login_handler, security_web_handler, basicauth_web_handler, none_handler,
 )

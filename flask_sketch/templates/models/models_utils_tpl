@@ -1,0 +1,36 @@
+from application_tpl.ext.database import db
+
+
+class ItemNotFoundError(Exception):
+    ...
+
+
+class ModelCRUD:
+    @classmethod
+    def get(cls, filters):
+        return cls.query.filter_by(**filters).all()
+
+    @classmethod
+    def get_by_id(cls, _id):
+        item = cls.query.get(_id)
+        if not item:
+            raise ItemNotFoundError("Error")
+        return item
+
+    @classmethod
+    def create(cls, data):
+        new_item = cls(**data)
+
+        db.session.add(new_item)
+        db.session.commit()
+
+        return new_item
+
+    def update(self, new_data):
+        self.query.filter_by(id=self.id).update(new_data)
+        db.session.commit()
+
+    @classmethod
+    def delete(cls, _id):
+        cls.query.filter_by(id=_id).delete()
+        db.session.commit()

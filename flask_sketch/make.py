@@ -6,6 +6,7 @@ from flask_sketch.handlers import (
     api_framework_handler,
     app_type_handler,
     auth_handler,
+    api_auth_handler,
     config_handler,
     database_handler,
     handle_features,
@@ -35,17 +36,20 @@ def create_project(args: Namespace, answers: dict):
 
     sketch.settings["default"]["DEBUG"] = False
     sketch.settings["development"]["DEBUG"] = True
+    sketch.settings["default"]["SECRET_KEY"] = random_string(length=32)
 
     app_type_handler(sketch)
     database_handler(sketch)
     auth_handler(sketch)
-    if "api" in sketch.app_type:
+    if sketch.have_api:
         api_framework_handler(sketch)
+        api_auth_handler(sketch)
+
     handle_features(sketch)
     config_handler(sketch)
 
-    if args.e:
-        sketch.blueprints.extend(["examples"])
+    # if args.e:
+    sketch.blueprints.extend(["examples"])
     make_app(sketch)
     make_requirements(sketch)
 

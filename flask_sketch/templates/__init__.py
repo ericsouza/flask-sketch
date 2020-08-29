@@ -4,8 +4,10 @@ from flask_sketch.templates import (
     ext,
     models,
     site,
+    api,
     app,
     examples,
+    utils,
 )
 
 from flask_sketch.templates.ext import admin
@@ -16,7 +18,9 @@ __all__ = [
     "ext",
     "models",
     "site",
+    "api",
     "app",
     "examples",
+    "utils",
     "admin",
 ]

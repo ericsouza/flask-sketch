@@ -1,0 +1,49 @@
+from flask import render_template, redirect, url_for
+from flask_login import login_user, login_required, logout_user
+from application_tpl.site.forms import LoginForm, RegisterForm
+from application_tpl.models import User
+from application_tpl.utils.security.password_hasher import password_hasher
+
+
+def index():
+    return "you are at index of your flask application"
+
+
+def login():
+    form = LoginForm()
+
+    if form.validate_on_submit():
+        user = User.get_by_email(email=form.email.data)
+        if user:
+            if password_hasher.verify(user.password, form.password.data):
+                login_user(user, remember=form.remember.data)
+                return redirect(url_for("site.dashboard"))
+
+        return "<h1>Invalid username or password</h1>"
+
+    return render_template("login.html", form=form)
+
+
+def register():
+    form = RegisterForm()
+
+    if form.validate_on_submit():
+        hashed_password = password_hasher.hash(form.password.data)
+
+        data = {"email": form.email.data, "password": hashed_password}
+        User.create(data)
+
+        return "<h1>New user has been created!</h1>"
+
+    return render_template("register.html", form=form)
+
+
+@login_required
+def dashboard():
+    return render_template("dashboard.html")
+
+
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for("site.index"))

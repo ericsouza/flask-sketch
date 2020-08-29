@@ -1,0 +1,11 @@
+from application_tpl.ext.database import db
+from application_tpl.models.utils import ModelCRUD
+
+
+class Pet(db.Model, ModelCRUD):
+    __tablename__ = "pet"
+    id = db.Column(db.Integer(), primary_key=True)
+    name = db.Column(db.String(255))
+
+    def __repr__(self):
+        return "<Pet {}".format(self.name)

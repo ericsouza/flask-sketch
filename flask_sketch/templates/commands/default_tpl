@@ -1,0 +1,41 @@
+import click
+from flask.cli import with_appcontext
+from application_tpl.ext.database import db
+from application_tpl.models import User, Role
+from application_tpl.utils.security.password_hasher import password_hasher
+
+
+@click.command(name="create_db")
+@with_appcontext
+def create_database():
+    db.create_all()
+
+
+@click.command(name="create_users")
+@with_appcontext
+def create_users():
+
+    admin_role = Role(name="admin")
+    editor_role = Role(name="editor")
+
+    admin = User(
+        email="admin@email.com",
+        password=password_hasher.hash("password"),
+        roles=[admin_role],
+    )
+
+    editor = User(
+        email="editor@email.com",
+        password=password_hasher.hash("12345678"),
+        roles=[editor_role],
+    )
+    user = User(email="user@email.com", password=password_hasher.hash("12345678"))
+
+    db.session.add_all([admin_role, editor_role])
+    db.session.add_all([admin, editor, user])
+    db.session.commit()
+
+
+def register_commands(app):
+    app.cli.add_command(create_database)
+    app.cli.add_command(create_users)
