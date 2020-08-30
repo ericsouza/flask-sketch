@@ -26,7 +26,9 @@ class User(db.Model, UserMixin, ModelCRUD):
     password = db.Column(db.String(255))
     active = db.Column(db.Boolean(), default=True, server_default="true")
     roles = db.relationship(
-        "Role", secondary="roles_users", backref=db.backref("users", lazy="dynamic"),
+        "Role",
+        secondary="roles_users",
+        backref=db.backref("users", lazy="dynamic"),
     )
 
     def __repr__(self):

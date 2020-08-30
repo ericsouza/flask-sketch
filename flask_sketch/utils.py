@@ -58,11 +58,11 @@ class Sketch:
     def add_blueprints(self, *blueprints):
         self.blueprints.extend(blueprints)
 
-    def write_template(self, template, template_location, path):
+    def write_template(self, template, template_location, path, mode="a"):
         template = pkg_resources.read_text(
             template_location, template
         ).replace("application_tpl", self.app_folder_name)
-        with open(path, "a") as file:
+        with open(path, mode) as file:
             file.writelines(template)
 
 
@@ -219,9 +219,10 @@ def make_commom(sketch: Sketch):
     os.makedirs(pjoin(pf, "tests"))
     os.makedirs(paf)
     os.makedirs(pjoin(paf, "ext"))
-    os.makedirs(pjoin(paf, "models"))
+    os.makedirs(pjoin(paf, "models", "examples"))
     os.makedirs(pjoin(paf, "config"))
     os.makedirs(pjoin(paf, "commands"))
+    os.makedirs(pjoin(paf, "utils", "security"))
     os.makedirs(pjoin(paf, "examples"))
     if "admin" in sketch.features:
         os.makedirs(pjoin(paf, "ext", "admin"))
@@ -229,8 +230,11 @@ def make_commom(sketch: Sketch):
     open(pjoin(paf, "app.py"), "a").close()
     open(pjoin(paf, "ext", "__init__.py"), "a").close()
     open(pjoin(paf, "models", "__init__.py"), "a").close()
+    open(pjoin(paf, "models", "examples", "__init__.py"), "a").close()
     open(pjoin(paf, "config", "__init__.py"), "a").close()
     open(pjoin(paf, "commands", "__init__.py"), "a").close()
+    open(pjoin(paf, "utils", "__init__.py"), "a").close()
+    open(pjoin(paf, "utils", "security", "__init__.py"), "a").close()
     open(pjoin(paf, "examples", "__init__.py"), "a").close()
     sketch.add_requirements("flask")
     sketch.add_requirements("black", "isort", "flake8", dev=True)
@@ -242,3 +246,7 @@ def make_commom(sketch: Sketch):
         templates.examples,
         pjoin(paf, "examples", "__init__.py"),
     )
+    sketch.write_template(
+        "models_utils_tpl", templates.models, pjoin(paf, "models", "utils.py"),
+    )
+

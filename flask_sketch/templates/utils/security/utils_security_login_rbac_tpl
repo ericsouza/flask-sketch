@@ -23,7 +23,9 @@ def roles_accepted(*roles):
     def decorator(func):
         @wraps(func)
         def wrapped(*args, **kwargs):
-            if current_user.is_authenticated and current_user.has_any_roles(*roles):
+            if current_user.is_authenticated and current_user.has_any_roles(
+                *roles
+            ):
                 return func(*args, **kwargs)
             return abort(403)
 

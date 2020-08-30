@@ -29,7 +29,9 @@ def create_users():
         password=password_hasher.hash("12345678"),
         roles=[editor_role],
     )
-    user = User(email="user@email.com", password=password_hasher.hash("12345678"))
+    user = User(
+        email="user@email.com", password=password_hasher.hash("12345678")
+    )
 
     db.session.add_all([admin_role, editor_role])
     db.session.add_all([admin, editor, user])

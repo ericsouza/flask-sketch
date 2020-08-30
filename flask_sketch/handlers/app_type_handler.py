@@ -7,9 +7,13 @@ from flask_sketch.utils import (
 import os
 
 
-def web_only_handler(sketch: Sketch):
+def app_handler(sketch: Sketch):
     if sketch.app_type == "web_and_api":
         os.makedirs(pjoin(sketch.app_folder, "api", "resources"))
+        open(pjoin(sketch.app_folder, "api", "__init__.py"), "a").close()
+        open(
+            pjoin(sketch.app_folder, "api", "resources", "__init__.py"), "a"
+        ).close()
 
     os.makedirs(pjoin(sketch.app_folder, "site"))
     sketch.blueprints.extend(["site"])
@@ -32,4 +36,4 @@ class AppTypeHandler(GenericHandler):
     ...
 
 
-app_type_handler = AppTypeHandler(web_only_handler)
+app_type_handler = AppTypeHandler(app_handler)

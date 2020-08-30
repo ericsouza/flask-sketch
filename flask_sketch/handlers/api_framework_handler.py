@@ -1,6 +1,8 @@
+import os
 from flask_sketch import templates  # noqa
 from flask_sketch.utils import Sketch
 from flask_sketch.utils import GenericHandler
+from flask_sketch.utils import pjoin
 
 
 def restx_handler(sketch: Sketch):
@@ -24,6 +26,37 @@ def smorest_handler(sketch: Sketch):
         ] = "https://cdn.jsdelivr.net/npm/swagger-ui-dist/"
 
         sketch.add_extensions("api")
+
+        os.makedirs(pjoin(sketch.app_folder, "api", "resources", "examples"))
+        open(
+            pjoin(
+                sketch.app_folder,
+                "api",
+                "resources",
+                "examples",
+                "__init__.py",
+            ),
+            "a",
+        ).close()
+
+        sketch.write_template(
+            "ext_api_smorest_tpl",
+            templates.ext,
+            pjoin(sketch.app_folder, "ext", "api.py"),
+        )
+
+        sketch.write_template(
+            "api_example_smorest_pet_tpl",
+            templates.api.resources.examples,
+            pjoin(sketch.app_folder, "api", "resources", "examples", "pet.py"),
+        )
+
+        sketch.write_template(
+            "models_examples_smorest_pet_tpl",
+            templates.models.examples,
+            pjoin(sketch.app_folder, "models", "examples", "pet.py"),
+        )
+
         return True
 
 

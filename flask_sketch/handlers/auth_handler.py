@@ -14,6 +14,52 @@ def login_handler(sketch: Sketch):
         )
         sketch.add_extensions("auth")
 
+        sketch.write_template(
+            "commands_default_tpl",
+            templates.commands,
+            pjoin(sketch.app_folder, "commands", "__init__.py",),
+            mode="w",
+        )
+
+        sketch.write_template(
+            "ext_login_tpl",
+            templates.ext,
+            pjoin(sketch.app_folder, "ext", "auth.py"),
+        )
+
+        sketch.write_template(
+            "models_login_tpl",
+            templates.models,
+            pjoin(sketch.app_folder, "models", "user.py"),
+        )
+
+        sketch.write_template(
+            "examples_login_auth_tpl",
+            templates.examples,
+            pjoin(sketch.app_folder, "examples", "auth_examples.py",),
+        )
+
+        sketch.write_template(
+            "examples_init_auth_tpl",
+            templates.examples,
+            pjoin(sketch.app_folder, "examples", "__init__.py",),
+        )
+
+        sketch.write_template(
+            "utils_security_login_rbac_tpl",
+            templates.utils.security,
+            pjoin(sketch.app_folder, "utils", "security", "rbac.py"),
+        )
+
+        sketch.write_template(
+            "utils_security_password_hasher_tpl",
+            templates.utils.security,
+            pjoin(
+                sketch.app_folder, "utils", "security", "password_hasher.py"
+            ),
+            mode="w",
+        )
+
         return True
 
 
@@ -42,7 +88,7 @@ def security_web_handler(sketch: Sketch):
         )
 
         sketch.write_template(
-            "models_security_web_only_tpl",
+            "models_security_tpl",
             templates.models,
             pjoin(sketch.app_folder, "models", "user.py"),
         )
@@ -54,7 +100,7 @@ def security_web_handler(sketch: Sketch):
         )
 
         sketch.write_template(
-            "examples_init_security_tpl",
+            "examples_init_auth_tpl",
             templates.examples,
             pjoin(sketch.app_folder, "examples", "__init__.py",),
         )

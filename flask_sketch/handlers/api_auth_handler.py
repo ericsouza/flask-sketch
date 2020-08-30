@@ -14,6 +14,40 @@ def jwt_extended_handler(sketch: Sketch):
 
         sketch.add_extensions("api_auth")
 
+        sketch.write_template(
+            "security_web_only_tpl",
+            templates.commands,
+            pjoin(sketch.app_folder, "commands", "__init__.py",),
+            mode="w",
+        )
+
+        sketch.write_template(
+            "api_init_jwt_extended_tpl",
+            templates.api,
+            pjoin(sketch.app_folder, "api", "__init__.py"),
+        )
+
+        sketch.write_template(
+            "ext_api_auth_jwt_extended_tpl",
+            templates.ext,
+            pjoin(sketch.app_folder, "ext", "api_auth.py"),
+        )
+
+        sketch.write_template(
+            "utils_security_jwt_extended_rbac_tpl",
+            templates.utils.security,
+            pjoin(sketch.app_folder, "utils", "security", "api_rbac.py"),
+        )
+
+        sketch.write_template(
+            "utils_security_password_hasher_tpl",
+            templates.utils.security,
+            pjoin(
+                sketch.app_folder, "utils", "security", "password_hasher.py"
+            ),
+            mode="w",
+        )
+
         return True
 
 

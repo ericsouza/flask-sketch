@@ -1,5 +1,5 @@
 from functools import wraps
-from flask import abort, Response, jsonify
+from flask import jsonify
 from flask_jwt_extended import get_jwt_identity
 from application_tpl.models import User
 
@@ -14,10 +14,11 @@ def roles_required(*roles):
                 if user.has_roles(*roles):
                     return func(*args, **kwargs)
             except AttributeError:
-                return abort(
-                    400, Response(jsonify({"code": 400, "message": "Missing token."}))
+                return (
+                    jsonify({"code": 400, "message": "Missing access token."}),
+                    400,
                 )
-            return abort(403, Response(jsonify({"code": 403, "status": "Forbidden"})))
+            return jsonify({"code": 403, "status": "Forbidden"}), 403
 
         return wrapped
 
@@ -34,10 +35,11 @@ def roles_accepted(*roles):
                 if user.has_any_roles(*roles):
                     return func(*args, **kwargs)
             except AttributeError:
-                return abort(
-                    403, Response(jsonify({"code": 403, "status": "Forbidden"}))
+                return (
+                    jsonify({"code": 400, "message": "Missing access token."}),
+                    400,
                 )
-            return abort(403, Response(jsonify({"code": 403, "status": "Forbidden"})))
+            return jsonify({"code": 403, "status": "Forbidden"}), 403
 
         return wrapped
 
