@@ -249,4 +249,3 @@ def make_commom(sketch: Sketch):
     sketch.write_template(
         "models_utils_tpl", templates.models, pjoin(paf, "models", "utils.py"),
     )
-

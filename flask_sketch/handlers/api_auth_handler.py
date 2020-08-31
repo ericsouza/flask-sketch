@@ -15,7 +15,7 @@ def jwt_extended_handler(sketch: Sketch):
         sketch.add_extensions("api_auth")
 
         sketch.write_template(
-            "security_web_only_tpl",
+            "commands_default_tpl",
             templates.commands,
             pjoin(sketch.app_folder, "commands", "__init__.py",),
             mode="w",

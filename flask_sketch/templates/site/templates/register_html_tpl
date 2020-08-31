@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Register</title>
+  </head>
+  <body>
+    <div>
+      <form method="POST" action="/register">
+        <h2>Sign Up</h2>
+        {{ form.hidden_tag() }} {{ form.email }}
+        <br />
+        <br />
+        {{ form.password }}
+        <br />
+        <br />
+        <button type="submit">
+          Register
+        </button>
+      </form>
+      <h1>Menu</h1>
+      <ul>
+        <li><a href="{{ url_for('site.login') }}">Login</a></li>
+        <li><a href="{{ url_for('site.register') }}">Register</a></li>
+      </ul>
+    </div>
+  </body>
+</html>

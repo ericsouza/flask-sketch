@@ -12,6 +12,9 @@ def restx_handler(sketch: Sketch):
 
 def smorest_handler(sketch: Sketch):
     if sketch.api_framework == "smorest":
+        sketch.add_requirements("flask-smorest")
+
+        sketch.settings["default"]["API_TITLE"] = sketch.project_name
         sketch.settings["default"]["API_VERSION"] = "v1"
         sketch.settings["default"]["OPENAPI_VERSION"] = "3.0.2"
         sketch.settings["default"]["OPENAPI_JSON_PATH"] = "api-spec.json"

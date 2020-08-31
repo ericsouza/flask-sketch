@@ -1,8 +1,10 @@
+import os
 from flask_sketch.utils import (
     Sketch,
     GenericHandler,
     pjoin,
     random_string,
+    pjoin,
 )
 from flask_sketch import templates
 
@@ -60,6 +62,44 @@ def login_handler(sketch: Sketch):
             mode="w",
         )
 
+        sketch.write_template(
+            "site_login_auth_views_tpl",
+            templates.site,
+            pjoin(sketch.app_folder, "site", "views.py",),
+        )
+
+        sketch.write_template(
+            "site_login_auth_forms_tpl",
+            templates.site,
+            pjoin(sketch.app_folder, "site", "forms.py",),
+        )
+
+        sketch.write_template(
+            "site_login_init_tpl",
+            templates.site,
+            pjoin(sketch.app_folder, "site", "__init__.py",),
+        )
+
+        os.makedirs(pjoin(sketch.app_folder, "site", "templates"))
+
+        sketch.write_template(
+            "login_html_tpl",
+            templates.site.templates,
+            pjoin(sketch.app_folder, "site", "templates", "login.html",),
+        )
+
+        sketch.write_template(
+            "register_html_tpl",
+            templates.site.templates,
+            pjoin(sketch.app_folder, "site", "templates", "register.html",),
+        )
+
+        sketch.write_template(
+            "dashboard_html_tpl",
+            templates.site.templates,
+            pjoin(sketch.app_folder, "site", "templates", "dashboard.html",),
+        )
+
         return True
 
 
@@ -79,6 +119,7 @@ def security_web_handler(sketch: Sketch):
             "security_web_only_tpl",
             templates.commands,
             pjoin(sketch.app_folder, "commands", "__init__.py",),
+            mode="w",
         )
 
         sketch.write_template(

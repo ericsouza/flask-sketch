@@ -84,9 +84,16 @@ def handle_admin(sketch: Sketch):
     sketch.settings["production"]["ADMIN_NAME"] = sketch.project_name
 
     # TODO refact this part to not use a lot of if statements
-    if sketch.auth_framework == "security_web":
+    if sketch.auth_framework == "security":
         sketch.write_template(
             "ext_admin_security_tpl",
+            templates.ext.admin,
+            pjoin(sketch.app_folder, "ext", "admin", "__init__.py",),
+        )
+
+    if sketch.auth_framework == "login":
+        sketch.write_template(
+            "ext_admin_login_tpl",
             templates.ext.admin,
             pjoin(sketch.app_folder, "ext", "admin", "__init__.py",),
         )

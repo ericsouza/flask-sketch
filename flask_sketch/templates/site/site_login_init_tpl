@@ -1,0 +1,16 @@
+from flask import Blueprint
+from application_tpl.site.views import (
+    index,
+    login,
+    register,
+    logout,
+    dashboard,
+)
+
+sitebp = Blueprint("site", __name__, template_folder="templates")
+
+sitebp.add_url_rule("/", view_func=index)
+sitebp.add_url_rule("/login", view_func=login, methods=["GET", "POST"])
+sitebp.add_url_rule("/register", view_func=register, methods=["GET", "POST"])
+sitebp.add_url_rule("/logout", view_func=logout)
+sitebp.add_url_rule("/dashboard", view_func=dashboard)
