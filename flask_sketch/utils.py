@@ -37,7 +37,15 @@ class Sketch:
         self.requirements = set()
         self.dev_requirements = set()
         self.extensions = []
+        self.dev_extensions = []
         self.blueprints = []
+        self.template_args = {
+            "PWD_VERIFIER_METHOD_IMPORT": f"from {self.app_folder_name}.utils.security.password_hasher import password_hasher",  # noqa
+            "PWD_VERIFIER_METHOD": "password_hasher.verify(user.password, password)",
+            "API_RBAC_IMPORT": f"from {self.app_folder_name}.utils.security.api_rbac import roles_required, roles_accepted",
+            "ROLES_REQUIRED_DECORATOR": "@roles_required(\"admin\")",
+            "ROLES_ACCEPTED_DECORATOR": "@roles_accepted(\"admin\", \"editor\")",
+        }
         self.secrets = {"default": {}}
         self.settings = {
             "default": {"EXTENSIONS": []},
@@ -52,8 +60,11 @@ class Sketch:
         else:
             self.requirements.update(requirements)
 
-    def add_extensions(self, *extensions):
-        self.extensions.extend(extensions)
+    def add_extensions(self, *extensions, dev=False):
+        if dev:
+            self.dev_extensions.extend(extensions)
+        else:
+            self.extensions.extend(extensions)
 
     def add_blueprints(self, *blueprints):
         self.blueprints.extend(blueprints)
@@ -150,7 +161,38 @@ def pjoin(*args):
 
 
 def cleanup(sketch: Sketch):
-    ...
+    files = get_list_of_files(sketch.app_folder)
+    for file in files:
+        with open(file, "r+") as f:
+            template = string.Template(f.read())
+            tpl_identifiers = find_template_identifiers(template)
+            tpl_dict = {}
+            for k in tpl_identifiers:
+                tpl_dict[k] = ""
+
+            new_content = template.substitute(**tpl_dict)
+
+            f.seek(0)
+            f.write(new_content)
+            f.truncate()
+
+
+def get_list_of_files(dir_name):
+    # create a list of file and sub directories
+    # names in the given directory
+    list_of_file = os.listdir(dir_name)
+    all_files = list()
+    # Iterate over all the entries
+    for entry in list_of_file:
+        # Create full path
+        full_path = os.path.join(dir_name, entry)
+        # If entry is a directory then get the list of files in this directory
+        if os.path.isdir(full_path):
+            all_files = all_files + get_list_of_files(full_path)
+        else:
+            all_files.append(full_path)
+
+    return all_files
 
 
 def make_requirements(sketch: Sketch):
@@ -218,6 +260,34 @@ def make_app(sketch: Sketch):
         f.truncate()
 
 
+def find_template_identifiers(template: string.Template):
+    return set(
+        [
+            s[1] or s[2]
+            for s in string.Template.pattern.findall(template.template)
+            if s[1] or s[2]
+        ]
+    )
+
+
+def make_template_args(sketch: Sketch):
+    files = get_list_of_files(sketch.app_folder)
+    for file in files:
+        with open(file, "r+") as f:
+            template = string.Template(f.read())
+            tpl_identifiers = find_template_identifiers(template)
+            args_keys = tpl_identifiers & set(sketch.template_args.keys())
+            tpl_dict = {}
+            for k in args_keys:
+                tpl_dict[k] = sketch.template_args[k]
+
+            new_content = template.substitute(**tpl_dict)
+
+            f.seek(0)
+            f.write(new_content)
+            f.truncate()
+
+
 def make_commom(sketch: Sketch):
     paf = sketch.app_folder
     pf = sketch.project_folder
@@ -251,7 +321,4 @@ def make_commom(sketch: Sketch):
         "examples_init_tpl",
         templates.examples,
         pjoin(paf, "examples", "__init__.py"),
-    )
-    sketch.write_template(
-        "models_utils_tpl", templates.models, pjoin(paf, "models", "utils.py"),
     )

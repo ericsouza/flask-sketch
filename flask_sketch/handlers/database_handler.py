@@ -24,6 +24,12 @@ def handle_sql_db(sketch: Sketch):
         pjoin(sketch.app_folder, "ext", "database.py"),
     )
 
+    sketch.write_template(
+        "models_utils_tpl",
+        templates.models,
+        pjoin(sketch.app_folder, "models", "utils.py"),
+    )
+
 
 def sqlite_handler(sketch: Sketch):
     if sketch.database == "sqlite":

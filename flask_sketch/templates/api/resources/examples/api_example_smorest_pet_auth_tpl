@@ -2,12 +2,9 @@ from flask.views import MethodView
 from flask_smorest import Blueprint, abort
 import marshmallow as ma
 from flask_jwt_extended import jwt_required
+$API_RBAC_IMPORT
 from application_tpl.models.examples.pet import Pet
 from application_tpl.models.utils import ItemNotFoundError
-from application_tpl.utils.security.api_rbac import (
-    roles_required,
-    roles_accepted,
-)
 
 pet_blp = Blueprint(
     "pets", "pets", url_prefix="/api/pets", description="Operations on pets"
@@ -34,7 +31,7 @@ class Pets(MethodView):
     @pet_blp.arguments(PetSchema)
     @pet_blp.response(PetSchema, code=201)
     @jwt_required
-    @roles_accepted("admin", "editor")
+    $ROLES_ACCEPTED_DECORATOR
     def post(self, new_data):
         """Add a new pet"""
         item = Pet.create(new_data)
@@ -55,7 +52,7 @@ class PetsById(MethodView):
     @pet_blp.arguments(PetSchema)
     @pet_blp.response(PetSchema)
     @jwt_required
-    @roles_accepted("admin", "editor")
+    $ROLES_ACCEPTED_DECORATOR
     def put(self, update_data, pet_id):
         """Update existing pet"""
         try:
@@ -67,7 +64,7 @@ class PetsById(MethodView):
 
     @pet_blp.response(code=204)
     @jwt_required
-    @roles_required("admin")
+    $ROLES_REQUIRED_DECORATOR
     def delete(self, pet_id):
         """Delete pet"""
         try:

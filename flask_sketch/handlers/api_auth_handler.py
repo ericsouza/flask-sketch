@@ -21,13 +21,8 @@ def jwt_extended_handler(sketch: Sketch):
             mode="w",
         )
 
-        api_init_tpl = "api_init_jwt_extended_tpl"
-
-        if sketch.auth_framework == "security":
-            api_init_tpl = "api_init_jwt_extended_security_tpl"
-
         sketch.write_template(
-            api_init_tpl,
+            "api_init_jwt_extended_tpl",
             templates.api,
             pjoin(sketch.app_folder, "api", "__init__.py"),
         )
@@ -44,14 +39,18 @@ def jwt_extended_handler(sketch: Sketch):
             pjoin(sketch.app_folder, "utils", "security", "api_rbac.py"),
         )
 
-        sketch.write_template(
-            "utils_security_password_hasher_tpl",
-            templates.utils.security,
-            pjoin(
-                sketch.app_folder, "utils", "security", "password_hasher.py"
-            ),
-            mode="w",
-        )
+        if sketch.auth_framework != "security":
+            sketch.write_template(
+                "utils_security_password_hasher_tpl",
+                templates.utils.security,
+                pjoin(
+                    sketch.app_folder,
+                    "utils",
+                    "security",
+                    "password_hasher.py",
+                ),
+                mode="w",
+            )
 
         return True
 
@@ -64,6 +63,10 @@ def basicauth_handler(sketch: Sketch):
 
 def none_handler(sketch: Sketch):
     if sketch.api_auth_framework == "none":
+        sketch.template_args["API_RBAC_IMPORT"] = ""
+        sketch.template_args["ROLES_REQUIRED_DECORATOR"] = ""
+        sketch.template_args["ROLES_ACCEPTED_DECORATOR"] = ""
+
         if not sketch.database == "none":
             sketch.write_template(
                 "no_auth_tpl",

@@ -102,7 +102,7 @@ def handle_admin(sketch: Sketch):
 def handle_debugtoolbar(sketch: Sketch):
     sketch.add_requirements("flask-debugtoolbar", dev=True)
 
-    sketch.add_extensions("debugtoolbar")
+    sketch.add_extensions("debugtoolbar", dev=True)
 
     sketch.settings["development"]["DEBUG_TB_INTERCEPT_REDIRECTS"] = False
     if sketch.config_framework != "dynaconf":

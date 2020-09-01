@@ -114,6 +114,14 @@ def security_web_handler(sketch: Sketch):
 
         sketch.secrets["default"]["SECURITY_PASSWORD_SALT"] = random_string()
 
+        sketch.template_args[
+            "PWD_VERIFIER_METHOD_IMPORT"
+        ] = "from flask_security import verify_password"
+
+        sketch.template_args[
+            "PWD_VERIFIER_METHOD"
+        ] = "verify_password(password, user.password)"
+
         sketch.write_template(
             "security_web_only_tpl",
             templates.commands,

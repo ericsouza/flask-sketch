@@ -48,8 +48,13 @@ def smorest_handler(sketch: Sketch):
             pjoin(sketch.app_folder, "ext", "api.py"),
         )
 
+        if sketch.auth_framework == "none":
+            resource_tpl = "api_example_smorest_pet_tpl"
+        else:
+            resource_tpl = "api_example_smorest_pet_auth_tpl"
+
         sketch.write_template(
-            "api_example_smorest_pet_jwt_tpl",
+            resource_tpl,
             templates.api.resources.examples,
             pjoin(sketch.app_folder, "api", "resources", "examples", "pet.py"),
         )

@@ -17,6 +17,7 @@ from flask_sketch.utils import (
     make_commom,
     make_requirements,
     make_app,
+    make_template_args,
     random_string,
     pjoin,
 )
@@ -52,6 +53,8 @@ def create_project(args: Namespace, answers: dict):
     sketch.blueprints.extend(["examples"])
     make_app(sketch)
     make_requirements(sketch)
+
+    make_template_args(sketch)
 
     cleanup(sketch)
 
