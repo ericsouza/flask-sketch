@@ -33,6 +33,8 @@ class Pets(MethodView):
 
     @pet_blp.arguments(PetSchema)
     @pet_blp.response(PetSchema, code=201)
+    @jwt_required
+    @roles_accepted("admin", "editor")
     def post(self, new_data):
         """Add a new pet"""
         item = Pet.create(new_data)
@@ -52,6 +54,8 @@ class PetsById(MethodView):
 
     @pet_blp.arguments(PetSchema)
     @pet_blp.response(PetSchema)
+    @jwt_required
+    @roles_accepted("admin", "editor")
     def put(self, update_data, pet_id):
         """Update existing pet"""
         try:
@@ -62,6 +66,8 @@ class PetsById(MethodView):
         return item
 
     @pet_blp.response(code=204)
+    @jwt_required
+    @roles_required("admin")
     def delete(self, pet_id):
         """Delete pet"""
         try:

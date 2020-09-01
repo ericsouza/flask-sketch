@@ -21,8 +21,13 @@ def jwt_extended_handler(sketch: Sketch):
             mode="w",
         )
 
+        api_init_tpl = "api_init_jwt_extended_tpl"
+
+        if sketch.auth_framework == "security":
+            api_init_tpl = "api_init_jwt_extended_security_tpl"
+
         sketch.write_template(
-            "api_init_jwt_extended_tpl",
+            api_init_tpl,
             templates.api,
             pjoin(sketch.app_folder, "api", "__init__.py"),
         )
@@ -64,6 +69,7 @@ def none_handler(sketch: Sketch):
                 "no_auth_tpl",
                 templates.commands,
                 pjoin(sketch.app_folder, "commands", "__init__.py",),
+                mode="w",
             )
 
         return True

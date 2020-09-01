@@ -20,7 +20,6 @@ def login_handler(sketch: Sketch):
             "commands_default_tpl",
             templates.commands,
             pjoin(sketch.app_folder, "commands", "__init__.py",),
-            mode="w",
         )
 
         sketch.write_template(

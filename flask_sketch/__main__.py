@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 # from pprint import pprint
 import argparse
-
+import shutil
 from pyfiglet import Figlet
 from PyInquirer import prompt
 
@@ -37,6 +37,12 @@ def flask_sketch(args):
 
 
 if __name__ == "__main__":
+
     args = parser.parse_args()
     args.project_name = args.project_name.lower()
-    flask_sketch(args)
+    try:
+        flask_sketch(args)
+    except Exception as e:
+        print("\n\nAn error occurred during generating files:")
+        print(e)
+        shutil.rmtree(args.project_name)

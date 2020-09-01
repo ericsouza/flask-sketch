@@ -49,7 +49,7 @@ def smorest_handler(sketch: Sketch):
         )
 
         sketch.write_template(
-            "api_example_smorest_pet_tpl",
+            "api_example_smorest_pet_jwt_tpl",
             templates.api.resources.examples,
             pjoin(sketch.app_folder, "api", "resources", "examples", "pet.py"),
         )

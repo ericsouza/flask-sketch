@@ -1,0 +1,49 @@
+from flask import Blueprint, request, jsonify
+from flask_jwt_extended import (
+    get_jwt_identity,
+    create_access_token,
+    create_refresh_token,
+    jwt_refresh_token_required,
+)
+from security_jwt.models import User
+from flask_security import verify_password
+
+apibp = Blueprint("api", __name__, url_prefix="/api")
+
+
+@apibp.route("/authenticate", methods=["POST"])
+def authenticate():
+    if not request.is_json:
+        return jsonify({"msg": "Missing JSON in request"}), 400
+
+    username = request.json.get("username", None)
+    password = request.json.get("password", None)
+    if not username:
+        return jsonify({"msg": "Missing username parameter"}), 400
+    if not password:
+        return jsonify({"msg": "Missing password parameter"}), 400
+
+    user: User = User.get_by_email(username)
+
+    if not user or not verify_password(user.password, password):
+        return jsonify({"msg": "Bad credentials."}), 401
+
+    # Identity can be any data that is json serializable
+    ret = {
+        "access_token": create_access_token(identity=username),
+        "refresh_token": create_refresh_token(identity=username),
+    }
+    return jsonify(ret), 200
+
+
+# The jwt_refresh_token_required decorator insures a valid refresh
+# token is present in the request before calling this endpoint. We
+# can use the get_jwt_identity() function to get the identity of
+# the refresh token, and use the create_access_token() function again
+# to make a new access token for this identity.
+@apibp.route("/refresh")
+@jwt_refresh_token_required
+def refresh():
+    current_user = get_jwt_identity()
+    ret = {"access_token": create_access_token(identity=current_user)}
+    return jsonify(ret), 200

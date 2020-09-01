@@ -59,6 +59,11 @@ class Sketch:
         self.blueprints.extend(blueprints)
 
     def write_template(self, template, template_location, path, mode="a"):
+
+        if os.path.isfile(path):
+            if os.stat(path).st_size > 0:
+                return None
+
         template = pkg_resources.read_text(
             template_location, template
         ).replace("application_tpl", self.app_folder_name)
@@ -178,6 +183,7 @@ def make_app(sketch: Sketch):
     extensions_inits = [f"{ext}.init_app(app)" for ext in sketch.extensions]
     extensions_inits_string = "\n    ".join(extensions_inits)
 
+    dev_extensions_inits_string = ""
     if "debugtoolbar" in sketch.features:
         dev_extensions_inits_string = "if app.debug:\n\
         from {}.ext import debugtoolbar \n\
