@@ -71,13 +71,17 @@ class Sketch:
 
     def write_template(self, template, template_location, path, mode="a"):
 
-        if os.path.isfile(path):
-            if os.stat(path).st_size > 0:
-                return None
+        if mode == "w" and os.path.isfile(path) and os.stat(path).st_size > 0:
+            return None
+            
+        # if os.path.isfile(path):
+        #     if os.stat(path).st_size > 0:
+        #         return None
 
         template = pkg_resources.read_text(
             template_location, template
         ).replace("application_tpl", self.app_folder_name)
+
         with open(path, mode) as file:
             file.writelines(template)
 
