@@ -123,6 +123,18 @@ def security_web_handler(sketch: Sketch):
         ] = "verify_password(password, user.password)"
 
         sketch.write_template(
+            "site_web_only_init_tpl",
+            templates.site,
+            pjoin(sketch.app_folder, "site", "__init__.py"),
+        )
+
+        sketch.write_template(
+            "site_web_only_views_tpl",
+            templates.site,
+            pjoin(sketch.app_folder, "site", "views.py"),
+        )
+
+        sketch.write_template(
             "security_web_only_tpl",
             templates.commands,
             pjoin(sketch.app_folder, "commands", "__init__.py",),

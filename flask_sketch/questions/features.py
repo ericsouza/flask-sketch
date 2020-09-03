@@ -47,11 +47,7 @@ features_questions = [
         "message": "Select some more features for your project",
         "name": "features",
         "choices": [
-            {
-                "name": "Flask-CORS",
-                "disabled": "Not supported yet.",
-                "value": "cors",
-            },
+            {"name": "Flask-CORS", "value": "cors"},
             {"name": "Migrations (Flask-Migrate)", "value": "migrate"},
             {"name": "Admin Interface (Flask-Admin)", "value": "admin"},
             {"name": "Cache (Flask-Caching)", "value": "caching"},

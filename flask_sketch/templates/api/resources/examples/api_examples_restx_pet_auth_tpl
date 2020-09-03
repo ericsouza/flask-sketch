@@ -1,0 +1,92 @@
+from flask_restx import Resource, fields
+from flask_jwt_extended import jwt_required
+from flask_restx import Namespace, reqparse
+from application_tpl.models.examples.pet import Pet
+from application_tpl.models.utils import ItemNotFoundError
+from application_tpl.utils.security.api_rbac import (
+    roles_required,
+    roles_accepted,
+)
+
+pet_ns = Namespace("pets", description="Pets related operations")
+
+pet = pet_ns.model(
+    "Pet",
+    {
+        "id": fields.Integer(readonly=True, description="The pet identifier"),
+        "name": fields.String(required=True, description="The pet name"),
+    },
+)
+
+parser = reqparse.RequestParser()
+parser.add_argument("name", type=str, required=True, location="json")
+
+query_parser = reqparse.RequestParser()
+query_parser.add_argument(
+    "name", type=str, location="args", store_missing=False
+)
+
+
+@pet_ns.route("")
+class PetList(Resource):
+    """Shows a list of all pets, and lets you POST to add new pets"""
+
+    @pet_ns.doc("list_pets")
+    @pet_ns.marshal_list_with(pet)
+    def get(self):
+        """List all pets"""
+        args = query_parser.parse_args()
+        return Pet.get(filters=args)
+
+    @pet_ns.doc("create_pet")
+    @pet_ns.expect(pet)
+    @pet_ns.marshal_with(pet, code=201)
+    @jwt_required
+    @roles_accepted("admin", "editor")
+    def post(self):
+        """Create a new task"""
+        new_data = parser.parse_args()
+        item = Pet.create(new_data)
+        return item
+
+
+@pet_ns.route("/<int:pet_id>")
+@pet_ns.response(404, "Item not found")
+@pet_ns.param("id", "The pet identifier")
+class PetResource(Resource):
+    """Show a single item and lets you delete them"""
+
+    @pet_ns.doc("get_pet")
+    @pet_ns.marshal_with(pet)
+    def get(self, pet_id):
+        """Get pet by ID"""
+        try:
+            item = Pet.get_by_id(pet_id)
+        except ItemNotFoundError:
+            pet_ns.abort(404, message="Item not found.")
+        return item
+
+    @pet_ns.expect(pet)
+    @pet_ns.marshal_with(pet)
+    @jwt_required
+    @roles_accepted("admin", "editor")
+    def put(self, pet_id):
+        """Update existing pet"""
+        update_data = parser.parse_args()
+        try:
+            item = Pet.get_by_id(pet_id)
+        except ItemNotFoundError:
+            pet_ns.abort(404, message="Item not found.")
+        item.update(update_data)
+        return item
+
+    @pet_ns.doc("delete_pet")
+    @pet_ns.response(204, "Item deleted")
+    @jwt_required
+    @roles_required("admin")
+    def delete(self, pet_id):
+        """Delete pet"""
+        try:
+            Pet.delete(pet_id)
+        except ItemNotFoundError:
+            pet_ns.abort(404, message="Item not found.")

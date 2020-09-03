@@ -7,6 +7,50 @@ from flask_sketch.utils import pjoin
 
 def restx_handler(sketch: Sketch):
     if sketch.api_framework == "restx":
+        sketch.add_requirements("flask-restx")
+
+        os.makedirs(pjoin(sketch.app_folder, "api", "resources", "examples"))
+        open(
+            pjoin(
+                sketch.app_folder,
+                "api",
+                "resources",
+                "examples",
+                "__init__.py",
+            ),
+            "a",
+        ).close()
+
+        if sketch.api_auth_framework == "jwt_extended":
+            sketch.write_template(
+                "api_init_restx_jwtext_tpl",
+                templates.api,
+                pjoin(sketch.app_folder, "api", "__init__.py"),
+            )
+        else:
+            sketch.write_template(
+                "api_init_restx_noauth_tpl",
+                templates.api,
+                pjoin(sketch.app_folder, "api", "__init__.py"),
+            )
+
+        if sketch.api_auth_framework == "none":
+            resource_tpl = "api_examples_restx_pet_tpl"
+        else:
+            resource_tpl = "api_examples_restx_pet_auth_tpl"
+
+        sketch.write_template(
+            resource_tpl,
+            templates.api.resources.examples,
+            pjoin(sketch.app_folder, "api", "resources", "examples", "pet.py"),
+        )
+
+        sketch.write_template(
+            "models_examples_smorest_pet_tpl",
+            templates.models.examples,
+            pjoin(sketch.app_folder, "models", "examples", "pet.py"),
+        )
+
         return True
 
 
@@ -42,13 +86,20 @@ def smorest_handler(sketch: Sketch):
             "a",
         ).close()
 
+        if sketch.api_auth_framework == "jwt_extended":
+            sketch.write_template(
+                "api_init_jwt_extended_tpl",
+                templates.api,
+                pjoin(sketch.app_folder, "api", "__init__.py"),
+            )
+
         sketch.write_template(
             "ext_api_smorest_tpl",
             templates.ext,
             pjoin(sketch.app_folder, "ext", "api.py"),
         )
 
-        if sketch.auth_framework == "none":
+        if sketch.api_auth_framework == "none":
             resource_tpl = "api_example_smorest_pet_tpl"
         else:
             resource_tpl = "api_example_smorest_pet_auth_tpl"

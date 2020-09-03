@@ -1,0 +1,8 @@
+from flask import Blueprint
+from flask_restx import Api
+from application_tpl.api.resources.examples.pet import pet_ns
+
+apibp = Blueprint("api", __name__, url_prefix="/api")
+
+api = Api(apibp, version="1.0", description="A simple demo API")
+api.add_namespace(pet_ns)

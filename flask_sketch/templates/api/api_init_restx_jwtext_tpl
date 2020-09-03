@@ -5,10 +5,15 @@ from flask_jwt_extended import (
     create_refresh_token,
     jwt_refresh_token_required,
 )
-from security_jwt.models import User
-from flask_security import verify_password
+from flask_restx import Api
+from application_tpl.models import User
+$PWD_VERIFIER_METHOD_IMPORT
+from application_tpl.api.resources.examples.pet import pet_ns
 
 apibp = Blueprint("api", __name__, url_prefix="/api")
+
+api = Api(apibp, version="1.0", description="A simple demo API")
+api.add_namespace(pet_ns)
 
 
 @apibp.route("/authenticate", methods=["POST"])
@@ -25,7 +30,7 @@ def authenticate():
 
     user: User = User.get_by_email(username)
 
-    if not user or not verify_password(user.password, password):
+    if not user or not $PWD_VERIFIER_METHOD:
         return jsonify({"msg": "Bad credentials."}), 401
 
     # Identity can be any data that is json serializable

@@ -19,17 +19,6 @@ def app_handler(sketch: Sketch):
     os.makedirs(pjoin(sketch.app_folder, "site"))
     sketch.blueprints.extend(["site"])
 
-    sketch.write_template(
-        "site_web_only_init_tpl",
-        templates.site,
-        pjoin(sketch.app_folder, "site", "__init__.py"),
-    )
-    sketch.write_template(
-        "site_web_only_views_tpl",
-        templates.site,
-        pjoin(sketch.app_folder, "site", "views.py"),
-    )
-
     return True
 
 

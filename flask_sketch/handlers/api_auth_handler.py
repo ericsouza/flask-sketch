@@ -22,12 +22,6 @@ def jwt_extended_handler(sketch: Sketch):
         )
 
         sketch.write_template(
-            "api_init_jwt_extended_tpl",
-            templates.api,
-            pjoin(sketch.app_folder, "api", "__init__.py"),
-        )
-
-        sketch.write_template(
             "ext_api_auth_jwt_extended_tpl",
             templates.ext,
             pjoin(sketch.app_folder, "ext", "api_auth.py"),
@@ -67,12 +61,11 @@ def none_handler(sketch: Sketch):
         sketch.template_args["ROLES_REQUIRED_DECORATOR"] = ""
         sketch.template_args["ROLES_ACCEPTED_DECORATOR"] = ""
 
-        if not sketch.database == "none":
+        if sketch.api_framework == "none":
             sketch.write_template(
-                "no_auth_tpl",
-                templates.commands,
-                pjoin(sketch.app_folder, "commands", "__init__.py",),
-                mode="w",
+                "api_init_noauth_tpl",
+                templates.api,
+                pjoin(sketch.app_folder, "api", "__init__.py"),
             )
 
         return True

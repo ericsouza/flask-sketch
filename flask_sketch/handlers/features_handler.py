@@ -113,6 +113,17 @@ def handle_debugtoolbar(sketch: Sketch):
         )
 
 
+def handle_cors(sketch: Sketch):
+    sketch.add_requirements("flask-cors")
+    sketch.add_extensions("cors")
+
+    sketch.write_template(
+        "ext_cors_tpl",
+        templates.ext,
+        pjoin(sketch.app_folder, "ext", "cors.py",),
+    )
+
+
 def handle_features(sketch: Sketch):
     for feature in sketch.features:
         globals()[f"handle_{feature}"](sketch)
