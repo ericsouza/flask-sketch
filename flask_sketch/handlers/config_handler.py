@@ -24,7 +24,7 @@ def dynaconf_handler(sketch: Sketch):
         secrets_toml = sort_settings(sketch.secrets)
 
         try:
-            sketch.extensions.remove("debugtoolbar")
+            sketch.dev_extensions.remove("debugtoolbar")
             settings_toml["development"]["EXTENSIONS"] = [
                 "flask_debugtoolbar:DebugToolbarExtension",
                 "dynaconf_merge_unique",
