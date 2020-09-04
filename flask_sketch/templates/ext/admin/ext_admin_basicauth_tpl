@@ -31,4 +31,6 @@ admin = Admin(index_view=ProtectedAdminIndexView())
 
 
 def init_app(app):
+    admin.name = app.config.get("ADMIN_NAME", "Admin")
+    admin.template_mode = app.config.get("ADMIN_TEMPLATE_MODE", "bootstrap3")
     admin.init_app(app)

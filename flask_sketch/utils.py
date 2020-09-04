@@ -124,6 +124,10 @@ class FlaskSketchTomlEncoder(toml.TomlEncoder):
         return retval
 
 
+def snake_to_camel(s: str):
+    return "".join(x.capitalize() for x in s.split("_"))
+
+
 def random_string(length=16):
     """
     Generates a random password having the specified length

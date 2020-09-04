@@ -1,4 +1,4 @@
-from flask_sketch.utils import Sketch, pjoin
+from flask_sketch.utils import Sketch, pjoin, snake_to_camel
 from flask_sketch import templates
 from uuid import uuid4
 
@@ -73,13 +73,15 @@ def handle_admin(sketch: Sketch):
     sketch.add_extensions("admin")
 
     sketch.settings["default"]["ADMIN_TEMPLATE_MODE"] = "bootstrap3"
-    sketch.settings["development"][
-        "ADMIN_NAME"
-    ] = f"{sketch.project_name} (Dev)"
-    sketch.settings["testing"][
-        "ADMIN_NAME"
-    ] = f"{sketch.project_name} (Testing)"
-    sketch.settings["production"]["ADMIN_NAME"] = sketch.project_name
+    sketch.settings["development"]["ADMIN_NAME"] = "{} (Dev)".format(
+        snake_to_camel(sketch.project_name)
+    )
+    sketch.settings["testing"]["ADMIN_NAME"] = "{} (Testing)".format(
+        snake_to_camel(sketch.project_name)
+    )
+    sketch.settings["production"]["ADMIN_NAME"] = snake_to_camel(
+        sketch.project_name
+    )
 
     # TODO refact this part to not use a lot of if statements
     if sketch.auth_framework == "security":
