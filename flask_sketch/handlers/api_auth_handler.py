@@ -61,11 +61,18 @@ def none_handler(sketch: Sketch):
         sketch.template_args["ROLES_REQUIRED_DECORATOR"] = ""
         sketch.template_args["ROLES_ACCEPTED_DECORATOR"] = ""
 
-        if sketch.api_framework == "none":
+        if sketch.api_framework == "none" or sketch.api_framework == "smorest":
             sketch.write_template(
                 "api_init_noauth_tpl",
                 templates.api,
                 pjoin(sketch.app_folder, "api", "__init__.py"),
+            )
+
+        if sketch.auth_framework == "none":
+            sketch.write_template(
+                "no_auth_tpl",
+                templates.commands,
+                pjoin(sketch.app_folder, "commands", "__init__.py"),
             )
 
         return True

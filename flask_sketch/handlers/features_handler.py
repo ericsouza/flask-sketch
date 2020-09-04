@@ -1,7 +1,4 @@
-from flask_sketch.utils import (
-    Sketch,
-    pjoin,
-)
+from flask_sketch.utils import Sketch, pjoin, random_string
 from flask_sketch import templates
 
 
@@ -94,6 +91,24 @@ def handle_admin(sketch: Sketch):
     if sketch.auth_framework == "login":
         sketch.write_template(
             "ext_admin_login_tpl",
+            templates.ext.admin,
+            pjoin(sketch.app_folder, "ext", "admin", "__init__.py",),
+        )
+
+    if sketch.auth_framework == "none":
+        sketch.add_requirements("flask-basicauth")
+        sketch.add_extensions("admin.basic_auth")
+        sketch.secrets["default"]["BASIC_AUTH_USERNAME"] = "admin"
+        sketch.secrets["default"]["BASIC_AUTH_PASSWORD"] = random_string()
+
+        sketch.write_template(
+            "ext_basicauth_tpl",
+            templates.ext.admin,
+            pjoin(sketch.app_folder, "ext", "admin", "basic_auth.py",),
+        )
+
+        sketch.write_template(
+            "ext_admin_basicauth_tpl",
             templates.ext.admin,
             pjoin(sketch.app_folder, "ext", "admin", "__init__.py",),
         )

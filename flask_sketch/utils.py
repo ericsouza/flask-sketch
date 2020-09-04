@@ -73,7 +73,7 @@ class Sketch:
 
         if mode == "w" and os.path.isfile(path) and os.stat(path).st_size > 0:
             return None
-            
+
         # if os.path.isfile(path):
         #     if os.stat(path).st_size > 0:
         #         return None
@@ -215,10 +215,15 @@ def make_requirements(sketch: Sketch):
 
 
 def make_app(sketch: Sketch):
-    aux = ",\n    ".join(sketch.extensions)
-    extensions_imports_string = (
-        f"from {sketch.app_folder_name}.ext import (\n    {aux}\n)"
-    )
+    extensions_imports_string = ""
+    for extension in sketch.extensions:
+        ext = extension.rsplit(".", 1)[-1]
+        aux = ""
+        if len(extension.rsplit(".", 1)) > 1:
+            aux = "." + extension.rsplit(".", 1)[0]
+        extensions_imports_string += (
+            f"from {sketch.app_folder_name}.ext{aux} import {ext}\n"
+        )
 
     blueprints = [
         f"from {sketch.app_folder_name}.{bp} import {bp}bp"
@@ -226,7 +231,10 @@ def make_app(sketch: Sketch):
     ]
     blueprints_imports_string = "\n".join(blueprints)
 
-    extensions_inits = [f"{ext}.init_app(app)" for ext in sketch.extensions]
+    extensions_inits = [
+        "{}.init_app(app)".format(ext.split(".")[-1])
+        for ext in sketch.extensions
+    ]
     extensions_inits_string = "\n    ".join(extensions_inits)
 
     dev_extensions_inits_string = ""

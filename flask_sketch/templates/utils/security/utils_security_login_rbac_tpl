@@ -1,22 +1,19 @@
 from functools import wraps
 from flask import abort
-from flask_jwt_extended import get_jwt_identity
-from myproject.models import User
+from flask_login import current_user
 
 
 def roles_required(*roles):
     def decorator(func):
         @wraps(func)
         def wrapped(*args, **kwargs):
-            current_user = get_jwt_identity()
-            user: User = User.get_by_email(current_user)
             try:
-                if user.has_roles(*roles):
+                if current_user.has_roles(*roles):
                     return func(*args, **kwargs)
             except AttributeError:
-                abort(400, {"Missing Parameters": "Missing access token."})
+                abort(400)
                 
-            return abort(403, {"status": "Forbidden"})
+            return abort(403)
 
         return wrapped
 
@@ -27,15 +24,13 @@ def roles_accepted(*roles):
     def decorator(func):
         @wraps(func)
         def wrapped(*args, **kwargs):
-            current_user = get_jwt_identity()
-            user: User = User.get_by_email(current_user)
             try:
-                if user.has_any_roles(*roles):
+                if current_user.has_any_roles(*roles):
                     return func(*args, **kwargs)
             except AttributeError:
-                abort(400, {"Missing Parameters": "Missing access token."})
+                abort(400)
 
-            return abort(403, {"status": "Forbidden"})
+            return abort(403)
 
         return wrapped
 

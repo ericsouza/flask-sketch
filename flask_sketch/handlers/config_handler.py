@@ -35,10 +35,14 @@ def dynaconf_handler(sketch: Sketch):
                 "dynaconf_merge_unique"
             ]
 
-        settings_toml["default"]["EXTENSIONS"] = [
-            "{}.ext.{}:init_app".format(sketch.app_folder_name, ext)
-            for ext in sketch.extensions
-        ]
+        for extension in sketch.extensions:
+            ext = extension.rsplit(".", 1)[-1]
+            aux = ""
+            if len(extension.rsplit(".", 1)) > 1:
+                aux = "." + extension.rsplit(".", 1)[0]
+            settings_toml["default"]["EXTENSIONS"].append(
+                "{}.ext{}.{}:init_app".format(sketch.app_folder_name, aux, ext)
+            )
 
         with open(pjoin(sketch.project_folder, "settings.toml"), "w") as f:
             toml.dump(settings_toml, f, encoder=FlaskSketchTomlEncoder())

@@ -7,3 +7,7 @@ from application_tpl.ext.database import db
 @with_appcontext
 def create_database():
     db.create_all()
+
+
+def register_commands(app):
+    app.cli.add_command(create_database)

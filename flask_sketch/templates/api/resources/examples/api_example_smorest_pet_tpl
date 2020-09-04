@@ -1,13 +1,8 @@
 from flask.views import MethodView
 from flask_smorest import Blueprint, abort
 import marshmallow as ma
-from flask_jwt_extended import jwt_required
 from application_tpl.models.examples.pet import Pet
 from application_tpl.models.utils import ItemNotFoundError
-from application_tpl.utils.security.api_rbac import (
-    roles_required,
-    roles_accepted,
-)
 
 pet_blp = Blueprint(
     "pets", "pets", url_prefix="/api/pets", description="Operations on pets"

@@ -37,7 +37,7 @@ def create_project(args: Namespace, answers: dict):
 
     sketch.settings["default"]["DEBUG"] = False
     sketch.settings["development"]["DEBUG"] = True
-    sketch.settings["default"]["SECRET_KEY"] = random_string(length=32)
+    sketch.secrets["default"]["SECRET_KEY"] = random_string(length=64)
 
     app_type_handler(sketch)
     database_handler(sketch)

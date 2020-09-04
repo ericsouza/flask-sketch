@@ -112,7 +112,9 @@ def security_web_handler(sketch: Sketch):
 
         sketch.add_extensions("auth")
 
-        sketch.secrets["default"]["SECURITY_PASSWORD_SALT"] = random_string()
+        sketch.secrets["default"]["SECURITY_PASSWORD_SALT"] = random_string(
+            length=32
+        )
 
         sketch.template_args[
             "PWD_VERIFIER_METHOD_IMPORT"
@@ -178,7 +180,19 @@ def basicauth_web_handler(sketch: Sketch):
 
 def none_handler(sketch: Sketch):
     if sketch.auth_framework == "none":
-        if not sketch.database == "none":
+        sketch.write_template(
+            "site_web_only_init_tpl",
+            templates.site,
+            pjoin(sketch.app_folder, "site", "__init__.py"),
+        )
+
+        sketch.write_template(
+            "site_web_only_views_tpl",
+            templates.site,
+            pjoin(sketch.app_folder, "site", "views.py"),
+        )
+
+        if not sketch.api_auth_framework == "none":
             sketch.write_template(
                 "no_auth_tpl",
                 templates.commands,

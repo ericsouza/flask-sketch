@@ -11,12 +11,7 @@ auth_framework_questions = [
                 "value": "security",
             },
             {"name": "Flask-Login", "value": "login"},
-            {
-                "name": "Flask-BasicAuth",
-                "value": "basicauth",
-                "disabled": "Not supported yet",
-            },
-            {"name": "None", "value": "none", "disabled": "Not supported yet"},
+            {"name": "None", "value": "none"},
         ],
         "validate": lambda answer: "You must choose at least one topping."
         if len(answer) == 0
@@ -28,11 +23,6 @@ auth_framework_questions = [
         "name": "api_auth_framework",
         "choices": [
             {"name": "Flask-JWT-Extended", "value": "jwt_extended"},
-            {
-                "name": "Flask-BasicAuth",
-                "value": "basicauth",
-                "disabled": "Not yet supported",
-            },
             {
                 "name": "Flask-Praetorian",
                 "value": "praetorian",
