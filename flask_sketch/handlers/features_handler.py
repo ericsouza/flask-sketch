@@ -1,5 +1,6 @@
-from flask_sketch.utils import Sketch, pjoin, random_string
+from flask_sketch.utils import Sketch, pjoin
 from flask_sketch import templates
+from uuid import uuid4
 
 
 def handle_caching(sketch: Sketch):
@@ -99,7 +100,7 @@ def handle_admin(sketch: Sketch):
         sketch.add_requirements("flask-basicauth")
         sketch.add_extensions("admin.basic_auth")
         sketch.secrets["default"]["BASIC_AUTH_USERNAME"] = "admin"
-        sketch.secrets["default"]["BASIC_AUTH_PASSWORD"] = random_string()
+        sketch.secrets["default"]["BASIC_AUTH_PASSWORD"] = str(uuid4())
 
         sketch.write_template(
             "ext_basicauth_tpl",

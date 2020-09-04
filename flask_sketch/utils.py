@@ -43,8 +43,8 @@ class Sketch:
             "PWD_VERIFIER_METHOD_IMPORT": f"from {self.app_folder_name}.utils.security.password_hasher import password_hasher",  # noqa
             "PWD_VERIFIER_METHOD": "password_hasher.verify(user.password, password)",
             "API_RBAC_IMPORT": f"from {self.app_folder_name}.utils.security.api_rbac import roles_required, roles_accepted",
-            "ROLES_REQUIRED_DECORATOR": "@roles_required(\"admin\")",
-            "ROLES_ACCEPTED_DECORATOR": "@roles_accepted(\"admin\", \"editor\")",
+            "ROLES_REQUIRED_DECORATOR": '@roles_required("admin")',
+            "ROLES_ACCEPTED_DECORATOR": '@roles_accepted("admin", "editor")',
         }
         self.secrets = {"default": {}}
         self.settings = {

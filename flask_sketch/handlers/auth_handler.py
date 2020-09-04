@@ -4,7 +4,6 @@ from flask_sketch.utils import (
     GenericHandler,
     pjoin,
     random_string,
-    pjoin,
 )
 from flask_sketch import templates
 

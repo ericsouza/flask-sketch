@@ -1,4 +1,3 @@
-from flask_sketch import templates
 from flask_sketch.utils import (
     Sketch,
     GenericHandler,

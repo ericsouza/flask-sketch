@@ -73,7 +73,6 @@ class PetResource(Resource):
 
     @pet_ns.doc("delete_pet")
     @pet_ns.response(204, "Item deleted")
-    @jwt_required
     def delete(self, pet_id):
         """Delete pet"""
         try:
