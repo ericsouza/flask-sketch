@@ -1,6 +1,6 @@
 # flask-sketch
 
-A Python CLI for auto-generate folders structure for Flask Applications.
+A Python CLI for auto-generate folders structure and boilerplate code for Flask Applications.
 
 ## Installation
 
