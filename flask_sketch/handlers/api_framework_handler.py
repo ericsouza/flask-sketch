@@ -1,8 +1,8 @@
 import os
-from flask_sketch import templates  # noqa
-from flask_sketch.utils import Sketch
+from os.path import join as pjoin
+from flask_sketch import templates
+from flask_sketch.sketch import Sketch
 from flask_sketch.utils import GenericHandler
-from flask_sketch.utils import pjoin
 
 
 def restx_handler(sketch: Sketch):

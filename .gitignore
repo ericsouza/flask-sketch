@@ -131,7 +131,6 @@ dmypy.json
 #vs code
 .vscode
 
-*.txt
 
 /__flask_helpers_projects
 

@@ -1,10 +1,7 @@
 import os
-from flask_sketch.utils import (
-    Sketch,
-    GenericHandler,
-    pjoin,
-    random_string,
-)
+from os.path import join as pjoin
+from flask_sketch.sketch import Sketch
+from flask_sketch.utils import GenericHandler, random_string
 from flask_sketch import templates
 
 

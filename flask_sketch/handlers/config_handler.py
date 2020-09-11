@@ -1,12 +1,9 @@
 from collections import OrderedDict
 import toml
+from os.path import join as pjoin
 from flask_sketch import templates
-from flask_sketch.utils import (
-    Sketch,
-    GenericHandler,
-    pjoin,
-    FlaskSketchTomlEncoder,
-)
+from flask_sketch.sketch import Sketch, FlaskSketchTomlEncoder
+from flask_sketch.utils import GenericHandler
 
 
 def sort_settings(settings: dict):

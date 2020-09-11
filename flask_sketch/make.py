@@ -1,6 +1,8 @@
 import os
+from os.path import join as pjoin
 import pathlib
 from argparse import Namespace
+from flask_sketch.sketch import Sketch
 
 from flask_sketch.handlers import (
     api_framework_handler,
@@ -12,14 +14,12 @@ from flask_sketch.handlers import (
     handle_features,
 )
 from flask_sketch.utils import (
-    Sketch,
     cleanup,
     make_commom,
     make_requirements,
     make_app,
     make_template_args,
     random_string,
-    pjoin,
 )
 
 

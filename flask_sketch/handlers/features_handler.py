@@ -1,4 +1,6 @@
-from flask_sketch.utils import Sketch, pjoin, snake_to_camel
+from os.path import join as pjoin
+from flask_sketch.sketch import Sketch
+from flask_sketch.utils import snake_to_camel
 from flask_sketch import templates
 from uuid import uuid4
 

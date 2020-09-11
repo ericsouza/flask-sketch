@@ -1,5 +1,4 @@
-from flask_restx import Resource, fields
-from flask_restx import Namespace, reqparse
+from flask_restx import Resource, Namespace, fields
 from application_tpl.models.examples.pet import Pet
 from application_tpl.models.utils import ItemNotFoundError
 
@@ -13,10 +12,8 @@ pet = pet_ns.model(
     },
 )
 
-parser = reqparse.RequestParser()
-parser.add_argument("name", type=str, required=True, location="json")
 
-query_parser = reqparse.RequestParser()
+query_parser = pet_ns.parser()
 query_parser.add_argument(
     "name", type=str, location="args", store_missing=False
 )
@@ -38,7 +35,7 @@ class PetList(Resource):
     @pet_ns.marshal_with(pet, code=201)
     def post(self):
         """Create a new task"""
-        new_data = parser.parse_args()
+        new_data = pet_ns.payload
         item = Pet.create(new_data)
         return item
 
@@ -63,7 +60,7 @@ class PetResource(Resource):
     @pet_ns.marshal_with(pet)
     def put(self, pet_id):
         """Update existing pet"""
-        update_data = parser.parse_args()
+        update_data = pet_ns.payload
         try:
             item = Pet.get_by_id(pet_id)
         except ItemNotFoundError:

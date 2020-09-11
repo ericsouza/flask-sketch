@@ -1,10 +1,7 @@
-import importlib.resources as pkg_resources  # noqa
-from flask_sketch import templates  # noqa
-from flask_sketch.utils import (
-    Sketch,
-    GenericHandler,
-    pjoin,
-)
+from os.path import join as pjoin
+from flask_sketch import templates
+from flask_sketch.sketch import Sketch
+from flask_sketch.utils import GenericHandler
 
 
 def handle_sql_db(sketch: Sketch):

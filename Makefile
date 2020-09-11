@@ -11,10 +11,6 @@ clean:
 	rm -rf docs/_build
 	pip install -e .[dev] --upgrade --no-cache
 
-test:
-	rm -rf myproject
-	python tests/__init__.py
-
 clear:
 	rm -rf myproject
 

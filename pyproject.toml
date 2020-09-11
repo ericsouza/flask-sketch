@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "flask-sketch"
-version = "0.3.17"
+version = "0.3.18"
 description = "A CLI for autogenerate folder structure and boilerplate for Flask applications"
 authors = ["Eric Souza <ericsouza0801@gmail.com>"]
 license = "MIT License"
@@ -20,7 +20,7 @@ toml = "^0.10.1"
 [tool.poetry.dev-dependencies]
 black = "^19.10b0"
 flake8 = "^3.8.3"
-isort = "^5.3.2"
+isort = "^5.5.2"
 
 [tool.poetry.scripts]
 flask-sketch = "flask_sketch.__main__:flask_sketch"
