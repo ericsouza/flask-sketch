@@ -8,4 +8,4 @@ class Pet(db.Model, ModelCRUD):
     name = db.Column(db.String(255))
 
     def __repr__(self):
-        return "<Pet {}".format(self.name)
+        return "<Pet {}>".format(self.name)

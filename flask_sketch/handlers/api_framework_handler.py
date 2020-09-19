@@ -115,8 +115,13 @@ def smorest_handler(sketch: Sketch):
             pjoin(sketch.app_folder, "api", "resources", "examples", "pet.py"),
         )
 
+        if sketch.database == "mongodb":
+            example_tpl_model = "pet_mongo_tpl"
+        else:
+            example_tpl_model = "pet_sql_tpl"
+
         sketch.write_template(
-            "pet_sql_tpl",
+            example_tpl_model,
             templates.models.examples,
             pjoin(sketch.app_folder, "models", "examples", "pet.py"),
         )

@@ -12,7 +12,7 @@ pet_blp = Blueprint(
 
 
 class PetSchema(ma.Schema):
-    id = ma.fields.Int(dump_only=True)
+    id = ma.fields.String(dump_only=True)
     name = ma.fields.String()
 
 
