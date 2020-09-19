@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request
 from flask_jwt_extended import (
     get_jwt_identity,
     create_access_token,
@@ -19,26 +19,26 @@ api.add_namespace(pet_ns)
 @apibp.route("/authenticate", methods=["POST"])
 def authenticate():
     if not request.is_json:
-        return jsonify({"msg": "Missing JSON in request"}), 400
+        return {"msg": "Missing JSON in request"}, 400
 
     username = request.json.get("username", None)
     password = request.json.get("password", None)
     if not username:
-        return jsonify({"msg": "Missing username parameter"}), 400
+        return {"msg": "Missing username parameter"}, 400
     if not password:
-        return jsonify({"msg": "Missing password parameter"}), 400
+        return {"msg": "Missing password parameter"}, 400
 
     user: User = User.get_by_email(username)
 
     if not user or not $PWD_VERIFIER_METHOD:
-        return jsonify({"msg": "Bad credentials."}), 401
+        return {"msg": "Bad credentials."}, 401
 
     # Identity can be any data that is json serializable
     ret = {
         "access_token": create_access_token(identity=username),
         "refresh_token": create_refresh_token(identity=username),
     }
-    return jsonify(ret), 200
+    return ret, 200
 
 
 # The jwt_refresh_token_required decorator insures a valid refresh
@@ -51,4 +51,4 @@ def authenticate():
 def refresh():
     current_user = get_jwt_identity()
     ret = {"access_token": create_access_token(identity=current_user)}
-    return jsonify(ret), 200
+    return ret, 200

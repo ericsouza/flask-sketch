@@ -1,0 +1,37 @@
+from flask_mongoengine import DoesNotExist
+
+
+class ItemNotFoundError(Exception):
+    ...
+
+
+class ModelCRUD:
+    @classmethod
+    def get_items(cls, filters):
+        return cls.objects(**filters)
+
+    @classmethod
+    def get_by_id(cls, _id):
+        try:
+            item = cls.objects.get(id=_id)
+        except DoesNotExist:
+            raise ItemNotFoundError("Error")
+        return item
+
+    @classmethod
+    def create_item(cls, data):
+        new_item = cls(**data)
+        new_item.save()
+
+        return new_item
+
+    def update_item(self, new_data):
+        return self.modify(**new_data)
+
+    @classmethod
+    def delete_item(cls, _id):
+        try:
+            item = cls.objects.get(id=_id)
+        except DoesNotExist:
+            raise ItemNotFoundError("Error")
+        item.delete()

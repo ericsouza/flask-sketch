@@ -26,7 +26,9 @@ features_questions = [
             {"name": "Flask-DebugToolbar", "value": "debugtoolbar"},
         ],
         "when": lambda answers: has_answers(
-            answers, have={"have_api": False}, not_have={"database": "none"},
+            answers,
+            have={"have_api": False},
+            not_have={"database": "none;mongodb"},
         ),
     },
     {
@@ -55,7 +57,9 @@ features_questions = [
             {"name": "Flask-DebugToolbar", "value": "debugtoolbar"},
         ],
         "when": lambda answers: has_answers(
-            answers, have={"have_api": True}, not_have={"database": "none"},
+            answers,
+            have={"have_api": True},
+            not_have={"database": "none;mongodb"},
         ),
     },
     {
@@ -74,6 +78,35 @@ features_questions = [
         ],
         "when": lambda answers: has_answers(
             answers, have={"have_api": True, "database": "none"},
+        ),
+    },
+    {
+        "type": "checkbox",
+        "message": "Select some more features for your project",
+        "name": "features",
+        "choices": [
+            {"name": "Flask-CORS", "value": "cors"},
+            {"name": "Admin Interface (Flask-Admin)", "value": "admin"},
+            {"name": "Cache (Flask-Caching)", "value": "caching"},
+            {"name": "Rate Limiting (Flask-Limiter)", "value": "limiter"},
+            {"name": "Flask-DebugToolbar", "value": "debugtoolbar"},
+        ],
+        "when": lambda answers: has_answers(
+            answers, have={"have_api": True, "database": "mongodb"}
+        ),
+    },
+    {
+        "type": "checkbox",
+        "message": "Select some more features for your project",
+        "name": "features",
+        "choices": [
+            {"name": "Admin Interface (Flask-Admin)", "value": "admin"},
+            {"name": "Cache (Flask-Caching)", "value": "caching"},
+            {"name": "Rate Limiting (Flask-Limiter)", "value": "limiter"},
+            {"name": "Flask-DebugToolbar", "value": "debugtoolbar"},
+        ],
+        "when": lambda answers: has_answers(
+            answers, have={"have_api": False, "database": "mongodb"}
         ),
     },
 ]

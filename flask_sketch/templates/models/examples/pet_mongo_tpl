@@ -1,0 +1,9 @@
+from application_tpl.ext.database import db
+from application_tpl.models.utils import ModelCRUD
+
+
+class Pet(db.Document, ModelCRUD):
+    name = db.StringField(max_length=255)
+
+    def __repr__(self):
+        return "<Pet {}>".format(self.name)

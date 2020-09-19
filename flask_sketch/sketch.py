@@ -26,9 +26,9 @@ class Sketch:
         self.config_framework: str = answers.get("config_framework")
         self.features: list = answers.get("features")
         self.secret_key = ""
-        self.create_examples = args.e
+        # self.create_examples = args.e
         self.create_virtualenv = args.v
-        self.create_pyproject = args.p
+        # self.create_pyproject = args.p
         self.requirements = set()
         self.dev_requirements = set()
         self.extensions = []

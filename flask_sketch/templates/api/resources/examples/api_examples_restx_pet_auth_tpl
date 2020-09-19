@@ -12,7 +12,7 @@ pet_ns = Namespace("pets", description="Pets related operations")
 pet = pet_ns.model(
     "Pet",
     {
-        "id": fields.Integer(readonly=True, description="The pet identifier"),
+        "id": fields.String(readonly=True, description="The pet identifier"),
         "name": fields.String(required=True, description="The pet name"),
     },
 )
@@ -33,7 +33,7 @@ class PetList(Resource):
     def get(self):
         """List all pets"""
         args = query_parser.parse_args()
-        return Pet.get(filters=args)
+        return list(Pet.get_items(filters=args))
 
     @pet_ns.doc("create_pet")
     @pet_ns.expect(pet)
@@ -43,11 +43,11 @@ class PetList(Resource):
     def post(self):
         """Create a new task"""
         new_data = pet_ns.payload
-        item = Pet.create(new_data)
+        item = Pet.create_item(new_data)
         return item
 
 
-@pet_ns.route("/<int:pet_id>")
+@pet_ns.route("/<pet_id>")
 @pet_ns.response(404, "Item not found")
 @pet_ns.param("id", "The pet identifier")
 class PetResource(Resource):
@@ -74,7 +74,7 @@ class PetResource(Resource):
             item = Pet.get_by_id(pet_id)
         except ItemNotFoundError:
             pet_ns.abort(404, message="Item not found.")
-        item.update(update_data)
+        item.update_item(update_data)
         return item
 
     @pet_ns.doc("delete_pet")
@@ -84,6 +84,6 @@ class PetResource(Resource):
     def delete(self, pet_id):
         """Delete pet"""
         try:
-            Pet.delete(pet_id)
+            Pet.delete_item(pet_id)
         except ItemNotFoundError:
             pet_ns.abort(404, message="Item not found.")

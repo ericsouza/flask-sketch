@@ -13,13 +13,6 @@ def jwt_extended_handler(sketch: Sketch):
         sketch.add_extensions("api_auth")
 
         sketch.write_template(
-            "commands_default_tpl",
-            templates.commands,
-            pjoin(sketch.app_folder, "commands", "__init__.py",),
-            mode="w",
-        )
-
-        sketch.write_template(
             "ext_api_auth_jwt_extended_tpl",
             templates.ext,
             pjoin(sketch.app_folder, "ext", "api_auth.py"),
@@ -66,13 +59,6 @@ def none_handler(sketch: Sketch):
                 pjoin(sketch.app_folder, "api", "__init__.py"),
             )
 
-        if sketch.auth_framework == "none":
-            sketch.write_template(
-                "no_auth_tpl",
-                templates.commands,
-                pjoin(sketch.app_folder, "commands", "__init__.py"),
-            )
-
         return True
 
 
@@ -83,7 +69,7 @@ class ApiAuthHandler(GenericHandler):
             if r:
                 if not handler.__name__ == "none_handler":
                     sketch.write_template(
-                        "models_auth_tpl",
+                        "models_init_tpl",
                         templates.models,
                         pjoin(sketch.app_folder, "models", "__init__.py",),
                     )

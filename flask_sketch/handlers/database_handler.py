@@ -22,10 +22,22 @@ def handle_sql_db(sketch: Sketch):
     )
 
     sketch.write_template(
-        "models_utils_tpl",
+        "utils_sql_tpl",
         templates.models,
         pjoin(sketch.app_folder, "models", "utils.py"),
     )
+
+    sketch.template_args["ADMIN_MODEL_ENGINE"] = "sqla"
+    sketch.template_args[
+        "ADMIN_DATABASE_IMPORT"
+    ] = "from application_tpl.ext.database import db"
+
+    sketch.template_args[
+        "ADMIN_VIEW_USER"
+    ] = "admin.add_view(ProtectedModelView(User, db.session))"
+    sketch.template_args[
+        "ADMIN_VIEW_ROLE"
+    ] = "admin.add_view(ProtectedModelView(Role, db.session))"
 
 
 def sqlite_handler(sketch: Sketch):
@@ -60,6 +72,33 @@ def postgres_handler(sketch: Sketch):
 def mongodb_handler(sketch: Sketch):
     if sketch.database == "mongodb":
         sketch.add_requirements("flask-mongoengine")
+        sketch.add_extensions("database")
+
+        sketch.settings["default"][
+            "MONGODB_HOST"
+        ] = "mongodb://root:password@127.0.0.1:27017/database?authSource=admin"
+
+        sketch.write_template(
+            "ext_mongoengine_tpl",
+            templates.ext,
+            pjoin(sketch.app_folder, "ext", "database.py"),
+        )
+
+        sketch.write_template(
+            "utils_mongo_tpl",
+            templates.models,
+            pjoin(sketch.app_folder, "models", "utils.py"),
+        )
+
+        sketch.template_args["ADMIN_MODEL_ENGINE"] = "mongoengine"
+        sketch.template_args["ADMIN_DATABASE_IMPORT"] = ""
+        sketch.template_args[
+            "ADMIN_VIEW_USER"
+        ] = "admin.add_view(ProtectedModelView(User))"
+        sketch.template_args[
+            "ADMIN_VIEW_ROLE"
+        ] = "admin.add_view(ProtectedModelView(Role))"
+
         return True
 
 

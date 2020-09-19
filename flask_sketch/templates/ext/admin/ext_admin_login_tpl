@@ -1,7 +1,7 @@
 from flask import abort
 from flask_admin import Admin, AdminIndexView
-from flask_admin.contrib.sqla import ModelView
-from application_tpl.ext.database import db
+from flask_admin.contrib.$ADMIN_MODEL_ENGINE import ModelView
+$ADMIN_DATABASE_IMPORT
 from application_tpl.models import User, Role
 from flask_login import current_user
 
@@ -34,6 +34,6 @@ admin = Admin(index_view=ProtectedAdminIndexView())
 def init_app(app):
     admin.name = app.config.get("ADMIN_NAME", "Admin")
     admin.template_mode = app.config.get("ADMIN_TEMPLATE_MODE", "bootstrap3")
-    admin.add_view(ProtectedModelView(User, db.session))
-    admin.add_view(ProtectedModelView(Role, db.session))
+    $ADMIN_VIEW_USER
+    $ADMIN_VIEW_ROLE
     admin.init_app(app)

@@ -45,8 +45,13 @@ def restx_handler(sketch: Sketch):
             pjoin(sketch.app_folder, "api", "resources", "examples", "pet.py"),
         )
 
+        if sketch.database == "mongodb":
+            example_tpl_model = "pet_mongo_tpl"
+        else:
+            example_tpl_model = "pet_sql_tpl"
+
         sketch.write_template(
-            "models_examples_smorest_pet_tpl",
+            example_tpl_model,
             templates.models.examples,
             pjoin(sketch.app_folder, "models", "examples", "pet.py"),
         )
@@ -111,7 +116,7 @@ def smorest_handler(sketch: Sketch):
         )
 
         sketch.write_template(
-            "models_examples_smorest_pet_tpl",
+            "pet_sql_tpl",
             templates.models.examples,
             pjoin(sketch.app_folder, "models", "examples", "pet.py"),
         )

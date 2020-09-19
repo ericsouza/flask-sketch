@@ -11,6 +11,8 @@ from flask_sketch.handlers import (
     api_auth_handler,
     config_handler,
     database_handler,
+    commands_handler,
+    models_handler,
     handle_features,
 )
 from flask_sketch.utils import (
@@ -41,11 +43,12 @@ def create_project(args: Namespace, answers: dict):
 
     app_type_handler(sketch)
     database_handler(sketch)
+    models_handler(sketch)
     auth_handler(sketch)
     if sketch.have_api:
         api_framework_handler(sketch)
         api_auth_handler(sketch)
-
+    commands_handler(sketch)
     handle_features(sketch)
     config_handler(sketch)
 

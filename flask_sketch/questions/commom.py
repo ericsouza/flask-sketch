@@ -13,11 +13,7 @@ commom_questions = [
             {"name": "SQLite", "value": "sqlite"},
             {"name": "Postgres", "value": "postgres"},
             {"name": "MySQL", "value": "mysql"},
-            {
-                "name": "MongoDB",
-                "value": "mongodb",
-                "disabled": "Not yet supported",
-            },
+            {"name": "MongoDB", "value": "mongodb"},
             {
                 "name": "None (no database)",
                 "value": "none",

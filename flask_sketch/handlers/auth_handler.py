@@ -13,21 +13,9 @@ def login_handler(sketch: Sketch):
         sketch.add_extensions("auth")
 
         sketch.write_template(
-            "commands_default_tpl",
-            templates.commands,
-            pjoin(sketch.app_folder, "commands", "__init__.py",),
-        )
-
-        sketch.write_template(
             "ext_login_tpl",
             templates.ext,
             pjoin(sketch.app_folder, "ext", "auth.py"),
-        )
-
-        sketch.write_template(
-            "models_login_tpl",
-            templates.models,
-            pjoin(sketch.app_folder, "models", "user.py"),
         )
 
         sketch.write_template(
@@ -133,22 +121,9 @@ def security_web_handler(sketch: Sketch):
         )
 
         sketch.write_template(
-            "security_web_only_tpl",
-            templates.commands,
-            pjoin(sketch.app_folder, "commands", "__init__.py",),
-            mode="w",
-        )
-
-        sketch.write_template(
             "ext_security_web_only_tpl",
             templates.ext,
             pjoin(sketch.app_folder, "ext", "auth.py"),
-        )
-
-        sketch.write_template(
-            "models_security_tpl",
-            templates.models,
-            pjoin(sketch.app_folder, "models", "user.py"),
         )
 
         sketch.write_template(
@@ -188,13 +163,6 @@ def none_handler(sketch: Sketch):
             pjoin(sketch.app_folder, "site", "views.py"),
         )
 
-        if not sketch.api_auth_framework == "none":
-            sketch.write_template(
-                "no_auth_tpl",
-                templates.commands,
-                pjoin(sketch.app_folder, "commands", "__init__.py",),
-            )
-
         return True
 
 
@@ -205,7 +173,7 @@ class AuthHandler(GenericHandler):
             if r:
                 if not handler.__name__ == "none_handler":
                     sketch.write_template(
-                        "models_auth_tpl",
+                        "models_init_tpl",
                         templates.models,
                         pjoin(sketch.app_folder, "models", "__init__.py",),
                     )

@@ -26,7 +26,7 @@ class Pets(MethodView):
     @pet_blp.response(PetSchema(many=True))
     def get(self, args):
         """List pets"""
-        return Pet.get(filters=args)
+        return list(Pet.get_items(filters=args))
 
     @pet_blp.arguments(PetSchema)
     @pet_blp.response(PetSchema, code=201)
@@ -34,7 +34,7 @@ class Pets(MethodView):
     $ROLES_ACCEPTED_DECORATOR
     def post(self, new_data):
         """Add a new pet"""
-        item = Pet.create(new_data)
+        item = Pet.create_item(new_data)
         return item
 
 
@@ -59,7 +59,7 @@ class PetsById(MethodView):
             item = Pet.get_by_id(pet_id)
         except ItemNotFoundError:
             abort(404, message="Item not found.")
-        item.update(update_data)
+        item.update_item(update_data)
         return item
 
     @pet_blp.response(code=204)
@@ -68,6 +68,6 @@ class PetsById(MethodView):
     def delete(self, pet_id):
         """Delete pet"""
         try:
-            Pet.delete(pet_id)
+            Pet.delete_item(pet_id)
         except ItemNotFoundError:
             abort(404, message="Item not found.")

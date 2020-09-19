@@ -125,6 +125,20 @@ def handle_debugtoolbar(sketch: Sketch):
     sketch.add_extensions("debugtoolbar", dev=True)
 
     sketch.settings["development"]["DEBUG_TB_INTERCEPT_REDIRECTS"] = False
+
+    if sketch.database == "mongodb":
+        sketch.settings["development"]["DEBUG_TB_PANELS"] = [
+            "flask_debugtoolbar.panels.versions.VersionDebugPanel",
+            "flask_debugtoolbar.panels.timer.TimerDebugPanel",
+            "flask_debugtoolbar.panels.headers.HeaderDebugPanel",
+            "flask_debugtoolbar.panels.request_vars.RequestVarsDebugPanel",
+            "flask_debugtoolbar.panels.template.TemplateDebugPanel",
+            "flask_debugtoolbar.panels.route_list.RouteListDebugPanel",
+            "flask_debugtoolbar.panels.logger.LoggingPanel",
+            "flask_debugtoolbar.panels.profiler.ProfilerDebugPanel",
+            "flask_debugtoolbar.panels.config_vars.ConfigVarsDebugPanel",
+        ]
+
     if sketch.config_framework != "dynaconf":
         sketch.write_template(
             "ext_debugtoolbar_tpl",

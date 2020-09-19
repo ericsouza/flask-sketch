@@ -7,7 +7,7 @@ class ItemNotFoundError(Exception):
 
 class ModelCRUD:
     @classmethod
-    def get(cls, filters):
+    def get_items(cls, filters):
         return cls.query.filter_by(**filters).all()
 
     @classmethod
@@ -18,7 +18,7 @@ class ModelCRUD:
         return item
 
     @classmethod
-    def create(cls, data):
+    def create_item(cls, data):
         new_item = cls(**data)
 
         db.session.add(new_item)
@@ -26,11 +26,11 @@ class ModelCRUD:
 
         return new_item
 
-    def update(self, new_data):
+    def update_item(self, new_data):
         self.query.filter_by(id=self.id).update(new_data)
         db.session.commit()
 
     @classmethod
-    def delete(cls, _id):
+    def delete_item(cls, _id):
         cls.query.filter_by(id=_id).delete()
         db.session.commit()

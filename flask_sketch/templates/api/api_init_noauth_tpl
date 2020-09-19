@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify
+from flask import Blueprint
 
 
 apibp = Blueprint("api", __name__, url_prefix="/api")
@@ -6,4 +6,4 @@ apibp = Blueprint("api", __name__, url_prefix="/api")
 
 @apibp.route("/hello")
 def hello():
-    return jsonify({"message": "hello world!"})
+    return {"message": "hello world!"}

@@ -24,7 +24,7 @@ if os.path.exists(readme_path):
 setup(
     long_description=readme,
     name='flask-sketch',
-    version='0.3.18',
+    version='0.3.20',
     description='A CLI for autogenerate folder structure and boilerplate for Flask applications',
     python_requires='<4.0,>=3.7',
     project_urls={"repository": "https://github.com/ericsouza/flask-sketch"},
@@ -32,7 +32,7 @@ setup(
     author_email='ericsouza0801@gmail.com',
     license='MIT License',
     keywords='flask-sketch flask_sketch flask boilerplate',
-    entry_points={"console_scripts": ["flask-sketch = flask_sketch.__main__:flask_sketch"]},
+    entry_points={"console_scripts": ["flask-sketch = flask_sketch.__main__:main"]},
     packages=['flask_sketch', 'flask_sketch.handlers', 'flask_sketch.questions', 'flask_sketch.templates', 'flask_sketch.templates.api', 'flask_sketch.templates.api.resources', 'flask_sketch.templates.api.resources.examples', 'flask_sketch.templates.app', 'flask_sketch.templates.commands', 'flask_sketch.templates.config', 'flask_sketch.templates.examples', 'flask_sketch.templates.ext', 'flask_sketch.templates.ext.admin', 'flask_sketch.templates.models', 'flask_sketch.templates.models.examples', 'flask_sketch.templates.site', 'flask_sketch.templates.site.templates', 'flask_sketch.templates.utils', 'flask_sketch.templates.utils.security'],
     package_dir={"": "."},
     package_data={},
