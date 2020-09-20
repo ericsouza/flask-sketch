@@ -97,6 +97,19 @@ def handle_sql_noauth(sketch: Sketch):
         )
 
 
+def handle_mongo_noauth(sketch: Sketch):
+    if (
+        sketch.database == "mongodb"
+        and sketch.auth_framework == "none"
+        and sketch.api_auth_framework == "none"
+    ):
+        sketch.write_template(
+            "mongo_noauth_tpl",
+            templates.commands,
+            pjoin(sketch.app_folder, "commands", "__init__.py",),
+        )
+
+
 class CommandsHandler(GenericHandler):
     ...
 
@@ -109,4 +122,5 @@ commands_handler = CommandsHandler(
     handle_mongo_security,
     handle_sql_security,
     handle_sql_noauth,
+    handle_mongo_noauth,
 )

@@ -1,0 +1,3 @@
+def register_commands(app):
+    # register your commands here
+    pass

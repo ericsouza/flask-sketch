@@ -2,7 +2,7 @@ from flask import redirect
 from flask_admin import Admin, AdminIndexView
 from flask_admin.contrib.$ADMIN_MODEL_ENGINE import ModelView
 $ADMIN_DATABASE_IMPORT
-from application_tpl.models import User, Role
+$ADMIN_USER_ROLE_IMPORT
 from application_tpl.ext.admin.basic_auth import basic_auth, AuthException
 
 

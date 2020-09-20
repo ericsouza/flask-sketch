@@ -80,6 +80,14 @@ def handle_jwt_sql(sketch: Sketch):
         return True
 
 
+def handle_noauth_nojwt(sketch: Sketch):
+    if sketch.api_auth_framework == "none" and sketch.auth_framework == "none":
+        sketch.template_args["ADMIN_USER_ROLE_IMPORT"] = ""
+        sketch.template_args["ADMIN_VIEW_USER"] = ""
+        sketch.template_args["ADMIN_VIEW_ROLE"] = ""
+        return True
+
+
 class ModelsHandler(GenericHandler):
     ...
 
@@ -91,4 +99,5 @@ models_handler = ModelsHandler(
     handle_sql_security,
     handle_jwt_mongo,
     handle_jwt_sql,
+    handle_noauth_nojwt,
 )

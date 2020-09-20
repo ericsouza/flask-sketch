@@ -40,6 +40,10 @@ def create_project(args: Namespace, answers: dict):
     sketch.settings["default"]["DEBUG"] = False
     sketch.settings["development"]["DEBUG"] = True
     sketch.secrets["default"]["SECRET_KEY"] = random_string(length=64)
+    # TODO find a better place for this below
+    sketch.template_args[
+        "ADMIN_USER_ROLE_IMPORT"
+    ] = "from application_tpl.models import User, Role"
 
     app_type_handler(sketch)
     database_handler(sketch)
