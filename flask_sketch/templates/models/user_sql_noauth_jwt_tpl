@@ -1,4 +1,3 @@
-from flask_login import UserMixin
 from application_tpl.ext.database import db
 from application_tpl.models.utils import ModelCRUD
 
@@ -19,7 +18,7 @@ class Role(db.Model):
         return "<Role {}>".format(self.name)
 
 
-class User(db.Model, ModelCRUD, UserMixin):
+class User(db.Model, ModelCRUD):
     __tablename__ = "user"
     id = db.Column(db.Integer(), primary_key=True)
     email = db.Column(db.String(255), unique=True)

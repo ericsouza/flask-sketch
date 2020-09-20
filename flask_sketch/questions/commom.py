@@ -1,3 +1,6 @@
+from flask_sketch.const import SQLITE, POSTGRES, MYSQL, MONGODB
+
+
 commom_questions = [
     {
         "type": "confirm",
@@ -10,15 +13,15 @@ commom_questions = [
         "message": "Select your database",
         "name": "database",
         "choices": [
-            {"name": "SQLite", "value": "sqlite"},
-            {"name": "Postgres", "value": "postgres"},
-            {"name": "MySQL", "value": "mysql"},
-            {"name": "MongoDB", "value": "mongodb"},
-            {
-                "name": "None (no database)",
-                "value": "none",
-                "disabled": "Not yet supported",
-            },
+            {"name": "SQLite", "value": SQLITE},
+            {"name": "Postgres", "value": POSTGRES},
+            {"name": "MySQL", "value": MYSQL},
+            {"name": "MongoDB", "value": MONGODB},
+            # {
+            #     "name": "None (no database)",
+            #     "value": NONE,
+            #     "disabled": "Not yet supported",
+            # },
         ],
         "validate": lambda answer: "You must choose at least one topping."
         if len(answer) == 0

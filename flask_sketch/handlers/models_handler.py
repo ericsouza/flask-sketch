@@ -32,7 +32,7 @@ def handle_sql_login(sketch: Sketch):
 def handle_mongo_security(sketch: Sketch):
     if sketch.database == "mongodb" and sketch.auth_framework == "security":
         sketch.write_template(
-            "user_sql_security_mongo_tpl",
+            "user_mongo_security_tpl",
             templates.models,
             pjoin(sketch.app_folder, "models", "user.py"),
         )
@@ -59,7 +59,7 @@ def handle_jwt_mongo(sketch: Sketch):
         and sketch.api_auth_framework != "none"
     ):
         sketch.write_template(
-            "user_mongo_tpl",
+            "user_mongo_noauth_jwt_tpl",
             templates.models,
             pjoin(sketch.app_folder, "models", "user.py"),
         )
@@ -73,7 +73,7 @@ def handle_jwt_sql(sketch: Sketch):
         and sketch.api_auth_framework != "none"
     ):
         sketch.write_template(
-            "user_sql_tpl",
+            "user_sql_noauth_jwt_tpl",
             templates.models,
             pjoin(sketch.app_folder, "models", "user.py"),
         )

@@ -1,4 +1,3 @@
-from flask_login import UserMixin
 from application_tpl.ext.database import db
 from application_tpl.models.utils import ModelCRUD
 
@@ -11,7 +10,7 @@ class Role(db.Document):
         return "<Role {}>".format(self.name)
 
 
-class User(db.Document, ModelCRUD, UserMixin):
+class User(db.Document, ModelCRUD):
     email = db.StringField(max_length=255)
     password = db.StringField(max_length=255)
     active = db.BooleanField(default=True)

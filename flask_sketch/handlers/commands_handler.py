@@ -18,7 +18,12 @@ def handle_mongo_default(sketch: Sketch):
 
 
 def handle_mongo_jwt_default(sketch: Sketch):
-    if sketch.database == "mongodb" and sketch.auth_framework == "none":
+    if (
+        sketch.database == "mongodb"
+        and sketch.auth_framework == "none"
+        and sketch.api_auth_framework != "none"
+    ):
+        print("é vdd esse bilete")
         sketch.write_template(
             "mongo_default_tpl",
             templates.commands,
@@ -46,6 +51,7 @@ def handle_sql_jwt_default(sketch: Sketch):
     if (
         sketch.database in ["sqlite", "postgres", "mysql"]
         and sketch.auth_framework == "none"
+        and sketch.api_auth_framework != "none"
     ):
         sketch.write_template(
             "sql_default_tpl",
@@ -58,7 +64,7 @@ def handle_sql_jwt_default(sketch: Sketch):
 def handle_mongo_security(sketch: Sketch):
     if sketch.database == "mongodb" and sketch.auth_framework == "security":
         sketch.write_template(
-            "mongo_security_default_tpl",
+            "mongo_security_tpl",
             templates.commands,
             pjoin(sketch.app_folder, "commands", "__init__.py",),
         )
@@ -98,6 +104,8 @@ class CommandsHandler(GenericHandler):
 commands_handler = CommandsHandler(
     handle_mongo_default,
     handle_sql_default,
+    handle_mongo_jwt_default,
+    handle_sql_jwt_default,
     handle_mongo_security,
     handle_sql_security,
     handle_sql_noauth,

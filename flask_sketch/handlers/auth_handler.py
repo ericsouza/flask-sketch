@@ -120,8 +120,13 @@ def security_web_handler(sketch: Sketch):
             pjoin(sketch.app_folder, "site", "views.py"),
         )
 
+        if sketch.database == "mongodb":
+            auth_tpl = "ext_auth_security_mongo_tpl"
+        else:
+            auth_tpl = "ext_security_web_only_tpl"
+
         sketch.write_template(
-            "ext_security_web_only_tpl",
+            auth_tpl,
             templates.ext,
             pjoin(sketch.app_folder, "ext", "auth.py"),
         )
@@ -176,6 +181,7 @@ class AuthHandler(GenericHandler):
                         "models_init_tpl",
                         templates.models,
                         pjoin(sketch.app_folder, "models", "__init__.py",),
+                        mode="w",
                     )
                 return r
 

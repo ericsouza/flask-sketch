@@ -72,6 +72,7 @@ class ApiAuthHandler(GenericHandler):
                         "models_init_tpl",
                         templates.models,
                         pjoin(sketch.app_folder, "models", "__init__.py",),
+                        mode="w",
                     )
                 return r
 
