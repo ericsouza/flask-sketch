@@ -30,7 +30,7 @@ def handle_sql_db(sketch: Sketch):
     sketch.template_args["ADMIN_MODEL_ENGINE"] = "sqla"
     sketch.template_args[
         "ADMIN_DATABASE_IMPORT"
-    ] = "from application_tpl.ext.database import db"
+    ] = "from {}.ext.database import db".format(sketch.app_folder_name)
 
     sketch.template_args[
         "ADMIN_VIEW_USER"

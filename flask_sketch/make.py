@@ -43,7 +43,7 @@ def create_project(args: Namespace, answers: dict):
     # TODO find a better place for this below
     sketch.template_args[
         "ADMIN_USER_ROLE_IMPORT"
-    ] = "from application_tpl.models import User, Role"
+    ] = "from {}.models import User, Role".format(sketch.app_folder_name)
 
     app_type_handler(sketch)
     database_handler(sketch)
