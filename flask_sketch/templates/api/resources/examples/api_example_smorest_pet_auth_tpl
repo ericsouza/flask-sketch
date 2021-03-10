@@ -23,14 +23,14 @@ class PetQueryArgsSchema(ma.Schema):
 @pet_blp.route("")
 class Pets(MethodView):
     @pet_blp.arguments(PetQueryArgsSchema, location="query")
-    @pet_blp.response(PetSchema(many=True))
+    @pet_blp.response(status_code=200, schema=PetSchema(many=True))
     def get(self, args):
         """List pets"""
         return list(Pet.get_items(filters=args))
 
     @pet_blp.arguments(PetSchema)
-    @pet_blp.response(PetSchema, code=201)
-    @jwt_required
+    @pet_blp.response(status_code=201, schema=PetSchema)
+    @jwt_required()
     $ROLES_ACCEPTED_DECORATOR
     def post(self, new_data):
         """Add a new pet"""
@@ -40,7 +40,7 @@ class Pets(MethodView):
 
 @pet_blp.route("/<pet_id>")
 class PetsById(MethodView):
-    @pet_blp.response(PetSchema)
+    @pet_blp.response(status_code=200, schema=PetSchema)
     def get(self, pet_id):
         """Get pet by ID"""
         try:
@@ -50,8 +50,8 @@ class PetsById(MethodView):
         return item
 
     @pet_blp.arguments(PetSchema)
-    @pet_blp.response(PetSchema)
-    @jwt_required
+    @pet_blp.response(status_code=200, schema=PetSchema)
+    @jwt_required()
     $ROLES_ACCEPTED_DECORATOR
     def put(self, update_data, pet_id):
         """Update existing pet"""
@@ -62,8 +62,8 @@ class PetsById(MethodView):
         item.update_item(update_data)
         return item
 
-    @pet_blp.response(code=204)
-    @jwt_required
+    @pet_blp.response(status_code=204)
+    @jwt_required()
     $ROLES_REQUIRED_DECORATOR
     def delete(self, pet_id):
         """Delete pet"""

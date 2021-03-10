@@ -38,7 +38,7 @@ class PetList(Resource):
     @pet_ns.doc("create_pet")
     @pet_ns.expect(pet)
     @pet_ns.marshal_with(pet, code=201)
-    @jwt_required
+    @jwt_required()
     @roles_accepted("admin", "editor")
     def post(self):
         """Create a new task"""
@@ -65,7 +65,7 @@ class PetResource(Resource):
 
     @pet_ns.expect(pet)
     @pet_ns.marshal_with(pet)
-    @jwt_required
+    @jwt_required()
     @roles_accepted("admin", "editor")
     def put(self, pet_id):
         """Update existing pet"""
@@ -79,7 +79,7 @@ class PetResource(Resource):
 
     @pet_ns.doc("delete_pet")
     @pet_ns.response(204, "Item deleted")
-    @jwt_required
+    @jwt_required()
     @roles_required("admin")
     def delete(self, pet_id):
         """Delete pet"""

@@ -3,7 +3,7 @@ from flask_jwt_extended import (
     get_jwt_identity,
     create_access_token,
     create_refresh_token,
-    jwt_refresh_token_required,
+    jwt_required,
 )
 from flask_restx import Api
 from application_tpl.models import User
@@ -41,13 +41,13 @@ def authenticate():
     return ret, 200
 
 
-# The jwt_refresh_token_required decorator insures a valid refresh
+# The jwt_required(refresh=True) decorator insures a valid refresh
 # token is present in the request before calling this endpoint. We
 # can use the get_jwt_identity() function to get the identity of
 # the refresh token, and use the create_access_token() function again
 # to make a new access token for this identity.
 @apibp.route("/refresh")
-@jwt_refresh_token_required
+@jwt_required(refresh=True)
 def refresh():
     current_user = get_jwt_identity()
     ret = {"access_token": create_access_token(identity=current_user)}
