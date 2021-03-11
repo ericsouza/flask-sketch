@@ -3,7 +3,7 @@ from flask_security import UserMixin, RoleMixin
 from application_tpl.models.utils import ModelCRUD
 
 
-class Role(db.Document, RoleMixin):
+class Role(db.Document, RoleMixin, ModelCRUD):
     name = db.StringField(max_length=80, unique=True)
     description = db.StringField(max_length=255)
 
@@ -11,7 +11,7 @@ class Role(db.Document, RoleMixin):
         return "<Role {}>".format(self.name)
 
 
-class User(db.Document, ModelCRUD, UserMixin):
+class User(db.Document, UserMixin, ModelCRUD):
     email = db.StringField(max_length=255)
     password = db.StringField(max_length=255)
     active = db.BooleanField(default=True)

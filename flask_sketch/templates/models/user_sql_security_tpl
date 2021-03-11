@@ -1,5 +1,5 @@
 from application_tpl.ext.database import db
-from flask_security import UserMixin, RoleMixin
+from flask_security.models.fsqla_v2 import FsUserMixin, FsRoleMixin
 from application_tpl.models.utils import ModelCRUD
 
 roles_users = db.Table(
@@ -9,7 +9,7 @@ roles_users = db.Table(
 )
 
 
-class Role(db.Model, RoleMixin, ModelCRUD):
+class Role(db.Model, FsRoleMixin, ModelCRUD):
     __tablename__ = "role"
     id = db.Column(db.Integer(), primary_key=True)
     name = db.Column(db.String(80), unique=True)
@@ -19,7 +19,7 @@ class Role(db.Model, RoleMixin, ModelCRUD):
         return "<Role {}>".format(self.name)
 
 
-class User(db.Model, UserMixin, ModelCRUD):
+class User(db.Model, FsUserMixin, ModelCRUD):
     __tablename__ = "user"
     id = db.Column(db.Integer(), primary_key=True)
     email = db.Column(db.String(255), unique=True)
