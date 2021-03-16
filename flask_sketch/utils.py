@@ -1,7 +1,7 @@
-from os.path import join as pjoin
 import os
 import random
 import string
+from os.path import join as pjoin
 from typing import Callable
 
 from flask_sketch import templates

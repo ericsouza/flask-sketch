@@ -1,7 +1,5 @@
 import importlib.resources as pkg_resources
-
 import os
-
 import string
 from argparse import Namespace
 

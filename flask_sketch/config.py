@@ -1,6 +1,5 @@
 from PyInquirer import Token, style_from_dict
 
-
 cli_style = style_from_dict(
     {
         Token.QuestionMark: "#E91E63 bold",

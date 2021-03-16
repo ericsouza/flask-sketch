@@ -1,25 +1,25 @@
 import os
-from os.path import join as pjoin
 import pathlib
 from argparse import Namespace
-from flask_sketch.sketch import Sketch
+from os.path import join as pjoin
 
 from flask_sketch.handlers import (
+    api_auth_handler,
     api_framework_handler,
     app_type_handler,
     auth_handler,
-    api_auth_handler,
+    commands_handler,
     config_handler,
     database_handler,
-    commands_handler,
-    models_handler,
     handle_features,
+    models_handler,
 )
+from flask_sketch.sketch import Sketch
 from flask_sketch.utils import (
     cleanup,
+    make_app,
     make_commom,
     make_requirements,
-    make_app,
     make_template_args,
     random_string,
 )
