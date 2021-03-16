@@ -34,10 +34,13 @@ For now Flask-Sketch is basic a study project for myself but I want to add suppo
 
 - Authlib (to deal with OAuth2)
 - More options to deal with migrations
-- Others extensions to flask:
+- Environs lib (another alternative for settings)
+- Others features extensions to flask:
     - Flask-Talisman
     - Pytest-Flask
     - Flask-Babel
     - Flask-File-Upload
+    - Flask-HTMLmin (to minifier HTML)
+    - Flask-Static-Digest
     - Something to help with text search.
     - Something to help with GraphQL

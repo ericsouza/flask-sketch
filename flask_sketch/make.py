@@ -66,7 +66,7 @@ def create_project(args: Namespace, answers: dict):
     cleanup(sketch)
 
     if args.v:
-        print("\ncreating virtual environment...")
-        os.system(f"python -m venv {pf}/.venv")
+        print("\nCreating virtual environment...")
+        os.system(f"python3 -m venv {pf}/.venv")
 
     print("\n\nAll done!")
