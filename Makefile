@@ -1,3 +1,4 @@
+.PHONY:install_editable
 install_editable:
 	@find ./ -name '*.pyc' -exec rm -f {} \;
 	@find ./ -name 'Thumbs.db' -exec rm -f {} \;
@@ -11,18 +12,21 @@ install_editable:
 	rm -rf docs/_build
 	poetry build
 	mv pyproject.toml _pyproject.toml
-	tar --wildcards -zxvf dist/flask-sketch-*.tar.gz flask-sketch-*/setup.py \
+	@tar -zxvf dist/flask-sketch-*.tar.gz \
 		&& mv flask-sketch-*/setup.py setup.py \
 		&& rm -rf flask-sketch-*
 	pip install -e .[dev] --upgrade --no-cache
 	mv _pyproject.toml pyproject.toml
 
+.PHONY:format
 format:
 	isort **/*.py
 	black -l 79 **/*.py
 
-test_project_sketch:
+.PHONY:test_project_sketch
+test_project_sketch: clean_test_sketch
 	flask-sketch test_sketch_project
 
-clear_test_sketch:
+.PHONY:clean_test_sketch
+clean_test_sketch:
 	rm -rf test_sketch_project

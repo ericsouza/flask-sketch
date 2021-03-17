@@ -1,5 +1,5 @@
 from flask_sketch.utils import has_answers
-from flask_sketch.const import FLASK_RESTX, FLASK_SMOREST, FLASK_RESTFUL, NONE
+from flask_sketch.questions.const import FLASK_RESTX, FLASK_SMOREST, FLASK_RESTFUL, NONE
 
 api_framework_questions = [
     {

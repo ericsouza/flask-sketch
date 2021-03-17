@@ -2,12 +2,13 @@ import os
 from os.path import join as pjoin
 from flask_sketch import templates
 from flask_sketch.sketch import Sketch
+from flask_sketch.const import requirements as reqs
 from flask_sketch.utils import GenericHandler
 
 
 def restx_handler(sketch: Sketch):
     if sketch.api_framework == "restx":
-        sketch.add_requirements("flask-restx")
+        sketch.add_requirements(reqs.FLASK_RESTX)
 
         os.makedirs(pjoin(sketch.app_folder, "api", "resources", "examples"))
         open(
@@ -61,7 +62,7 @@ def restx_handler(sketch: Sketch):
 
 def smorest_handler(sketch: Sketch):
     if sketch.api_framework == "smorest":
-        sketch.add_requirements("flask-smorest")
+        sketch.add_requirements(reqs.FLASK_SMOREST)
 
         sketch.settings["default"]["API_TITLE"] = sketch.project_name
         sketch.settings["default"]["API_VERSION"] = "v1"

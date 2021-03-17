@@ -1,12 +1,13 @@
 from os.path import join as pjoin
 from flask_sketch.sketch import Sketch
+from flask_sketch.const import requirements as reqs
 from flask_sketch.utils import snake_to_camel
 from flask_sketch import templates
 from uuid import uuid4
 
 
 def handle_caching(sketch: Sketch):
-    sketch.add_requirements("flask-caching")
+    sketch.add_requirements(reqs.FLASK_CACHING)
 
     sketch.settings["development"]["CACHE_TYPE"] = "simple"
     sketch.settings["testing"]["CACHE_TYPE"] = "simple"
@@ -32,7 +33,7 @@ def handle_caching(sketch: Sketch):
 
 
 def handle_limiter(sketch: Sketch):
-    sketch.add_requirements("flask-limiter")
+    sketch.add_requirements(reqs.FLASK_LIMITER)
 
     sketch.settings["default"]["RATELIMIT_DEFAULT"] = "200 per day;50 per hour"
     sketch.settings["default"]["RATELIMIT_ENABLED"] = True
@@ -58,7 +59,7 @@ def handle_limiter(sketch: Sketch):
 
 
 def handle_migrate(sketch: Sketch):
-    sketch.add_requirements("flask-migrate")
+    sketch.add_requirements(reqs.FLASK_MIGRATE)
 
     sketch.add_extensions("migrate")
 
@@ -70,7 +71,7 @@ def handle_migrate(sketch: Sketch):
 
 
 def handle_admin(sketch: Sketch):
-    sketch.add_requirements("flask-admin")
+    sketch.add_requirements(reqs.FLASK_ADMIN)
 
     sketch.add_extensions("admin")
 
@@ -101,7 +102,7 @@ def handle_admin(sketch: Sketch):
         )
 
     if sketch.auth_framework == "none":
-        sketch.add_requirements("flask-basicauth")
+        sketch.add_requirements(reqs.FLASK_BASICAUTH)
         sketch.add_extensions("admin.basic_auth")
         sketch.secrets["default"]["BASIC_AUTH_USERNAME"] = "admin"
         sketch.secrets["default"]["BASIC_AUTH_PASSWORD"] = str(uuid4())
@@ -120,7 +121,7 @@ def handle_admin(sketch: Sketch):
 
 
 def handle_debugtoolbar(sketch: Sketch):
-    sketch.add_requirements("flask-debugtoolbar", dev=True)
+    sketch.add_requirements(reqs.FLASK_DEBUGTOOLBAR, dev=True)
 
     sketch.add_extensions("debugtoolbar", dev=True)
 
@@ -148,7 +149,7 @@ def handle_debugtoolbar(sketch: Sketch):
 
 
 def handle_cors(sketch: Sketch):
-    sketch.add_requirements("flask-cors")
+    sketch.add_requirements(reqs.FLASK_CORS)
     sketch.add_extensions("cors")
 
     sketch.write_template(

@@ -1,4 +1,4 @@
-from flask_sketch.const import DYNACONF, NONE
+from flask_sketch.questions.const import DYNACONF, NONE
 
 config_questions = [
     {

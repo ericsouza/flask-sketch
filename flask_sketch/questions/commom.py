@@ -1,4 +1,4 @@
-from flask_sketch.const import SQLITE, POSTGRES, MYSQL, MONGODB
+from flask_sketch.questions.const import SQLITE, POSTGRES, MYSQL, MONGODB
 
 
 commom_questions = [

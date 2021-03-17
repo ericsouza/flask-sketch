@@ -5,6 +5,7 @@ from os.path import join as pjoin
 from typing import Callable
 
 from flask_sketch import templates
+from flask_sketch.const import requirements as reqs
 from flask_sketch.sketch import Sketch
 
 LETTERS = string.ascii_letters
@@ -225,8 +226,8 @@ def make_commom(sketch: Sketch):
     open(pjoin(paf, "utils", "__init__.py"), "a").close()
     open(pjoin(paf, "utils", "security", "__init__.py"), "a").close()
     open(pjoin(paf, "examples", "__init__.py"), "a").close()
-    sketch.add_requirements("flask")
-    sketch.add_requirements("black", "isort", "flake8", dev=True)
+    sketch.add_requirements(reqs.FLASK)
+    sketch.add_requirements(reqs.BLACK, reqs.ISORT, reqs.FLAKE8, dev=True)
 
     sketch.write_template(".gitignore_tpl", templates, pjoin(pf, ".gitignore"))
     sketch.write_template("wsgi_tpl", templates, pjoin(pf, "wsgi.py"))

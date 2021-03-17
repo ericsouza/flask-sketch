@@ -2,13 +2,14 @@ import os
 from os.path import join as pjoin
 from flask_sketch.sketch import Sketch
 from flask_sketch.utils import GenericHandler, random_string
+from flask_sketch.const import requirements as reqs
 from flask_sketch import templates
 
 
 def login_handler(sketch: Sketch):
     if sketch.auth_framework == "login":
         sketch.add_requirements(
-            "flask-login", "argon2-cffi", "flask-wtf", "email_validator"
+            reqs.FLASK_LOGIN, reqs.ARGON2, reqs.FLASK_WTF, reqs.EMAIL_VALIDATOR
         )
         sketch.add_extensions("auth")
 
@@ -88,7 +89,7 @@ def login_handler(sketch: Sketch):
 
 def security_web_handler(sketch: Sketch):
     if sketch.auth_framework == "security":
-        sketch.add_requirements("flask-security-too", "argon2-cffi")
+        sketch.add_requirements(reqs.FLASK_SECURITY_TOO, reqs.ARGON2)
 
         sketch.settings["default"]["SECURITY_REGISTERABLE"] = True
         sketch.settings["default"]["SECURITY_POST_LOGIN_VIEW"] = "/"
@@ -148,7 +149,7 @@ def security_web_handler(sketch: Sketch):
 
 def basicauth_web_handler(sketch: Sketch):
     if sketch.auth_framework == "basicauth":
-        sketch.add_requirements("flask-basicAuth")
+        sketch.add_requirements(reqs.FLASK_BASICAUTH)
         sketch.secrets["default"]["BASIC_AUTH_PASSWORD"] = "admin"
         sketch.secrets["default"]["BASIC_AUTH_PASSWORD"] = random_string()
         return True

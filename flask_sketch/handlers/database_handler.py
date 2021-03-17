@@ -1,17 +1,16 @@
 from os.path import join as pjoin
 from flask_sketch import templates
 from flask_sketch.sketch import Sketch
+from flask_sketch.const import requirements as reqs
 from flask_sketch.utils import GenericHandler
 
 
 def handle_sql_db(sketch: Sketch):
-    sketch.add_requirements("flask-sqlalchemy")
+    sketch.add_requirements(reqs.FLASK_SQLALCHEMY)
 
     sketch.settings["default"]["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
     sketch.settings["development"]["SQLALCHEMY_TRACK_MODIFICATIONS"] = True
-    sketch.settings["default"][
-        "SQLALCHEMY_DATABASE_URI"
-    ] = "sqlite:///db.sqlite3"
+    sketch.secrets["default"]["SQLALCHEMY_DATABASE_URI"] = "sqlite:///db.sqlite3"
 
     sketch.add_extensions("database")
 
@@ -43,7 +42,7 @@ def handle_sql_db(sketch: Sketch):
 def sqlite_handler(sketch: Sketch):
     if sketch.database == "sqlite":
         handle_sql_db(sketch)
-        sketch.settings["production"][
+        sketch.secrets["production"][
             "SQLALCHEMY_DATABASE_URI"
         ] = "sqlite:///production_db.sqlite3"
         return True
@@ -51,9 +50,9 @@ def sqlite_handler(sketch: Sketch):
 
 def mysql_handler(sketch: Sketch):
     if sketch.database == "mysql":
-        sketch.add_requirements("mysqlclient")
+        sketch.add_requirements(reqs.MYSQLCLIENT)
         handle_sql_db(sketch)
-        sketch.settings["production"][
+        sketch.secrets["production"][
             "SQLALCHEMY_DATABASE_URI"
         ] = "mysql+mysqldb://<user>:<password>@<server_ip>/MY_DATABASE"
         return True
@@ -61,9 +60,9 @@ def mysql_handler(sketch: Sketch):
 
 def postgres_handler(sketch: Sketch):
     if sketch.database == "postgres":
-        sketch.add_requirements("psycopg2")
+        sketch.add_requirements(reqs.PSYCOPG2)
         handle_sql_db(sketch)
-        sketch.settings["production"][
+        sketch.secrets["production"][
             "SQLALCHEMY_DATABASE_URI"
         ] = "postgres://<user>:<password>@<server_ip>/MY_DATABASE"
         return True
@@ -71,7 +70,7 @@ def postgres_handler(sketch: Sketch):
 
 def mongodb_handler(sketch: Sketch):
     if sketch.database == "mongodb":
-        sketch.add_requirements("flask-mongoengine")
+        sketch.add_requirements(reqs.FLASK_MONGOENGINE)
         sketch.add_extensions("database")
 
         sketch.settings["default"][

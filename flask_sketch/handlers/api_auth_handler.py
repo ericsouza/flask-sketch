@@ -1,12 +1,13 @@
 from os.path import join as pjoin
 from flask_sketch.sketch import Sketch
 from flask_sketch.utils import GenericHandler
+from flask_sketch.const import requirements as reqs
 from flask_sketch import templates
 
 
 def jwt_extended_handler(sketch: Sketch):
     if sketch.api_auth_framework == "jwt_extended":
-        sketch.add_requirements("flask-jwt-extended", "argon2-cffi")
+        sketch.add_requirements(reqs.FLASK_JWT_EXTENDED, reqs.ARGON2)
         sketch.settings["default"]["JWT_ACCESS_TOKEN_EXPIRES"] = 3600
         sketch.settings["default"]["JWT_REFRESH_TOKEN_EXPIRES"] = 2592000
 
@@ -42,7 +43,7 @@ def jwt_extended_handler(sketch: Sketch):
 
 def basicauth_handler(sketch: Sketch):
     if sketch.api_auth_framework == "basicauth":
-        sketch.add_requirements("flask-basicauth")
+        sketch.add_requirements(reqs.FLASK_BASICAUTH)
         return True
 
 

@@ -26,7 +26,6 @@ class Sketch:
         self.secret_key = ""
         # self.create_examples = args.e
         self.create_virtualenv = args.v
-        # self.create_pyproject = args.p
         self.requirements = set()
         self.dev_requirements = set()
         self.extensions = []
@@ -39,7 +38,12 @@ class Sketch:
             "ROLES_REQUIRED_DECORATOR": '@roles_required("admin")',
             "ROLES_ACCEPTED_DECORATOR": '@roles_accepted("admin", "editor")',
         }
-        self.secrets = {"default": {}}
+        self.secrets = {
+            "default": {},
+            "development": {},
+            "testing": {},
+            "production": {},
+        }
         self.settings = {
             "default": {"EXTENSIONS": []},
             "development": {"EXTENSIONS": []},

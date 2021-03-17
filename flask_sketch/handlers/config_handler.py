@@ -3,6 +3,7 @@ import toml
 from os.path import join as pjoin
 from flask_sketch import templates
 from flask_sketch.sketch import Sketch, FlaskSketchTomlEncoder
+from flask_sketch.const import requirements as reqs
 from flask_sketch.utils import GenericHandler
 
 
@@ -15,7 +16,7 @@ def sort_settings(settings: dict):
 
 def dynaconf_handler(sketch: Sketch):
     if sketch.config_framework == "dynaconf":
-        sketch.add_requirements("dynaconf")
+        sketch.add_requirements(reqs.DYNACONF)
 
         settings_toml = sort_settings(sketch.settings)
         secrets_toml = sort_settings(sketch.secrets)

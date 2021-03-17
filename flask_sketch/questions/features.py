@@ -1,5 +1,5 @@
 from flask_sketch.utils import has_answers
-from flask_sketch.const import (
+from flask_sketch.questions.const import (
     FLASK_MIGRATE,
     FLASK_ADMIN,
     FLASK_CACHING,
